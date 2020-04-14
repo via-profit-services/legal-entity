@@ -34,6 +34,28 @@ const getDirectorName = () => {
   };
 };
 
+const generateINN = () => {
+  const str = String(Math.floor(new Date().valueOf() * Math.random()));
+  return `000${str}`.substr(0, 12);
+};
+
+const generateOGRN = () => {
+  const str = String(Math.floor(new Date().valueOf() * Math.random()));
+  return `000${str}`.substr(0, 13);
+};
+const generateKPP = () => {
+  const str = String(Math.floor(new Date().valueOf() * Math.random()));
+  return `000${str}`.substr(0, 9);
+};
+const generateBIC = () => {
+  const str = String(Math.floor(new Date().valueOf() * Math.random()));
+  return `04${str}`.substr(0, 9);
+};
+const generateRSKS = () => {
+  const str = String(Math.floor(new Date().valueOf() * Math.random()));
+  return `000000000${str}`.substr(0, 20);
+};
+
 export async function seed(knex: Knex): Promise<any> {
   // Deletes ALL existing entries
   return knex('legalEntities')
@@ -50,12 +72,12 @@ export async function seed(knex: Knex): Promise<any> {
           faker.address.streetAddress(),
           faker.address.secondaryAddress(),
         ].join(' '),
-        ogrn: faker.finance.iban(),
-        kpp: faker.finance.iban(),
-        inn: `${faker.finance.account().toString()}${faker.finance.account().toString()}`,
-        rs: faker.finance.iban(),
-        ks: faker.finance.iban(),
-        bic: faker.finance.iban(),
+        ogrn: generateOGRN(),
+        kpp: generateKPP(),
+        inn: generateINN(),
+        bic: generateBIC(),
+        rs: generateRSKS(),
+        ks: generateRSKS(),
         bank: [
           'Публичное акционерное общество «Сбербанк России»',
           'АО «Тинькофф Банк»',

@@ -36,4 +36,5 @@ export const queryResolver: IResolverObject<any, IContext> = {
   },
 };
 
+
 export default queryResolver;

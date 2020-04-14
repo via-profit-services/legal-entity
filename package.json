@@ -34,15 +34,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git@gitlab.com:via-profit/tlk-transfer-server.git"
-    },
-    "bin": {
-        "via-profit-core": "./dist/bin/cli.js"
+        "url": "git@gitlab.com:via-profit-services/legal-entity.git"
     },
     "author": "Via Profit <promo@via-profit.ru>",
     "license": "MIT",
     "dependencies": {
-        "@via-profit-services/core": "ssh://git@gitlab.com:via-profit-services/core.git#0.10.2",
+        "@via-profit-services/core": "ssh://git@gitlab.com:via-profit-services/core.git#0.10.6",
         "chalk": "^3.0.0",
         "dotenv": "^8.2.0",
         "graphql": "^14.6.0",

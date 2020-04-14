@@ -1,7 +1,9 @@
 import { IContext } from '@via-profit-services/core';
 import { IResolvers } from 'graphql-tools';
 
-import QueryResolver from './LegalEntitiesQuery';
+import * as scalars from '../scalars';
+import LegalEntitiesMutationResolver from './LegalEntitiesMutation';
+import LegalEntitiesQueryResolver from './LegalEntitiesQuery';
 import LegalEntityResolver from './LegalEntity';
 
 const resolvers: IResolvers<any, IContext> = {
@@ -12,7 +14,9 @@ const resolvers: IResolvers<any, IContext> = {
     legalEntities: () => ({}),
   },
   LegalEntity: LegalEntityResolver,
-  LegalEntitiesQuery: QueryResolver,
+  LegalEntitiesQuery: LegalEntitiesQueryResolver,
+  LegalEntitiesMutation: LegalEntitiesMutationResolver,
+  ...scalars,
 };
 
 export default resolvers;
