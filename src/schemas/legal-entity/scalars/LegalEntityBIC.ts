@@ -30,7 +30,7 @@ export default new GraphQLScalarType({
   parseLiteral: (ast) => {
     if (ast.kind !== Kind.INT && ast.kind !== Kind.STRING) {
       throw new GraphQLError(
-        `Can only parse strings & integers but got a: ${ast.kind}`,
+        `Can only parse strings & integers but got a ${ast.kind}`,
       );
     }
 
