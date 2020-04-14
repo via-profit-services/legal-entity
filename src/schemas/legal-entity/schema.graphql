@@ -1,0 +1,105 @@
+extend type Query {
+  legalEntities: LegalEntitiesQuery!
+}
+
+extend type Mutation {
+  legalEntities: LegalEntitiesMutation!
+}
+
+"""
+Possible data to sort of legal entities list
+"""
+enum LegalEntityOrderField {
+  createdAt
+  updatedAt
+}
+
+
+"""
+legal entities module queries
+"""
+type LegalEntitiesQuery {
+
+  """
+  Returns legal entities list bundle
+  """
+  list(
+    first: Int
+    offset: Int
+    after: String
+    orderBy: [LegalEntityOrderBy]
+    filter: LegalEntityListFilter
+  ): LegalEntityListConnection!
+
+}
+
+type LegalEntitiesMutation {
+  
+  """
+  Update legal entity
+  """
+  updateLegalEntity(
+    id: ID!
+    data: InputLegalEntityData!
+  ): LegalEntity!
+}
+
+"""
+Possible data to order list of legal entities
+"""
+input LegalEntityOrderBy {
+  field: LegalEntityOrderField!
+  direction: OrderDirection!
+}
+
+"""
+Possible data to filter list of legal entities
+"""
+input LegalEntityListFilter {
+  createdAt: DateTime
+}
+
+"""
+Legal entity adge bundle
+"""
+type LegalEntityEdge implements Edge {
+  node: LegalEntity!
+  cursor: String!
+}
+
+"""
+Legal entities list bundle
+"""
+type LegalEntityListConnection implements Connection {
+  totalCount: Int!
+  pageInfo: PageInfo!
+  edges: [LegalEntityEdge]!
+}
+
+
+"""
+Legal entity data
+"""
+type LegalEntity implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  address: String!
+  ogrn: String!
+  kpp: String
+  inn: String!
+  rs: String!
+  ks: String!
+  bic: String!
+  bank: String!
+  directorNameNominative: String!
+  directorNameGenitive: String!
+}
+
+"""
+Possible data to legal entity update
+"""
+input InputLegalEntityData {
+  name: String
+}
