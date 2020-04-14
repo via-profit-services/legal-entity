@@ -1,4 +1,6 @@
-import { Node, DataLoader, IContext } from '@via-profit-services/core';
+import {
+  Node, DataLoader, IContext, collateForDataloader,
+} from '@via-profit-services/core';
 import LegalEntityService, { ILegalEntity } from './service';
 
 
@@ -10,6 +12,7 @@ const loaders: Loaders = {
   legalEntities: null,
 };
 
+
 export default function createLoaders(context: IContext) {
   if (loaders.legalEntities !== null) {
     return loaders;
@@ -17,9 +20,11 @@ export default function createLoaders(context: IContext) {
 
   const service = new LegalEntityService({ context });
 
-  loaders.legalEntities = new DataLoader<
-    string, Node<ILegalEntity>
-    >((ids: string[]) => service.getLegalEntitiesByIds(ids));
+  // eslint-disable-next-line arrow-body-style
+  loaders.legalEntities = new DataLoader<string, Node<ILegalEntity>>((ids: string[]) => {
+    return service.getLegalEntitiesByIds(ids)
+      .then((nodes) => collateForDataloader(ids, nodes));
+  });
 
   return loaders;
 }

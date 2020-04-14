@@ -6,6 +6,38 @@ extend type Mutation {
   legalEntities: LegalEntitiesMutation!
 }
 
+
+"""
+Legal Entity INN (Taxpayer Identification Number) 
+"""
+scalar LegalEntityINN
+
+"""
+Legal Entity OGRN (Main state registration number)
+"""
+scalar LegalEntityOGRN
+
+"""
+Legal Entity KPP (Code of the reason for registration)
+"""
+scalar LegalEntityKPP
+
+"""
+Legal Entity BIC (Bank Identification Code)
+"""
+scalar LegalEntityBIC
+
+"""
+Legal Entity BIC (Payment account number)
+"""
+scalar LegalEntityRS
+
+"""
+Legal Entity KS (Correspondent account number)
+"""
+scalar LegalEntityKS
+
+
 """
 Possible data to sort of legal entities list
 """
@@ -29,6 +61,7 @@ type LegalEntitiesQuery {
     after: String
     orderBy: [LegalEntityOrderBy]
     filter: LegalEntityListFilter
+    search: LegalEntityFilterSearch
   ): LegalEntityListConnection!
 
 }
@@ -36,12 +69,26 @@ type LegalEntitiesQuery {
 type LegalEntitiesMutation {
   
   """
+  Create legal entity
+  """
+  create(
+    data: InputLegalEntityCreate!
+  ): LegalEntity!
+
+  """
   Update legal entity
   """
-  updateLegalEntity(
+  update(
     id: ID!
-    data: InputLegalEntityData!
+    data: InputLegalEntityUpdate!
   ): LegalEntity!
+
+  """
+  Delete legal entity
+  """
+  delete(
+    id: ID!
+  ): Boolean!
 }
 
 """
@@ -56,7 +103,26 @@ input LegalEntityOrderBy {
 Possible data to filter list of legal entities
 """
 input LegalEntityListFilter {
-  createdAt: DateTime
+  inn: LegalEntityINN
+}
+
+enum LegalEntityFilterSearchField {
+  name
+  address
+  ogrn
+  kpp
+  inn
+  rs
+  ks
+  bic
+  bank
+  directorNameNominative
+  directorNameGenitive
+}
+
+input LegalEntityFilterSearch {
+  field: LegalEntityFilterSearchField!
+  query: String!
 }
 
 """
@@ -86,12 +152,12 @@ type LegalEntity implements Node {
   updatedAt: DateTime!
   name: String!
   address: String!
-  ogrn: String!
-  kpp: String
-  inn: String!
-  rs: String!
-  ks: String!
-  bic: String!
+  ogrn: LegalEntityOGRN!
+  kpp: LegalEntityKPP
+  inn: LegalEntityINN!
+  rs: LegalEntityRS!
+  ks: LegalEntityKS!
+  bic: LegalEntityBIC!
   bank: String!
   directorNameNominative: String!
   directorNameGenitive: String!
@@ -100,6 +166,32 @@ type LegalEntity implements Node {
 """
 Possible data to legal entity update
 """
-input InputLegalEntityData {
+input InputLegalEntityUpdate {
+  id: ID
   name: String
+  address: String
+  ogrn: LegalEntityOGRN
+  kpp: LegalEntityKPP
+  inn: LegalEntityINN
+  rs: LegalEntityRS
+  ks: LegalEntityKS
+  bic: LegalEntityBIC
+  bank: String
+  directorNameNominative: String
+  directorNameGenitive: String
+}
+
+
+input InputLegalEntityCreate {
+  name: String!
+  address: String!
+  ogrn: LegalEntityOGRN!
+  kpp: LegalEntityKPP!
+  inn: LegalEntityINN!
+  rs: LegalEntityRS!
+  ks: LegalEntityKS!
+  bic: LegalEntityBIC!
+  bank: String!
+  directorNameNominative: String!
+  directorNameGenitive: String!
 }

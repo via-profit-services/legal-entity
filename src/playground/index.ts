@@ -21,6 +21,19 @@ app.bootstrap((props) => {
   }
 
   console.log('');
+  const authService = new AuthService({ context });
+  const { accessToken } = authService.generateTokens({
+    uuid: uuidv4(),
+    roles: ['developer'],
+  }, {
+    access: 2.592e6,
+    refresh: 2.592e6,
+  });
+
+  console.log(chalk.green('Your development token is:'));
+  console.log(chalk.yellow(accessToken.token));
+  console.log('');
+
   console.log('');
   console.log(chalk.green('============== Server =============='));
   console.log('');
@@ -34,18 +47,5 @@ app.bootstrap((props) => {
     console.log(`${chalk.magenta('GraphQL voyager')}:    ${chalk.yellow(resolveUrl.voyager)}`);
   }
 
-  console.log('');
-
-  const authService = new AuthService({ context });
-  const { accessToken } = authService.generateTokens({
-    uuid: uuidv4(),
-    roles: ['developer'],
-  }, {
-    access: 2.592e6,
-    refresh: 2.592e6,
-  });
-
-  console.log(chalk.green('Your development token is:'));
-  console.log(chalk.yellow(accessToken.token));
   console.log('');
 });
