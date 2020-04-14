@@ -24,7 +24,11 @@ export async function up(knex: Knex): Promise<any> {
       CONSTRAINT legalEntities_pkey PRIMARY KEY (id)
     );
     
+    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesInnUniqe" UNIQUE (inn);
+    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesOgrnUniqe" UNIQUE (ogrn);
     CREATE INDEX "legalEntitiesDeletedIndex" ON "legalEntities" USING btree (deleted);
+    CREATE INDEX "legalentitiesInnIndex" ON "legalEntities" (inn);
+    CREATE INDEX "legalentitiesOgrnIndex" ON "legalEntities" (ogrn);
   `);
 }
 

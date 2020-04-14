@@ -2,10 +2,12 @@ import { IContext, IListResponse, TOutputFilter } from '@via-profit-services/cor
 declare class LegalEntitiesService {
     props: IProps;
     constructor(props: IProps);
-    getLegalEntities(filter: TOutputFilter): Promise<IListResponse<ILegalEntity>>;
+    getLegalEntities(filter: Partial<TOutputFilter>, withDeleted?: boolean): Promise<IListResponse<ILegalEntity>>;
     getLegalEntitiesByIds(ids: string[]): Promise<ILegalEntity[]>;
-    getDriver(id: string): Promise<ILegalEntity | false>;
-    updateCustomer(id: string, customerData: Partial<ILegalEntityUpdateInfo>): Promise<void>;
+    getLegalEntity(id: string): Promise<ILegalEntity | false>;
+    updateLegalEntity(id: string, legalEntityData: Partial<ILegalEntityUpdateInfo>): Promise<string>;
+    createLegalEntity(legalEntityData: ILegalEntityCreateInfo): Promise<string>;
+    deleteLegalEntity(id: string): Promise<boolean>;
 }
 interface IProps {
     context: IContext;
@@ -25,9 +27,16 @@ export interface ILegalEntity {
     bank: string;
     directorNameNominative: string;
     directorNameGenitive: string;
+    deleted: Boolean;
 }
-export declare type ILegalEntityUpdateInfo = Omit<ILegalEntity, 'id' | 'createdAt' | 'updatedAt'> & {
+export declare type ILegalEntityUpdateInfo = Omit<Partial<ILegalEntityCreateInfo>, 'id' | 'createdAt' | 'updatedAt'> & {
+    id?: string;
     updatedAt: string;
+};
+export declare type ILegalEntityCreateInfo = Omit<ILegalEntity, 'id' | 'createdAt' | 'updatedAt'> & {
+    id?: string;
+    updatedAt: string;
+    createdAt: string;
 };
 export default LegalEntitiesService;
 export { LegalEntitiesService };
