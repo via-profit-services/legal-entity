@@ -8,37 +8,6 @@ extend type Mutation {
 
 
 """
-Legal Entity INN (Taxpayer Identification Number) 
-"""
-scalar LegalEntityINN
-
-"""
-Legal Entity OGRN (Main state registration number)
-"""
-scalar LegalEntityOGRN
-
-"""
-Legal Entity KPP (Code of the reason for registration)
-"""
-scalar LegalEntityKPP
-
-"""
-Legal Entity BIC (Bank Identification Code)
-"""
-scalar LegalEntityBIC
-
-"""
-Legal Entity BIC (Payment account number)
-"""
-scalar LegalEntityRS
-
-"""
-Legal Entity KS (Correspondent account number)
-"""
-scalar LegalEntityKS
-
-
-"""
 Possible data to sort of legal entities list
 """
 enum LegalEntityOrderField {
@@ -72,7 +41,7 @@ type LegalEntitiesMutation {
   Create legal entity
   """
   create(
-    data: InputLegalEntityCreate!
+    input: LegalEntityCreateInput!
   ): LegalEntity!
 
   """
@@ -80,7 +49,7 @@ type LegalEntitiesMutation {
   """
   update(
     id: ID!
-    data: InputLegalEntityUpdate!
+    input: LegalEntityUpdateInput!
   ): LegalEntity!
 
   """
@@ -166,7 +135,7 @@ type LegalEntity implements Node {
 """
 Possible data to legal entity update
 """
-input InputLegalEntityUpdate {
+input LegalEntityUpdateInput {
   id: ID
   name: String
   address: String
@@ -182,7 +151,7 @@ input InputLegalEntityUpdate {
 }
 
 
-input InputLegalEntityCreate {
+input LegalEntityCreateInput {
   name: String!
   address: String!
   ogrn: String!

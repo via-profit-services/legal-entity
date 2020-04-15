@@ -8,19 +8,19 @@ export const legalEntityMutationResolver: IResolverObject<any, IContext> = {
 
   update: async (parent, args: {
     id: string;
-    data: ILegalEntityUpdateInfo
+    input: ILegalEntityUpdateInfo
   }, context) => {
-    const { id, data } = args;
+    const { id, input } = args;
     const loaders = createLoaders(context);
     const legalEntityService = new LegalEntityService({ context });
 
 
     // check INN unique
-    if (data.inn) {
+    if (input.inn) {
       const { nodes } = await legalEntityService.getLegalEntities({
         limit: 1,
         where: [
-          ['inn', TWhereAction.EQ, data.inn],
+          ['inn', TWhereAction.EQ, input.inn],
           ['id', TWhereAction.NEQ, id],
         ],
       });
@@ -30,7 +30,7 @@ export const legalEntityMutationResolver: IResolverObject<any, IContext> = {
 
         if (nodes[0].id !== id) {
           throw new ServerError(
-            `Legal entity record already exists with inn ${data.inn} value`, { id, data },
+            `Legal entity record already exists with inn ${input.inn} value`, { id, input },
           );
         }
       }
@@ -38,11 +38,11 @@ export const legalEntityMutationResolver: IResolverObject<any, IContext> = {
 
 
     // check OGRN unique
-    if (data.ogrn) {
+    if (input.ogrn) {
       const { nodes } = await legalEntityService.getLegalEntities({
         limit: 1,
         where: [
-          ['ogrn', TWhereAction.EQ, data.ogrn],
+          ['ogrn', TWhereAction.EQ, input.ogrn],
           ['id', TWhereAction.NEQ, id],
         ],
       });
@@ -52,7 +52,7 @@ export const legalEntityMutationResolver: IResolverObject<any, IContext> = {
 
         if (nodes[0].id !== id) {
           throw new ServerError(
-            `Legal entity record already exists with ogrn ${data.ogrn} value`, { id, data },
+            `Legal entity record already exists with ogrn ${input.ogrn} value`, { id, input },
           );
         }
       }
@@ -60,58 +60,58 @@ export const legalEntityMutationResolver: IResolverObject<any, IContext> = {
 
 
     try {
-      await legalEntityService.updateLegalEntity(id, data);
+      await legalEntityService.updateLegalEntity(id, input);
     } catch (err) {
-      throw new ServerError('Failed to update legal entity', { err, id, data });
+      throw new ServerError('Failed to update legal entity', { err, id, input });
     }
 
     // clear cache of this legal entity
     loaders.legalEntities.clear(id);
     return { id };
   },
-  create: async (parent, args: { data: ILegalEntityCreateInfo }, context) => {
-    const { data } = args;
+  create: async (parent, args: { input: ILegalEntityCreateInfo }, context) => {
+    const { input } = args;
     const legalEntityService = new LegalEntityService({ context });
 
     // check INN unique
-    if (data.inn) {
+    if (input.inn) {
       const { totalCount } = await legalEntityService.getLegalEntities({
         limit: 1,
         where: [
-          ['inn', TWhereAction.EQ, data.inn],
+          ['inn', TWhereAction.EQ, input.inn],
         ],
       });
 
       if (totalCount) {
         throw new ServerError(
-          `Legal entity record already exists with inn ${data.inn} value`, { data },
+          `Legal entity record already exists with inn ${input.inn} value`, { input },
         );
       }
     }
 
 
     // check OGRN unique
-    if (data.ogrn) {
+    if (input.ogrn) {
       const { totalCount } = await legalEntityService.getLegalEntities({
         limit: 1,
         where: [
-          ['ogrn', TWhereAction.EQ, data.ogrn],
+          ['ogrn', TWhereAction.EQ, input.ogrn],
         ],
       });
 
       if (totalCount) {
         throw new ServerError(
-          `Legal entity record already exists with ogrn ${data.ogrn} value`, { data },
+          `Legal entity record already exists with ogrn ${input.ogrn} value`, { input },
         );
       }
     }
 
     try {
-      const id = await legalEntityService.createLegalEntity(data);
+      const id = await legalEntityService.createLegalEntity(input);
 
       return { id };
     } catch (err) {
-      throw new ServerError('Failed to create legal entity', { err, data });
+      throw new ServerError('Failed to create legal entity', { err, input });
     }
   },
   delete: async (parent, args: { id: string; }, context) => {

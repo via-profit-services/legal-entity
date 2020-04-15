@@ -25,6 +25,7 @@
     "@typescript-eslint/no-unused-vars": "error",
     "no-dupe-class-members": "off",
     "no-console": "off",
+    "arrow-body-style": "off",
     "import/order": ["error", {
       "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
       "newlines-between": "ignore",
