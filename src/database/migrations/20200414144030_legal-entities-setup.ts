@@ -21,7 +21,7 @@ export async function up(knex: Knex): Promise<any> {
       "directorNameNominative" varchar(255) NOT NULL,
       "directorNameGenitive" varchar(255) NOT NULL,
       "deleted" boolean NOT NULL DEFAULT false,
-      CONSTRAINT legalEntities_pkey PRIMARY KEY (id)
+      CONSTRAINT "legalEntities_pkey" PRIMARY KEY (id)
     );
     
     ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesInnUniqe" UNIQUE (inn);
