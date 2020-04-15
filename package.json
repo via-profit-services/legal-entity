@@ -2,7 +2,7 @@
     "name": "@via-profit-services/legal-entity",
     "private": true,
     "support": "https://via-profit.ru",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Via Profit Legal Entity Schema",
     "main": "dist/index.js",
     "scripts": {
@@ -15,7 +15,6 @@
         "start:dist": "yarn dist && node ./dist/playground.js",
         "test": "jest",
         "lint": "eslint --ext .ts ./src/ --fix .",
-        "psin": "yarn via-profit-core",
         "knex:migrate:make": "knex migrate:make --knexfile src/utils/knexfile.ts",
         "knex:migrate:up": "knex migrate:up --knexfile src/utils/knexfile.ts",
         "knex:migrate:list": "knex migrate:list --knexfile src/utils/knexfile.ts",
