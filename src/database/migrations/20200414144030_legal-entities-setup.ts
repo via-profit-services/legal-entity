@@ -1,3 +1,9 @@
+/**
+ * @via-profit-services/legal-entity
+ *
+ * This migration file was created by the @via-profit-services/legal-entity package
+ */
+
 import * as Knex from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
