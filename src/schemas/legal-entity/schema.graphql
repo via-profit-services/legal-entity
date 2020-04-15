@@ -103,7 +103,7 @@ input LegalEntityOrderBy {
 Possible data to filter list of legal entities
 """
 input LegalEntityListFilter {
-  inn: LegalEntityINN
+  inn: String
 }
 
 enum LegalEntityFilterSearchField {
@@ -152,12 +152,12 @@ type LegalEntity implements Node {
   updatedAt: DateTime!
   name: String!
   address: String!
-  ogrn: LegalEntityOGRN!
-  kpp: LegalEntityKPP
-  inn: LegalEntityINN!
-  rs: LegalEntityRS!
-  ks: LegalEntityKS!
-  bic: LegalEntityBIC!
+  ogrn: String!
+  kpp: String
+  inn: String!
+  rs: String!
+  ks: String!
+  bic: String!
   bank: String!
   directorNameNominative: String!
   directorNameGenitive: String!
@@ -170,12 +170,12 @@ input InputLegalEntityUpdate {
   id: ID
   name: String
   address: String
-  ogrn: LegalEntityOGRN
-  kpp: LegalEntityKPP
-  inn: LegalEntityINN
-  rs: LegalEntityRS
-  ks: LegalEntityKS
-  bic: LegalEntityBIC
+  ogrn: String
+  kpp: String
+  inn: String
+  rs: String
+  ks: String
+  bic: String
   bank: String
   directorNameNominative: String
   directorNameGenitive: String
@@ -185,12 +185,12 @@ input InputLegalEntityUpdate {
 input InputLegalEntityCreate {
   name: String!
   address: String!
-  ogrn: LegalEntityOGRN!
-  kpp: LegalEntityKPP!
-  inn: LegalEntityINN!
-  rs: LegalEntityRS!
-  ks: LegalEntityKS!
-  bic: LegalEntityBIC!
+  ogrn: String!
+  kpp: String!
+  inn: String!
+  rs: String!
+  ks: String!
+  bic: String!
   bank: String!
   directorNameNominative: String!
   directorNameGenitive: String!
