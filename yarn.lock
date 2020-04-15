@@ -802,9 +802,9 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#0.10.6":
-  version "0.10.6"
-  resolved "ssh://git@gitlab.com:via-profit-services/core.git#02b24cc7f7c5ae453951f8969dc8c8fe38cf32b6"
+"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#0.11.0":
+  version "0.11.0"
+  resolved "ssh://git@gitlab.com:via-profit-services/core.git#b0b15aab95ad54b26147210590e54d9efefa1653"
   dependencies:
     "@graphql-toolkit/core" "^0.9.1"
     "@graphql-toolkit/schema-merging" "^0.9.1"
@@ -824,7 +824,6 @@
     graphql "^14.5.8"
     graphql-middleware "^4.0.2"
     graphql-playground-middleware-express "^1.7.12"
-    graphql-scalars "^1.0.9"
     graphql-shield "^7.2.2"
     graphql-subscriptions "^1.1.0"
     graphql-tag "^2.10.1"
@@ -845,9 +844,9 @@
     winston-daily-rotate-file "^4.4.2"
     ws "^7.2.3"
 
-"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#0.11.0":
-  version "0.11.0"
-  resolved "ssh://git@gitlab.com:via-profit-services/core.git#b0b15aab95ad54b26147210590e54d9efefa1653"
+"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#0.11.5":
+  version "0.11.5"
+  resolved "ssh://git@gitlab.com:via-profit-services/core.git#0c32044f55296398ddf9fd4ad2b2a7981e6bae89"
   dependencies:
     "@graphql-toolkit/core" "^0.9.1"
     "@graphql-toolkit/schema-merging" "^0.9.1"
@@ -4273,11 +4272,6 @@ graphql-playground-middleware-express@^1.7.12:
   integrity sha512-17szgonnVSxWVrgblLRHHLjWnMUONfkULIwSunaMvYx8k5oG3yL86cyGCbHuDFUFkyr2swLhdfYl4mDfDXuvOA==
   dependencies:
     graphql-playground-html "1.6.12"
-
-graphql-scalars@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/graphql-scalars/-/graphql-scalars-1.0.9.tgz#d354627c97807bd825fbdf49893051a3dbf5cc06"
-  integrity sha512-U2bIiy8hw1fgRHIB4AhCo9Oudlf88QXEjPVCM8W68GwUj9ZuQPmskyOIk9zt5HDc+FLy+qUEWpMZyqDbaU0plA==
 
 graphql-shield@^7.2.2:
   version "7.2.2"
