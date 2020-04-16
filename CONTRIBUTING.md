@@ -73,14 +73,14 @@ psql
 2. Создайте пользователя, базу данных и назначте необходимые права
 
 ```bash
-create user tlktransfer with password 'admin';
-create database tlktransfer_server;
-grant all privileges on database tlktransfer_server to tlktransfer;
+create user services with password 'nonprofitproject';
+create database services;
+grant all privileges on database services to services;
 ```
 
 3. Попробуйте выполнить подключение:
 ```bash
-psql --host=localhost --username=tlktransfer --dbname=tlktransfer_server --password
+psql --host=localhost --username=services --dbname=services --password
 ```
 
 Команда для выхода из оболочки psql - `\q`
@@ -90,7 +90,7 @@ psql --host=localhost --username=tlktransfer --dbname=tlktransfer_server --passw
 Склонируйте репозиторий
 
 ```bash
-git clone git@gitlab.com:via-profit/tlk-transfer-server.git
+git clone git@gitlab.com:via-profit-services/working-hours.git
 ```
 
 **Замечание:** _(Необязательно)_ Чтобы запустить localhost на SSL используйте [mkcert](https://github.com/FiloSottile/mkcert) 
@@ -122,9 +122,9 @@ GQL_ENDPOINT=/graphql
 GQL_SUBSCRIPTIONSENDPOINT=/subscriptions
 
 DB_HOST=localhost
-DB_USER=tlktransfer
-DB_NAME=tlktransfer_server
-DB_PASSWORD=admin
+DB_USER=services
+DB_NAME=services
+DB_PASSWORD=nonprofitproject
 DB_TIMEZONE=UTC
 DB_MIGRATIONS_DIRECTORY=./src/database/migrations
 DB_MIGRATIONS_TABLENAME=knex_migrations
