@@ -6,7 +6,6 @@
     "description": "Via Profit Legal Entity Schema",
     "main": "dist/index.js",
     "scripts": {
-        "postinstall": "yarn via-profit-core get-migrations -m",
         "dist": "yarn lint && yarn test && yarn build:dist",
         "start": "yarn start:dev",
         "build:dev": "cross-env NODE_ENV=development webpack --config ./webpack/webpack.config.dev.js",
