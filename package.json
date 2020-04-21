@@ -37,7 +37,7 @@
     "author": "Via Profit <promo@via-profit.ru>",
     "license": "MIT",
     "dependencies": {
-        "@via-profit-services/core": "ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.11.5",
+        "@via-profit-services/core": "ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.12.0",
         "chalk": "^3.0.0",
         "dotenv": "^8.2.0",
         "graphql": "^14.6.0",

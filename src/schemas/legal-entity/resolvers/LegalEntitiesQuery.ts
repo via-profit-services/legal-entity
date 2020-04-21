@@ -20,7 +20,7 @@ export const queryResolver: IResolverObject<any, IContext> = {
 
     try {
       const legalEntitiesConnection = await legalEntitiesService.getLegalEntities(filter);
-      const connection = buildCursorConnection(legalEntitiesConnection);
+      const connection = buildCursorConnection(legalEntitiesConnection, 'legalEntities');
 
       // fill the cache
       legalEntitiesConnection.nodes.forEach((node) => {
