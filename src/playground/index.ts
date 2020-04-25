@@ -38,7 +38,6 @@ app.bootstrap((props) => {
   console.log(chalk.green('============== Server =============='));
   console.log('');
   console.log(`${chalk.green('GraphQL server')}:     ${chalk.yellow(resolveUrl.graphql)}`);
-  console.log(`${chalk.cyan('Auth server')}:        ${chalk.yellow(resolveUrl.auth)}`);
 
   if (resolveUrl.playground) {
     console.log(`${chalk.magenta('GraphQL playground')}: ${chalk.yellow(resolveUrl.playground)}`);
