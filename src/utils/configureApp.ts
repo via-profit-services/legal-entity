@@ -57,6 +57,11 @@ const serverConfig: IInitProps = {
   useVoyager: Boolean(process.env.GQL_USE_VOYAGER),
   timezone: process.env.TIMEZONE,
   database: databaseConfig,
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
+  },
   jwt: jwtConfig,
   logger,
   serverOptions: {

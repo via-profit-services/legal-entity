@@ -37,25 +37,37 @@ class LegalEntitiesService {
     }
 
     return knex
-      .select<any, Array<ILegalEntity & { totalCount: number }>>(['joined.totalCount', 'legalEntities.*'])
-      .join(
-        knex('legalEntities')
-          .select(['id', knex.raw('count(*) over() as "totalCount"')])
-          .limit(limit || 1)
-          .offset(offset || 0)
-          .where((builder) => convertWhereToKnex(builder, where))
-          .orderBy(convertOrderByToKnex(orderBy))
-          .as('joined'),
-        'joined.id',
-        'legalEntities.id',
-      )
-      .orderBy(convertOrderByToKnex(orderBy))
+      .select([
+        '*',
+        knex.raw('count(*) over() as "totalCount"'),
+      ])
       .from('legalEntities')
+      .limit(limit || 1)
+      .offset(offset || 0)
+      .where((builder) => convertWhereToKnex(builder, where))
+      .orderBy(convertOrderByToKnex(orderBy))
+      // .select<any, Array<ILegalEntity & {
+    //  totalCount: number }>>(['joined.totalCount', 'legalEntities.*'])
+      // .join(
+      //   knex('legalEntities')
+      //     .select(['id', knex.raw('count(*) over() as "totalCount"')])
+      //     .limit(limit || 1)
+      //     .offset(offset || 0)
+      //     .where((builder) => convertWhereToKnex(builder, where))
+      //     .orderBy(convertOrderByToKnex(orderBy))
+      //     .as('joined'),
+      //   'joined.id',
+      //   'legalEntities.id',
+      // )
+      // .orderBy(convertOrderByToKnex(orderBy))
+      // .from('legalEntities')
       .then((nodes) => ({
         totalCount: nodes.length ? Number(nodes[0].totalCount) : 0,
         limit,
         offset,
         nodes,
+        where,
+        orderBy,
       }));
   }
 

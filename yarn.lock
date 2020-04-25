@@ -802,9 +802,9 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#0.11.0":
-  version "0.11.0"
-  resolved "ssh://git@gitlab.com:via-profit-services/core.git#b0b15aab95ad54b26147210590e54d9efefa1653"
+"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.12.2":
+  version "0.12.2"
+  resolved "ssh://git@gitlab.com:via-profit-services/core.git#70d3c9c9bff3bb796f217a7076768af9211efb79"
   dependencies:
     "@graphql-toolkit/core" "^0.9.1"
     "@graphql-toolkit/schema-merging" "^0.9.1"
@@ -844,9 +844,9 @@
     winston-daily-rotate-file "^4.4.2"
     ws "^7.2.3"
 
-"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#0.11.5":
-  version "0.11.5"
-  resolved "ssh://git@gitlab.com:via-profit-services/core.git#0c32044f55296398ddf9fd4ad2b2a7981e6bae89"
+"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.13.0":
+  version "0.13.0"
+  resolved "ssh://git@gitlab.com:via-profit-services/core.git#40b5a4d56cf722c1c2ff4e3f658a1554630e0837"
   dependencies:
     "@graphql-toolkit/core" "^0.9.1"
     "@graphql-toolkit/schema-merging" "^0.9.1"
@@ -866,11 +866,13 @@
     graphql "^14.5.8"
     graphql-middleware "^4.0.2"
     graphql-playground-middleware-express "^1.7.12"
+    graphql-redis-subscriptions "^2.2.1"
     graphql-shield "^7.2.2"
     graphql-subscriptions "^1.1.0"
     graphql-tag "^2.10.1"
     graphql-tools "^4.0.6"
     graphql-voyager "^1.0.0-rc.28"
+    ioredis "^4.16.3"
     jsonwebtoken "^8.5.1"
     knex "^0.20.10"
     moment "^2.24.0"
@@ -2128,6 +2130,11 @@ cliui@^5.0.0:
     strip-ansi "^5.2.0"
     wrap-ansi "^5.1.0"
 
+cluster-key-slot@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/cluster-key-slot/-/cluster-key-slot-1.1.0.tgz#30474b2a981fb12172695833052bc0d01336d10d"
+  integrity sha512-2Nii8p3RwAPiFwsnZvukotvow2rIHM+yQ6ZcBXGHdniadkYGZYiGmkHJIbZPIV9nfv7m/U1IPMVVcAhoWFeklw==
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -2775,6 +2782,11 @@ delegate@^3.1.2:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/delegate/-/delegate-3.2.0.tgz#b66b71c3158522e8ab5744f720d8ca0c2af59166"
   integrity sha512-IofjkYBZaZivn0V8nnsMJGBr4jVLxHDheKSW88PyxS5QC4Vo9ZbZVvhzlSxY87fVq3STR6r+4cGepyHkcWOQSw==
+
+denque@^1.1.0:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/denque/-/denque-1.4.1.tgz#6744ff7641c148c3f8a69c307e51235c1f4a37cf"
+  integrity sha512-OfzPuSZKGcgr96rf1oODnfjqBFmr1DVoc/TrItj3Ohe0Ah1C5WX5Baquw/9U9KovnQ88EqmJbD66rKYUQYN1tQ==
 
 depd@~1.1.2:
   version "1.1.2"
@@ -4273,6 +4285,15 @@ graphql-playground-middleware-express@^1.7.12:
   dependencies:
     graphql-playground-html "1.6.12"
 
+graphql-redis-subscriptions@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-2.2.1.tgz#377be5670ff344aa78cf147a9852e686a65e4b21"
+  integrity sha512-Rk0hapKUZuZpJIv3rG5rmd1SX3f+9k1k5AXoh8bxbM3Vkdzh28WM7kvJOqq1pJuO3gQ4OAoqzciNT0MMHRylXQ==
+  dependencies:
+    iterall "^1.3.0"
+  optionalDependencies:
+    ioredis "^4.6.3"
+
 graphql-shield@^7.2.2:
   version "7.2.2"
   resolved "https://registry.yarnpkg.com/graphql-shield/-/graphql-shield-7.2.2.tgz#daf9a91c6b8487b5f00dea12c8ab3bb85947471a"
@@ -4746,6 +4767,21 @@ invert-kv@^2.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
+ioredis@^4.16.3, ioredis@^4.6.3:
+  version "4.16.3"
+  resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-4.16.3.tgz#6a6b85830206fd98353b7ff8536521f17943be53"
+  integrity sha512-Ejvcs2yW19Vq8AipvbtfcX3Ig8XG9EAyFOvGbhI/Q1QoVOK9ZdgY092kdOyOWIYBnPHjfjMJhU9qhsnp0i0K1w==
+  dependencies:
+    cluster-key-slot "^1.1.0"
+    debug "^4.1.1"
+    denque "^1.1.0"
+    lodash.defaults "^4.2.0"
+    lodash.flatten "^4.4.0"
+    redis-commands "1.5.0"
+    redis-errors "^1.2.0"
+    redis-parser "^3.0.0"
+    standard-as-callback "^2.0.1"
+
 ip-regex@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-2.1.0.tgz#fa78bf5d2e6913c911ce9f819ee5146bb6d844e9"
@@ -5198,7 +5234,7 @@ istanbul-reports@^2.2.6:
   dependencies:
     html-escaper "^2.0.0"
 
-iterall@^1.1.3, iterall@^1.2.1, iterall@^1.2.2:
+iterall@^1.1.3, iterall@^1.2.1, iterall@^1.2.2, iterall@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.3.0.tgz#afcb08492e2915cbd8a0884eb93a8c94d0d72fea"
   integrity sha512-QZ9qOMdF+QLHxy1QIpUHUU1D5pS2CG2P69LF6L6CPjPYA/XMOmKV3PZpawHoAjHNyB0swdVTRxdYT4tbBbxqwg==
@@ -7780,6 +7816,23 @@ rechoir@^0.6.2:
     react-lifecycles-compat "^3.0.2"
     symbol-observable "^1.0.4"
 
+redis-commands@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/redis-commands/-/redis-commands-1.5.0.tgz#80d2e20698fe688f227127ff9e5164a7dd17e785"
+  integrity sha512-6KxamqpZ468MeQC3bkWmCB1fp56XL64D4Kf0zJSwDZbVLLm7KFkoIcHrgRvQ+sk8dnhySs7+yBg94yIkAK7aJg==
+
+redis-errors@^1.0.0, redis-errors@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/redis-errors/-/redis-errors-1.2.0.tgz#eb62d2adb15e4eaf4610c04afe1529384250abad"
+  integrity sha1-62LSrbFeTq9GEMBK/hUpOEJQq60=
+
+redis-parser@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/redis-parser/-/redis-parser-3.0.0.tgz#b66d828cdcafe6b4b8a428a7def4c6bcac31c8b4"
+  integrity sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ=
+  dependencies:
+    redis-errors "^1.0.0"
+
 regenerator-runtime@^0.11.0:
   version "0.11.1"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
@@ -8532,6 +8585,11 @@ stack-utils@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/stack-utils/-/stack-utils-1.0.2.tgz#33eba3897788558bebfc2db059dc158ec36cebb8"
   integrity sha512-MTX+MeG5U994cazkjd/9KNAapsHnibjMLnfXodlkXw76JEea0UiNzrqidzo1emMwk7w5Qhc9jd4Bn9TBb1MFwA==
+
+standard-as-callback@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/standard-as-callback/-/standard-as-callback-2.0.1.tgz#ed8bb25648e15831759b6023bdb87e6b60b38126"
+  integrity sha512-NQOxSeB8gOI5WjSaxjBgog2QFw55FV8TkS6Y07BiB3VJ8xNTvUYm0wl0s8ObgQ5NhdpnNfigMIKjgPESzgr4tg==
 
 static-extend@^0.1.1:
   version "0.1.2"
