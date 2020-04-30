@@ -13,7 +13,7 @@ const loaders: Loaders = {
 };
 
 
-export default function createLoaders(context: IContext) {
+export default function createLoaders(context: Pick<IContext, 'knex' | 'timezone'>) {
   if (loaders.legalEntities !== null) {
     return loaders;
   }

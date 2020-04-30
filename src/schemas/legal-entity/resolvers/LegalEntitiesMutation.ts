@@ -4,7 +4,7 @@ import { IResolverObject } from 'graphql-tools';
 import createLoaders from '../loaders';
 import LegalEntityService, { ILegalEntityUpdateInfo, ILegalEntityCreateInfo } from '../service';
 
-export const legalEntityMutationResolver: IResolverObject<any, IContext> = {
+export const legalEntityMutationResolver: IResolverObject<any, Pick<IContext, 'knex' | 'timezone'>> = {
 
   update: async (parent, args: {
     id: string;

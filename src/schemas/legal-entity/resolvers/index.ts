@@ -5,7 +5,7 @@ import LegalEntitiesMutationResolver from './LegalEntitiesMutation';
 import LegalEntitiesQueryResolver from './LegalEntitiesQuery';
 import LegalEntityResolver from './LegalEntity';
 
-const resolvers: IResolvers<any, IContext> = {
+const resolvers: IResolvers<any, Pick<IContext, 'knex' | 'timezone'>> = {
   Query: {
     legalEntities: () => ({}),
   },

@@ -3,5 +3,5 @@ import { ILegalEntity } from './service';
 interface Loaders {
     legalEntities: DataLoader<string, Node<ILegalEntity>>;
 }
-export default function createLoaders(context: IContext): Loaders;
+export default function createLoaders(context: Pick<IContext, 'knex' | 'timezone'>): Loaders;
 export {};

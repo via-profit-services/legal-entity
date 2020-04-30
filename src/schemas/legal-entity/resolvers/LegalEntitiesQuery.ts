@@ -11,7 +11,7 @@ import createLoaders from '../loaders';
 import LegalEntityService from '../service';
 
 
-export const queryResolver: IResolverObject<any, IContext> = {
+export const queryResolver: IResolverObject<any, Pick<IContext, 'knex' | 'timezone'>> = {
 
   list: async (parent, args: TInputFilter, context) => {
     const filter = buildQueryFilter(args);

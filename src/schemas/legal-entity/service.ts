@@ -123,7 +123,7 @@ class LegalEntitiesService {
 }
 
 interface IProps {
-  context: IContext;
+  context: Pick<IContext, 'knex' | 'timezone'>;
 }
 
 export interface ILegalEntity {

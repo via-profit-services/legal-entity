@@ -10,7 +10,7 @@ declare class LegalEntitiesService {
     deleteLegalEntity(id: string): Promise<boolean>;
 }
 interface IProps {
-    context: IContext;
+    context: Pick<IContext, 'knex' | 'timezone'>;
 }
 export interface ILegalEntity {
     id: string;
