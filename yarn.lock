@@ -99,9 +99,9 @@
     "@babel/helper-plugin-utils" "^7.8.0"
 
 "@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0":
-  version "7.9.2"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.9.2.tgz#d90df0583a3a252f09aaa619665367bae518db06"
-  integrity sha512-NE2DtOdufG7R5vnfQUTehdTfNycfUANEtCa9PssN9O/xmTzP4E08UI797ixaei6hBEVL9BI/PsdJS5x7mWoB9Q==
+  version "7.9.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.9.6.tgz#a9102eb5cadedf3f31d08a9ecf294af7827ea29f"
+  integrity sha512-64AF1xY3OAkFHqOb9s4jpgk1Mm5vDZ4L3acHvAml+53nO1XbXLuDodsVpO4OIUsmemlUHMxNdYMNJmsvOwLrvQ==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -800,9 +800,9 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.14.0":
-  version "0.14.0"
-  resolved "ssh://git@gitlab.com:via-profit-services/core.git#83d5c0076b2953a9cf1ac0afca6670118de16075"
+"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.15.0":
+  version "0.15.0"
+  resolved "ssh://git@gitlab.com:via-profit-services/core.git#3ab5dd6f05a6faa5730a1011f019ccaeb057c18b"
   dependencies:
     "@graphql-toolkit/core" "^0.9.1"
     "@graphql-toolkit/schema-merging" "^0.9.1"
@@ -5863,7 +5863,7 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-knex@*, knex@^0.20.11:
+knex@*:
   version "0.20.11"
   resolved "https://registry.yarnpkg.com/knex/-/knex-0.20.11.tgz#c25167cdd562b08252a53b833b91cb6436e76a35"
   integrity sha512-8H3dUVSQOxDRVxRd9YcfL3Xli5BdblYy8Yg4hGSaII2XHEqfGhWrcMxuL2hogBuQ5CL85Bzp+dUEeRCHb94fCw==
