@@ -1,5 +1,4 @@
 import {
-  IContext,
   IListResponse,
   TOutputFilter,
   convertOrderByToKnex,
@@ -8,6 +7,8 @@ import {
 } from '@via-profit-services/core';
 import moment from 'moment-timezone';
 import { v4 as uuidv4 } from 'uuid';
+
+import { Context } from '../../context';
 
 class LegalEntitiesService {
   public props: IProps;
@@ -123,7 +124,7 @@ class LegalEntitiesService {
 }
 
 interface IProps {
-  context: Pick<IContext, 'knex' | 'timezone'>;
+  context: Context;
 }
 
 export interface ILegalEntity {

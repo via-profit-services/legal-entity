@@ -1,11 +1,11 @@
-import { IContext } from '@via-profit-services/core';
 import { IResolvers } from 'graphql-tools';
+import { Context } from '../../../context';
 
 import LegalEntitiesMutationResolver from './LegalEntitiesMutation';
 import LegalEntitiesQueryResolver from './LegalEntitiesQuery';
 import LegalEntityResolver from './LegalEntity';
 
-const resolvers: IResolvers<any, Pick<IContext, 'knex' | 'timezone'>> = {
+const resolvers: IResolvers<any, Context> = {
   Query: {
     legalEntities: () => ({}),
   },

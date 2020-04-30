@@ -1,11 +1,9 @@
-import { IContext } from '@via-profit-services/core';
 import { IResolverObject } from 'graphql-tools';
 
+import { Context } from '../../../context';
 import createLoaders from '../loaders';
-import { ILegalEntity } from '../service';
 
-
-export const legalEntityResolver: IResolverObject<Pick<ILegalEntity, 'id'>, IContext> = {
+export const legalEntityResolver: IResolverObject<any, Context> = {
 
   createdAt: async ({ id }, args, context) => {
     const loaders = createLoaders(context);
