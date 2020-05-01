@@ -2,7 +2,7 @@
     "name": "@via-profit-services/legal-entity",
     "private": true,
     "support": "https://via-profit.ru",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "description": "Via Profit Legal Entity Schema",
     "main": "dist/index.js",
     "scripts": {
@@ -46,8 +46,6 @@
         "uuid": "^7.0.2"
     },
     "devDependencies": {
-        "dotenv": "^8.2.0",
-        "chalk": "^3.0.0",
         "@jagi/jest-transform-graphql": "^1.0.2",
         "@types/express-serve-static-core": "^4.17.2",
         "@types/faker": "^4.1.10",
@@ -63,9 +61,11 @@
         "@typescript-eslint/eslint-plugin": "^2.19.2",
         "@typescript-eslint/parser": "^2.19.2",
         "@zerollup/ts-transform-paths": "^1.7.11",
+        "chalk": "^3.0.0",
         "clean-webpack-plugin": "^3.0.0",
         "copy-webpack-plugin": "^5.1.1",
         "cross-env": "^6.0.3",
+        "dotenv": "^8.2.0",
         "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "^14.0.0",
         "eslint-config-prettier": "^6.10.0",
