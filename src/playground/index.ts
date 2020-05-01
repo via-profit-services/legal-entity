@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { App, schemas } from '@via-profit-services/core';
 import chalk from 'chalk';
 import { v4 as uuidv4 } from 'uuid';

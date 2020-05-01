@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import fs from 'fs';
 import path from 'path';
 import { IInitProps, configureLogger } from '@via-profit-services/core';
@@ -70,7 +71,6 @@ const serverConfig: IInitProps = {
     cert: process.env.SSL_CERT
       ? fs.readFileSync(path.resolve(rootPath, process.env.SSL_CERT))
       : undefined,
-    cookieSign: process.env.COOKIES_SIGN_SECRET,
   },
 };
 
