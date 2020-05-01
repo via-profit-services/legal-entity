@@ -1,5 +1,4 @@
 import {
-  IContext,
   ServerError,
   buildCursorConnection,
   buildQueryFilter,
@@ -7,11 +6,11 @@ import {
 } from '@via-profit-services/core';
 import { IResolverObject } from 'graphql-tools';
 
+import { Context } from '../../../context';
 import createLoaders from '../loaders';
 import LegalEntityService from '../service';
 
-
-export const queryResolver: IResolverObject<any, IContext> = {
+export const queryResolver: IResolverObject<any, Context> = {
 
   list: async (parent, args: TInputFilter, context) => {
     const filter = buildQueryFilter(args);

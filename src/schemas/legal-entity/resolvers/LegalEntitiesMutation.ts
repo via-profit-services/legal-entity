@@ -1,10 +1,11 @@
-import { IContext, ServerError, TWhereAction } from '@via-profit-services/core';
+import { ServerError, TWhereAction } from '@via-profit-services/core';
 import { IResolverObject } from 'graphql-tools';
 
+import { Context } from '../../../context';
 import createLoaders from '../loaders';
 import LegalEntityService, { ILegalEntityUpdateInfo, ILegalEntityCreateInfo } from '../service';
 
-export const legalEntityMutationResolver: IResolverObject<any, IContext> = {
+export const legalEntityMutationResolver: IResolverObject<any, Context> = {
 
   update: async (parent, args: {
     id: string;

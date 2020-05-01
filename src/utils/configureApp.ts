@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import fs from 'fs';
 import path from 'path';
 import { IInitProps, configureLogger } from '@via-profit-services/core';
@@ -44,7 +45,6 @@ const jwtConfig: IInitProps['jwt'] = {
   privateKey: path.resolve(rootPath, process.env.JWT_PRIVATEKEY),
   publicKey: path.resolve(rootPath, process.env.JWT_PUBLICKEY),
   refreshTokenExpiresIn: Number(process.env.JWT_REFRESHTOKENEXPIRESIN),
-  blackList: path.resolve(rootPath, process.env.JWT_BLACKLIST),
 };
 
 const serverConfig: IInitProps = {
@@ -71,7 +71,6 @@ const serverConfig: IInitProps = {
     cert: process.env.SSL_CERT
       ? fs.readFileSync(path.resolve(rootPath, process.env.SSL_CERT))
       : undefined,
-    cookieSign: process.env.COOKIES_SIGN_SECRET,
   },
 };
 

@@ -1,4 +1,4 @@
-import { IContext } from '@via-profit-services/core';
 import { IResolvers } from 'graphql-tools';
-declare const resolvers: IResolvers<any, IContext>;
+import { Context } from '../../../context';
+declare const resolvers: IResolvers<any, Context>;
 export default resolvers;

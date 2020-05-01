@@ -1,6 +1,7 @@
 import {
-  Node, DataLoader, IContext, collateForDataloader,
+  Node, DataLoader, collateForDataloader,
 } from '@via-profit-services/core';
+import { Context } from '../../context';
 import LegalEntityService, { ILegalEntity } from './service';
 
 
@@ -13,7 +14,7 @@ const loaders: Loaders = {
 };
 
 
-export default function createLoaders(context: IContext) {
+export default function createLoaders(context: Context) {
   if (loaders.legalEntities !== null) {
     return loaders;
   }

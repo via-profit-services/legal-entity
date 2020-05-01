@@ -1,4 +1,4 @@
-import { IContext } from '@via-profit-services/core';
 import { IResolverObject } from 'graphql-tools';
-export declare const queryResolver: IResolverObject<any, IContext>;
+import { Context } from '../../../context';
+export declare const queryResolver: IResolverObject<any, Context>;
 export default queryResolver;

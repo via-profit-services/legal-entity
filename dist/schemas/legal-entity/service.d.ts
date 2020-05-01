@@ -1,4 +1,5 @@
-import { IContext, IListResponse, TOutputFilter } from '@via-profit-services/core';
+import { IListResponse, TOutputFilter } from '@via-profit-services/core';
+import { Context } from '../../context';
 declare class LegalEntitiesService {
     props: IProps;
     constructor(props: IProps);
@@ -10,7 +11,7 @@ declare class LegalEntitiesService {
     deleteLegalEntity(id: string): Promise<boolean>;
 }
 interface IProps {
-    context: IContext;
+    context: Context;
 }
 export interface ILegalEntity {
     id: string;

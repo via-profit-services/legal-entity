@@ -25,7 +25,8 @@ module.exports = merge(baseConfig, {
  Via Profit services / legal-entity
 
  Repository https://gitlab.com/via-profit-services/legal-entity
- Contact https://via-profit.ru
+ Contact    promo@via-profit.ru
+ Website    https://via-profit.ru
       `,
     }),
     new FileManagerPlugin({
@@ -43,7 +44,10 @@ module.exports = merge(baseConfig, {
             destination: './dist/database/seeds/',
           },
         ],
-        delete: ['./dist/playground'],
+        delete: [
+          './dist/playground',
+          './dist/database/migrations/!(+([0-9])_legal-entities-*@(.ts|.d.ts))',
+        ],
       },
     }),
   ],

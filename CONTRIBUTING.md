@@ -73,14 +73,14 @@ psql
 2. Создайте пользователя, базу данных и назначте необходимые права
 
 ```bash
-create user services with password 'nonprofitproject';
-create database services;
-grant all privileges on database services to services;
+create user services with password 'admin';
+create database services_legal_entity;
+grant all privileges on database services_legal_entity to services;
 ```
 
 3. Попробуйте выполнить подключение:
 ```bash
-psql --host=localhost --username=services --dbname=services --password
+psql --host=localhost --username=services --dbname=services_legal_entity --password
 ```
 
 Команда для выхода из оболочки psql - `\q`
@@ -90,7 +90,7 @@ psql --host=localhost --username=services --dbname=services --password
 Склонируйте репозиторий
 
 ```bash
-git clone git@gitlab.com:via-profit-services/working-hours.git
+git clone git@gitlab.com:via-profit-services/legal-entity.git
 ```
 
 **Замечание:** _(Необязательно)_ Чтобы запустить localhost на SSL используйте [mkcert](https://github.com/FiloSottile/mkcert) 
@@ -123,8 +123,8 @@ GQL_SUBSCRIPTIONSENDPOINT=/subscriptions
 
 DB_HOST=localhost
 DB_USER=services
-DB_NAME=services
-DB_PASSWORD=nonprofitproject
+DB_NAME=services_legal_entity
+DB_PASSWORD=admin
 DB_TIMEZONE=UTC
 DB_MIGRATIONS_DIRECTORY=./src/database/migrations
 DB_MIGRATIONS_TABLENAME=knex_migrations
@@ -132,13 +132,16 @@ DB_MIGRATIONS_EXTENSION=ts
 DB_SEEDS_DIRECTORY=./src/database/seeds
 DB_SEEDS_EXTENSION=ts
 
+REDIS_HOST=localhost
+REDIS_HOST=6379
+REDIS_PASSWORD=
+
 JWT_ALGORITHM=RS256
 JWT_ACCESSTOKENEXPIRESIN=1800
 JWT_REFRESHTOKENEXPIRESIN=2.592e6
 JWT_ISSUER=viaprofit-services
 JWT_PRIVATEKEY=./keys/jwtRS256.key
 JWT_PUBLICKEY=./keys/jwtRS256.key.pub
-JWT_BLACKLIST=./misc/blacklist.json
 
 TIMEZONE=UTC
 ```

@@ -1,5 +1,4 @@
-import { IContext } from '@via-profit-services/core';
 import { IResolverObject } from 'graphql-tools';
-import { ILegalEntity } from '../service';
-export declare const legalEntityResolver: IResolverObject<Pick<ILegalEntity, 'id'>, IContext>;
+import { Context } from '../../../context';
+export declare const legalEntityResolver: IResolverObject<any, Context>;
 export default legalEntityResolver;
