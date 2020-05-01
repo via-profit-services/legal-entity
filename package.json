@@ -25,7 +25,7 @@
         "knex:seed:run": "knex seed:run --knexfile src/utils/knexfile.ts",
         "preversion": "yarn dist && git add --all && git commit -m \"Build\"",
         "postversion:readme": "yarn replace '/legal-entity\\.git#semver:\\^\\d+\\.\\d+\\.\\d+' \"/legal-entity.git#semver:^$npm_package_version\" ./README.md",
-        "postversion": "yarn postversion:readme && git push --tags",
+        "postversion": "yarn postversion:readme && git add --all && git commit -m \" Bump README.md\" push --tags",
         "release:patch": "yarn version --patch",
         "release:minor": "yarn version --minor",
         "release:major": "yarn version --major",
