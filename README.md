@@ -16,7 +16,7 @@
 Для установки определенной версии, например, `0.0.2` (см. [список версий](https://gitlab.com/via-profit-services/legal-entity/-/tags)), укажите необходимый тег после символа `#` или выражение `#semver:^x.x.x`:
 
 ```bash
-yarn add ssh://git@gitlab.com:via-profit-services/legal-entity.git#semver:^0.0.2
+yarn add ssh://git@gitlab.com:via-profit-services/legal-entity.git#semver:^0.0.14
 ```
 
 ### Миграции
