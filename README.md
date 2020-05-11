@@ -14,7 +14,7 @@
 ### Установка
 
 ```bash
-yarn add ssh://git@gitlab.com:via-profit-services/legal-entity.git#semver:^0.0.15
+yarn add ssh://git@gitlab.com:via-profit-services/legal-entity.git#semver:^0.0.16
 ```
 
 Список версий [см. здесь](https://gitlab.com/via-profit-services/legal-entity/-/tags)
