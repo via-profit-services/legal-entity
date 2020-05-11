@@ -33,15 +33,6 @@ class LegalEntitiesService {
 
     where.push(['deleted', TWhereAction.EQ, withDeleted ? 'true' : 'false']);
 
-    if (search) {
-      // affect each seach request and split query string by space
-      search.forEach(({ field, query }) => {
-        query.split(' ').forEach((subquery) => {
-          where.push([field, TWhereAction.ILIKE, `%${subquery}%`]);
-        });
-      });
-    }
-
     const connection = await knex
       .select([
         '*',
@@ -51,6 +42,17 @@ class LegalEntitiesService {
       .limit(limit || 1)
       .offset(offset || 0)
       .where((builder) => convertWhereToKnex(builder, where))
+      .where((builder) => {
+        if (search) {
+          search.forEach(({ field, query }) => {
+            query.split(' ').forEach((subquery) => {
+              builder.orWhere(field, TWhereAction.ILIKE, `%${subquery}%`);
+            });
+          });
+        }
+
+        return builder;
+      })
       .orderBy(convertOrderByToKnex(orderBy))
 
       .then((nodes) => ({
