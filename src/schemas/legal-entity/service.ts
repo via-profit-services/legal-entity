@@ -34,7 +34,12 @@ class LegalEntitiesService {
     where.push(['deleted', TWhereAction.EQ, withDeleted ? 'true' : 'false']);
 
     if (search) {
-      where.push([search.field, TWhereAction.ILIKE, `%${search.query}%`]);
+      // affect each seach request and split query string by space
+      search.forEach(({ field, query }) => {
+        query.split(' ').forEach((subquery) => {
+          where.push([field, TWhereAction.ILIKE, `%${subquery}%`]);
+        });
+      });
     }
 
     const connection = await knex
