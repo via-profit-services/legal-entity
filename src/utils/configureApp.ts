@@ -74,7 +74,6 @@ const serverConfig: IInitProps = {
   },
 };
 
-console.log(process.env.SSL_KEY);
 const configureApp = (props?: IProps): IInitProps => {
   const { typeDefs, resolvers, permissions } = props || {};
   return {

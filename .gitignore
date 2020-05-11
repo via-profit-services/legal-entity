@@ -13,3 +13,6 @@
 
 # jwt keys
 /keys
+
+# Redis sump
+/dump.rdb

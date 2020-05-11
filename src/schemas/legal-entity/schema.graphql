@@ -90,7 +90,7 @@ enum LegalEntityFilterSearchField {
 }
 
 input LegalEntityFilterSearch {
-  field: LegalEntityFilterSearchField!
+  fields: [LegalEntityFilterSearchField!]!
   query: String!
 }
 
