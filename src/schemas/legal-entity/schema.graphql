@@ -72,7 +72,13 @@ input LegalEntityOrderBy {
 Possible data to filter list of legal entities
 """
 input LegalEntityListFilter {
-  inn: String
+  id: [ID!]
+  ogrn: [String!]
+  kpp: [String!]
+  inn: [String!]
+  rs: [String!]
+  ks: [String!]
+  bic: [String!]
 }
 
 enum LegalEntityFilterSearchField {
