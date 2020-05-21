@@ -14,7 +14,7 @@
 ### Установка
 
 ```bash
-yarn add ssh://git@gitlab.com:via-profit-services/legal-entity.git#semver:^0.1.0
+yarn add ssh://git@gitlab.com:via-profit-services/legal-entity.git#semver:^0.2.0
 ```
 
 Список версий [см. здесь](https://gitlab.com/via-profit-services/legal-entity/-/tags)
@@ -36,7 +36,6 @@ yarn knex:migrate:latest
  - typeDefs - Типы
  - resolvers - Резолверы
  - service - Класс, реализующий модель данного модуля
- - permissions - Разрешения для [GraphQL-chield](https://github.com/maticzav/graphql-shield)
 
 Для интеграции модуля, просто, задействуйте в своем приложении экспортируемые типы и резолверы
 
