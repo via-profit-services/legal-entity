@@ -36,7 +36,6 @@ yarn knex:migrate:latest
  - typeDefs - Типы
  - resolvers - Резолверы
  - service - Класс, реализующий модель данного модуля
- - permissions - Разрешения для [GraphQL-chield](https://github.com/maticzav/graphql-shield)
 
 Для интеграции модуля, просто, задействуйте в своем приложении экспортируемые типы и резолверы
 

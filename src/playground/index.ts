@@ -3,12 +3,11 @@ import { App, schemas } from '@via-profit-services/core';
 import chalk from 'chalk';
 import { v4 as uuidv4 } from 'uuid';
 
-import { typeDefs, permissions, resolvers } from '../schemas/legal-entity';
+import { typeDefs, resolvers } from '../schemas/legal-entity';
 import { configureApp } from '../utils/configureApp';
 
 const config = configureApp({
   typeDefs: [typeDefs],
-  permissions: [permissions],
   resolvers: [resolvers],
 });
 const app = new App(config);
