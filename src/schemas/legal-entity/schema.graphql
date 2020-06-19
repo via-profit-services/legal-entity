@@ -33,6 +33,7 @@ type LegalEntitiesQuery {
     search: LegalEntityFilterSearch
   ): LegalEntityListConnection!
 
+  get(id: ID!): LegalEntity
 }
 
 type LegalEntitiesMutation {

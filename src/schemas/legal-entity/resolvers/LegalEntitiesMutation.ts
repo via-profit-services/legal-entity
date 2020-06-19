@@ -1,9 +1,9 @@
 import { ServerError, TWhereAction } from '@via-profit-services/core';
 import { IResolverObject } from 'graphql-tools';
 
-import { Context } from '../../../context';
 import createLoaders from '../loaders';
-import LegalEntityService, { ILegalEntityUpdateInfo, ILegalEntityCreateInfo } from '../service';
+import LegalEntityService from '../service';
+import { Context, ILegalEntityUpdateInfo, ILegalEntityCreateInfo } from '../types';
 
 export const legalEntityMutationResolver: IResolverObject<any, Context> = {
 
@@ -118,9 +118,11 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
   delete: async (parent, args: { id: string; }, context) => {
     const { id } = args;
     const legalEntityService = new LegalEntityService({ context });
+    const loaders = createLoaders(context);
 
     try {
       const result = legalEntityService.deleteLegalEntity(id);
+      loaders.legalEntities.clear(id);
       return result;
     } catch (err) {
       throw new ServerError('Failed to delete legal entity', { err, id });

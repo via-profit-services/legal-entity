@@ -2,7 +2,8 @@ import {
   Node, DataLoader, collateForDataloader,
 } from '@via-profit-services/core';
 import { Context } from '../../context';
-import LegalEntityService, { ILegalEntity } from './service';
+import LegalEntityService from './service';
+import { ILegalEntity } from './types';
 
 
 interface Loaders {

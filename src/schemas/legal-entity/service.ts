@@ -8,7 +8,9 @@ import {
 import moment from 'moment-timezone';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Context } from '../../context';
+import {
+  Context, ILegalEntity, ILegalEntityCreateInfo, ILegalEntityUpdateInfo, ILegalEntityTable,
+} from './types';
 
 class LegalEntitiesService {
   public props: IProps;
@@ -133,42 +135,6 @@ class LegalEntitiesService {
 interface IProps {
   context: Context;
 }
-
-export interface ILegalEntity {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  name: string;
-  address: string;
-  ogrn: string;
-  kpp?: string;
-  inn: string;
-  rs: string;
-  ks: string;
-  bic: string;
-  bank: string;
-  directorNameNominative: string;
-  directorNameGenitive: string;
-  deleted: Boolean;
-}
-
-
-export type ILegalEntityUpdateInfo = Omit<
-Partial<ILegalEntityCreateInfo>, 'id' | 'createdAt' | 'updatedAt'
-> & {
-  id?: string;
-  updatedAt: string;
-};
-
-export type ILegalEntityCreateInfo = Omit<ILegalEntity, 'id' | 'createdAt' | 'updatedAt'> & {
-  id?: string;
-  updatedAt: string;
-  createdAt: string;
-};
-
-type ILegalEntityTable = ILegalEntity & {
-  totalCount: number;
-};
 
 export default LegalEntitiesService;
 export { LegalEntitiesService };
