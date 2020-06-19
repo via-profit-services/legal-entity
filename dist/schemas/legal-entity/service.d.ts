@@ -1,5 +1,5 @@
 import { IListResponse, TOutputFilter } from '@via-profit-services/core';
-import { Context } from '../../context';
+import { Context, ILegalEntity, ILegalEntityCreateInfo, ILegalEntityUpdateInfo } from './types';
 declare class LegalEntitiesService {
     props: IProps;
     constructor(props: IProps);
@@ -13,31 +13,5 @@ declare class LegalEntitiesService {
 interface IProps {
     context: Context;
 }
-export interface ILegalEntity {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    name: string;
-    address: string;
-    ogrn: string;
-    kpp?: string;
-    inn: string;
-    rs: string;
-    ks: string;
-    bic: string;
-    bank: string;
-    directorNameNominative: string;
-    directorNameGenitive: string;
-    deleted: Boolean;
-}
-export declare type ILegalEntityUpdateInfo = Omit<Partial<ILegalEntityCreateInfo>, 'id' | 'createdAt' | 'updatedAt'> & {
-    id?: string;
-    updatedAt: string;
-};
-export declare type ILegalEntityCreateInfo = Omit<ILegalEntity, 'id' | 'createdAt' | 'updatedAt'> & {
-    id?: string;
-    updatedAt: string;
-    createdAt: string;
-};
 export default LegalEntitiesService;
 export { LegalEntitiesService };

@@ -1,4 +1,17 @@
-import { IResolverObject } from 'graphql-tools';
-import { Context } from '../../../context';
-export declare const legalEntityResolver: IResolverObject<any, Context>;
+export declare const legalEntityResolver: {
+    id: () => {};
+    createdAt: () => {};
+    updatedAt: () => {};
+    name: () => {};
+    address: () => {};
+    ogrn: () => {};
+    kpp: () => {};
+    inn: () => {};
+    rs: () => {};
+    ks: () => {};
+    bic: () => {};
+    bank: () => {};
+    directorNameNominative: () => {};
+    directorNameGenitive: () => {};
+};
 export default legalEntityResolver;

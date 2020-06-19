@@ -4,6 +4,7 @@
 /log
 /misc
 /sandbox.js
+/sessions
 
 # jest
 /coverage
