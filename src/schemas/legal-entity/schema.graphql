@@ -159,7 +159,7 @@ type LegalEntity implements Node {
   """
   directorNameShortGenitive: String!
 
-  comment: String!
+  comment: String
 }
 
 """
