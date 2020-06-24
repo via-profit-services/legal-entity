@@ -1,16 +1,16 @@
 import { ServerError, TWhereAction } from '@via-profit-services/core';
 import { IResolverObject } from 'graphql-tools';
+import { v4 as uuidv4 } from 'uuid';
 
 import createLoaders from '../loaders';
 import LegalEntityService from '../service';
-import { Context, ILegalEntityUpdateInfo, ILegalEntityCreateInfo } from '../types';
+import {
+  Context, IUpdateArgs, ICreateArgs, IDeleteArgs,
+} from '../types';
 
 export const legalEntityMutationResolver: IResolverObject<any, Context> = {
 
-  update: async (parent, args: {
-    id: string;
-    input: ILegalEntityUpdateInfo
-  }, context) => {
+  update: async (parent, args: IUpdateArgs, context) => {
     const { id, input } = args;
     const loaders = createLoaders(context);
     const legalEntityService = new LegalEntityService({ context });
@@ -27,8 +27,6 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
       });
 
       if (nodes.length) {
-        loaders.legalEntities.prime(nodes[0].id, nodes[0]);
-
         if (nodes[0].id !== id) {
           throw new ServerError(
             `Legal entity record already exists with inn ${input.inn} value`, { id, input },
@@ -49,8 +47,6 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
       });
 
       if (nodes.length) {
-        loaders.legalEntities.prime(nodes[0].id, nodes[0]);
-
         if (nodes[0].id !== id) {
           throw new ServerError(
             `Legal entity record already exists with ogrn ${input.ogrn} value`, { id, input },
@@ -70,8 +66,9 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
     loaders.legalEntities.clear(id);
     return { id };
   },
-  create: async (parent, args: { input: ILegalEntityCreateInfo }, context) => {
+  create: async (parent, args: ICreateArgs, context) => {
     const { input } = args;
+    const id = input.id || uuidv4();
     const legalEntityService = new LegalEntityService({ context });
 
     // check INN unique
@@ -108,21 +105,28 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
     }
 
     try {
-      const id = await legalEntityService.createLegalEntity(input);
+      await legalEntityService.createLegalEntity({
+        ...LegalEntityService.getLegalEntityDefaultData(),
+        ...input,
+        id,
+
+      });
 
       return { id };
     } catch (err) {
       throw new ServerError('Failed to create legal entity', { err, input });
     }
   },
-  delete: async (parent, args: { id: string; }, context) => {
+  delete: async (parent, args: IDeleteArgs, context) => {
     const { id } = args;
+    const { logger, token } = context;
     const legalEntityService = new LegalEntityService({ context });
     const loaders = createLoaders(context);
 
     try {
       const result = legalEntityService.deleteLegalEntity(id);
       loaders.legalEntities.clear(id);
+      logger.server.debug(`Legal entity with id ${id} was deleted`, { id, uuid: token.uuid });
       return result;
     } catch (err) {
       throw new ServerError('Failed to delete legal entity', { err, id });

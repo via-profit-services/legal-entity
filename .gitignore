@@ -17,3 +17,5 @@
 
 # Redis sump
 /dump.rdb
+
+/sessions
