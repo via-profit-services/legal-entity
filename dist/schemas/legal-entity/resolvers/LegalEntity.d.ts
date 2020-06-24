@@ -13,5 +13,8 @@ export declare const legalEntityResolver: {
     bank: () => {};
     directorNameNominative: () => {};
     directorNameGenitive: () => {};
+    directorNameShortNominative: () => {};
+    directorNameShortGenitive: () => {};
+    comment: () => {};
 };
 export default legalEntityResolver;

@@ -1,5 +1,5 @@
 import { IContext } from '@via-profit-services/core';
-export declare type Context = Pick<IContext, 'knex' | 'timezone'>;
+export declare type Context = Pick<IContext, 'knex' | 'timezone' | 'logger' | 'token'>;
 export interface ILegalEntity {
     id: string;
     createdAt: Date;
@@ -15,17 +15,29 @@ export interface ILegalEntity {
     bank: string;
     directorNameNominative: string;
     directorNameGenitive: string;
+    directorNameShortNominative: string;
+    directorNameShortGenitive: string;
+    comment: string;
     deleted: Boolean;
 }
-export declare type ILegalEntityUpdateInfo = Omit<Partial<ILegalEntityCreateInfo>, 'id' | 'createdAt' | 'updatedAt'> & {
+export declare type TLegalEntityInputTable = Omit<ILegalEntity, 'id' | 'createdAt' | 'updatedAt' | 'directorNameShort'> & {
     id?: string;
-    updatedAt: string;
+    createdAt: string | Date;
+    updatedAt: string | Date;
 };
-export declare type ILegalEntityCreateInfo = Omit<ILegalEntity, 'id' | 'createdAt' | 'updatedAt'> & {
-    id?: string;
-    updatedAt: string;
-    createdAt: string;
-};
-export declare type ILegalEntityTable = ILegalEntity & {
+export declare type ILegalEntityOutputTable = ILegalEntity & {
     totalCount: number;
 };
+export interface ICreateArgs {
+    input: TLegalEntityInputTable;
+}
+export interface IUpdateArgs {
+    id: string;
+    input: Partial<TLegalEntityInputTable>;
+}
+export interface IDeleteArgs {
+    id: string;
+}
+export interface IRestoreArgs {
+    id: string;
+}
