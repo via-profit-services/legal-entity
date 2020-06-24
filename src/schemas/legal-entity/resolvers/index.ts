@@ -1,9 +1,9 @@
 import { IResolvers } from 'graphql-tools';
-import { Context } from '../../../context';
+import { Context } from '../types';
 
-import LegalEntitiesMutationResolver from './LegalEntitiesMutation';
-import LegalEntitiesQueryResolver from './LegalEntitiesQuery';
-import LegalEntityResolver from './LegalEntity';
+import LegalEntitiesMutation from './LegalEntitiesMutation';
+import LegalEntitiesQuery from './LegalEntitiesQuery';
+import LegalEntity from './LegalEntity';
 
 const resolvers: IResolvers<any, Context> = {
   Query: {
@@ -12,9 +12,9 @@ const resolvers: IResolvers<any, Context> = {
   Mutation: {
     legalEntities: () => ({}),
   },
-  LegalEntity: LegalEntityResolver,
-  LegalEntitiesQuery: LegalEntitiesQueryResolver,
-  LegalEntitiesMutation: LegalEntitiesMutationResolver,
+  LegalEntity,
+  LegalEntitiesQuery,
+  LegalEntitiesMutation,
 };
 
 export default resolvers;

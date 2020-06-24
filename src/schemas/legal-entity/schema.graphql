@@ -33,6 +33,7 @@ type LegalEntitiesQuery {
     search: LegalEntityFilterSearch
   ): LegalEntityListConnection!
 
+  get(id: ID!): LegalEntity
 }
 
 type LegalEntitiesMutation {
@@ -41,7 +42,7 @@ type LegalEntitiesMutation {
   Create legal entity
   """
   create(
-    input: LegalEntityCreateInput!
+    input: InputLegalEntityCreate!
   ): LegalEntity!
 
   """
@@ -49,7 +50,7 @@ type LegalEntitiesMutation {
   """
   update(
     id: ID!
-    input: LegalEntityUpdateInput!
+    input: InputLegalEntityUpdate!
   ): LegalEntity!
 
   """
@@ -92,7 +93,6 @@ enum LegalEntityFilterSearchField {
   bic
   bank
   directorNameNominative
-  directorNameGenitive
 }
 
 input LegalEntityFilterSearch {
@@ -134,39 +134,72 @@ type LegalEntity implements Node {
   ks: String!
   bic: String!
   bank: String!
+
+  """
+  Director name in Nominative case
+  e.g. Ivanov Boris Olegovich
+  """
   directorNameNominative: String!
+
+  """
+  Director name initials in Nominative case
+  e.g. Ivanov B. O.
+  """
+  directorNameShortNominative: String!
+
+  """
+  Director name in Genitive case
+  e.g. Ivanova Borisa Olegovicha
+  """
   directorNameGenitive: String!
+
+  """
+  Director name initials on Genitive case
+  e.g. Ivanova B. O.
+  """
+  directorNameShortGenitive: String!
+
+  comment: String!
 }
 
 """
 Possible data to legal entity update
 """
-input LegalEntityUpdateInput {
+input InputLegalEntityUpdate {
   id: ID
   name: String
   address: String
   ogrn: String
-  kpp: String
   inn: String
+  kpp: String
   rs: String
   ks: String
   bic: String
   bank: String
   directorNameNominative: String
   directorNameGenitive: String
+  directorNameShortNominative: String
+  directorNameShortGenitive: String
+  comment: String
 }
 
-
-input LegalEntityCreateInput {
-  name: String!
-  address: String!
+"""
+Possible data to legal entity update
+"""
+input InputLegalEntityCreate {
   ogrn: String!
-  kpp: String!
   inn: String!
-  rs: String!
-  ks: String!
-  bic: String!
-  bank: String!
-  directorNameNominative: String!
-  directorNameGenitive: String!
+  id: ID
+  name: String
+  address: String
+  kpp: String
+  rs: String
+  ks: String
+  bic: String
+  bank: String
+  directorNameNominative: String
+  directorNameGenitive: String
+  directorNameShortNominative: String
+  directorNameShortGenitive: String
+  comment: String
 }

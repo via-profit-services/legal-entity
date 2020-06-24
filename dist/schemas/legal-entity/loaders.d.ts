@@ -1,6 +1,5 @@
 import { Node, DataLoader } from '@via-profit-services/core';
-import { Context } from '../../context';
-import { ILegalEntity } from './service';
+import { ILegalEntity, Context } from './types';
 interface Loaders {
     legalEntities: DataLoader<string, Node<ILegalEntity>>;
 }

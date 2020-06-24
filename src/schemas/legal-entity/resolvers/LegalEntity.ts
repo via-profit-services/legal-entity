@@ -1,75 +1,45 @@
-import { IResolverObject } from 'graphql-tools';
+import { IFieldResolver } from 'graphql-tools';
 
-import { Context } from '../../../context';
 import createLoaders from '../loaders';
+import { Context, ILegalEntity } from '../types';
 
-export const legalEntityResolver: IResolverObject<any, Context> = {
+interface IParent {
+  id: string;
+}
+interface IArgs {
+  id: string;
+}
+type ILegalEntityProxy = Omit<ILegalEntity, 'deleted'>;
 
-  createdAt: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.createdAt;
+export const legalEntityResolver = new Proxy({
+  id: () => ({}),
+  createdAt: () => ({}),
+  updatedAt: () => ({}),
+  name: () => ({}),
+  address: () => ({}),
+  ogrn: () => ({}),
+  kpp: () => ({}),
+  inn: () => ({}),
+  rs: () => ({}),
+  ks: () => ({}),
+  bic: () => ({}),
+  bank: () => ({}),
+  directorNameNominative: () => ({}),
+  directorNameGenitive: () => ({}),
+  directorNameShortNominative: () => ({}),
+  directorNameShortGenitive: () => ({}),
+  comment: () => ({}),
+}, {
+  get: (target, prop: keyof ILegalEntityProxy) => {
+    const resolver: IFieldResolver<IParent, Context, IArgs> = async (parent, args, context) => {
+      const { id } = parent;
+      const loaders = createLoaders(context);
+      const legalEntity = await loaders.legalEntities.load(id);
+      return legalEntity[prop];
+    };
+
+    return resolver;
   },
-  updatedAt: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.updatedAt;
-  },
-  name: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.name;
-  },
-  address: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.address;
-  },
-  ogrn: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.ogrn;
-  },
-  kpp: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.kpp;
-  },
-  inn: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.inn;
-  },
-  rs: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.rs;
-  },
-  ks: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.ks;
-  },
-  bic: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.bic;
-  },
-  bank: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.bank;
-  },
-  directorNameNominative: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.directorNameNominative;
-  },
-  directorNameGenitive: async ({ id }, args, context) => {
-    const loaders = createLoaders(context);
-    const data = await loaders.legalEntities.load(id);
-    return data.directorNameGenitive;
-  },
-};
+});
 
 export default legalEntityResolver;

@@ -6,9 +6,9 @@ import {
 } from '@via-profit-services/core';
 import { IResolverObject } from 'graphql-tools';
 
-import { Context } from '../../../context';
 import createLoaders from '../loaders';
 import LegalEntityService from '../service';
+import { Context } from '../types';
 
 export const queryResolver: IResolverObject<any, Context> = {
 
@@ -32,6 +32,13 @@ export const queryResolver: IResolverObject<any, Context> = {
     } catch (err) {
       throw new ServerError('Failed to get LegalEntities list', { err });
     }
+  },
+  get: async (parent, args: {id: string}, context) => {
+    const { id } = args;
+    const loaders = createLoaders(context);
+    const legalEntity = await loaders.legalEntities.load(id);
+
+    return legalEntity || null;
   },
 };
 
