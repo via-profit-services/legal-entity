@@ -4,7 +4,7 @@ import * as Knex from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
   return knex.raw(`
-    truncate table "legalEntities";
+    truncate table "legalEntities" cascade; 
     alter table "legalEntities" add column "directorNameShortNominative" varchar(100) NOT NULL;
     alter table "legalEntities" add column "directorNameShortGenitive" varchar(100) NOT NULL;
     alter table "legalEntities" add column "comment" text NULL;
