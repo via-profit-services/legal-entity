@@ -36,7 +36,8 @@ export interface IUpdateArgs {
     input: Partial<TLegalEntityInputTable>;
 }
 export interface IDeleteArgs {
-    id: string;
+    id?: string;
+    ids?: string[];
 }
 export interface IRestoreArgs {
     id: string;
