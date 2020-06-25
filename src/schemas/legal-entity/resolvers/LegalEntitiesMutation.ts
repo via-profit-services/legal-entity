@@ -118,19 +118,31 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
     }
   },
   delete: async (parent, args: IDeleteArgs, context) => {
-    const { id } = args;
+    const { id, ids } = args;
     const { logger, token } = context;
     const legalEntityService = new LegalEntityService({ context });
     const loaders = createLoaders(context);
 
-    try {
-      const result = legalEntityService.deleteLegalEntity(id);
-      loaders.legalEntities.clear(id);
-      logger.server.debug(`Legal entity with id ${id} was deleted`, { id, uuid: token.uuid });
-      return result;
-    } catch (err) {
-      throw new ServerError('Failed to delete legal entity', { err, id });
-    }
+    const toDeleteIds = []
+      .concat(ids || [])
+      .concat(id ? [id] : []);
+
+    await toDeleteIds.reduce(async (prevPromise, legalEntityId) => {
+      await prevPromise;
+      try {
+        legalEntityService.deleteLegalEntity(legalEntityId);
+        loaders.legalEntities.clear(legalEntityId);
+        logger.server.debug(`Legal entity with id ${legalEntityId} was deleted`, {
+          id: legalEntityId,
+          uuid: token.uuid,
+        });
+      } catch (err) {
+        throw new ServerError('Failed to delete legal entity', { err, id: legalEntityId });
+      }
+    }, Promise.resolve());
+
+
+    return true;
   },
 
 };
