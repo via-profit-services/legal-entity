@@ -38,11 +38,12 @@
     "author": "Via Profit <promo@via-profit.ru>",
     "license": "MIT",
     "dependencies": {
-        "@via-profit-services/core": "ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.23.0",
+        "@via-profit-services/core": "ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.23.5",
         "graphql": "^14.6.0",
         "graphql-tools": "^4.0.7",
         "moment": "^2.24.0",
         "moment-timezone": "^0.5.28",
+        "node-fetch": "^2.6.0",
         "uuid": "^7.0.2"
     },
     "devDependencies": {
@@ -52,6 +53,7 @@
         "@types/jest": "^24.0.23",
         "@types/minimist": "^1.2.0",
         "@types/moment-timezone": "^0.5.12",
+        "@types/node-fetch": "^2.5.7",
         "@types/supertest": "^2.0.8",
         "@types/uuid": "^7.0.0",
         "@types/webpack": "^4.41.2",

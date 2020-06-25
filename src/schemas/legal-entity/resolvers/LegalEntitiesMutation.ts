@@ -12,6 +12,7 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
 
   update: async (parent, args: IUpdateArgs, context) => {
     const { id, input } = args;
+    const { payments, ...otherInput } = input;
     const loaders = createLoaders(context);
     const legalEntityService = new LegalEntityService({ context });
 
@@ -56,10 +57,64 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
     }
 
 
+    // update legal entity
     try {
-      await legalEntityService.updateLegalEntity(id, input);
+      await legalEntityService.updateLegalEntity(id, otherInput);
     } catch (err) {
       throw new ServerError('Failed to update legal entity', { err, id, input });
+    }
+
+    const currentPaymentsIds: string[] = [];
+    if (payments && Array.isArray(payments)) {
+      const legalEntity = await loaders.legalEntities.load(id);
+
+      // create and update payments
+      await payments.reduce(async (prev, data) => {
+        await prev;
+
+        const defaultPaymentData = LegalEntityService.getLegalEntityPaymentDefaultData();
+        const existsPaymentData = await loaders.payments.load(data.id || defaultPaymentData.id);
+
+        const paymentData = {
+          // mixed default data if is new payment
+          ...(data.id ? {} : defaultPaymentData),
+          // mixed input data
+          ...data,
+          // set owner permanently
+          owner: id,
+        };
+
+        currentPaymentsIds.push(paymentData.id);
+        loaders.payments.clear(paymentData.id);
+
+        if (!existsPaymentData) {
+          try {
+            await legalEntityService.createLegalEntityPayment(paymentData);
+          } catch (err) {
+            throw new ServerError('Failed to create legal entity payments', { err });
+          }
+        } else {
+          try {
+            await legalEntityService.updateLegalEntityPayment(paymentData.id, paymentData);
+          } catch (err) {
+            throw new ServerError('Failed to update legal entity payments', { err });
+          }
+        }
+      }, Promise.resolve());
+
+      // remove old payments of this legal entity
+      const prevPaymentsIds = legalEntity.payments.map((p) => p.id);
+      const toDeletePaymentIds = prevPaymentsIds
+        .filter((prevId) => !currentPaymentsIds
+          .includes(prevId));
+      try {
+        await Promise.all(toDeletePaymentIds.map((((idToDelete) => {
+          loaders.payments.clear(idToDelete);
+          return legalEntityService.deleteLegalEntityPayment(idToDelete);
+        }))));
+      } catch (err) {
+        throw new ServerError('Failed to remove old payments of this legal entity', { err });
+      }
     }
 
     // clear cache of this legal entity
@@ -68,6 +123,7 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
   },
   create: async (parent, args: ICreateArgs, context) => {
     const { input } = args;
+    const { payments, ...otherInput } = input;
     const id = input.id || uuidv4();
     const legalEntityService = new LegalEntityService({ context });
 
@@ -107,15 +163,33 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
     try {
       await legalEntityService.createLegalEntity({
         ...LegalEntityService.getLegalEntityDefaultData(),
-        ...input,
+        ...otherInput,
         id,
-
       });
-
-      return { id };
     } catch (err) {
       throw new ServerError('Failed to create legal entity', { err, input });
     }
+
+
+    try {
+      await payments.reduce(async (prev, paymentData) => {
+        await prev;
+        try {
+          await legalEntityService.createLegalEntityPayment({
+            ...LegalEntityService.getLegalEntityPaymentDefaultData(),
+            ...paymentData,
+            owner: id,
+          });
+        } catch (err) {
+          throw new ServerError('Failed to create legal entity payments', { err });
+        }
+      }, Promise.resolve());
+    } catch (err) {
+      throw new ServerError('Failed to create legal entity payments', { err, input });
+    }
+
+
+    return { id };
   },
   delete: async (parent, args: IDeleteArgs, context) => {
     const { id, ids } = args;

@@ -13,8 +13,16 @@ Possible data to sort of legal entities list
 enum LegalEntityOrderField {
   createdAt
   updatedAt
+  label
+  nameFull
+  nameShort
+  directorNameNominative
 }
 
+enum legalEntityPaymentPriority {
+  master
+  slave
+}
 
 """
 legal entities module queries
@@ -34,6 +42,21 @@ type LegalEntitiesQuery {
   ): LegalEntityListConnection!
 
   get(id: ID!): LegalEntity
+
+  externalSearch(query: String!): [LegalEntityExternalSearchResult!]
+}
+
+type LegalEntityExternalSearchResult {
+  name: String!
+  address: String!
+  ogrn: String!
+  inn: String!
+  kpp: String!
+  city: String!
+  region: String!
+  country: String!
+  countryCode: String!
+
 }
 
 type LegalEntitiesMutation {
@@ -42,7 +65,7 @@ type LegalEntitiesMutation {
   Create legal entity
   """
   create(
-    input: InputLegalEntityCreate!
+    input: LegalEntityInputCreate!
   ): LegalEntity!
 
   """
@@ -50,7 +73,7 @@ type LegalEntitiesMutation {
   """
   update(
     id: ID!
-    input: InputLegalEntityUpdate!
+    input: LegalEntityInputUpdate!
   ): LegalEntity!
 
   """
@@ -60,6 +83,7 @@ type LegalEntitiesMutation {
     id: ID
     ids: [ID!]
   ): Boolean!
+  
 }
 
 """
@@ -76,23 +100,14 @@ Possible data to filter list of legal entities
 input LegalEntityListFilter {
   id: [ID!]
   ogrn: [String!]
-  kpp: [String!]
   inn: [String!]
-  rs: [String!]
-  ks: [String!]
-  bic: [String!]
+  nameShort: [String!]
 }
 
 enum LegalEntityFilterSearchField {
-  name
-  address
-  ogrn
-  kpp
-  inn
-  rs
-  ks
-  bic
-  bank
+  label
+  nameFull
+  nameShort
   directorNameNominative
 }
 
@@ -126,15 +141,14 @@ type LegalEntity implements Node {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
-  name: String!
+  label: String!
+  nameFull: String!
+  nameShort: String!
   address: String!
   ogrn: String!
   kpp: String
   inn: String!
-  rs: String!
-  ks: String!
-  bic: String!
-  bank: String!
+  payments: [LegalEntityPayments!]!
 
   """
   Director name in Nominative case
@@ -163,20 +177,46 @@ type LegalEntity implements Node {
   comment: String
 }
 
-"""
-Possible data to legal entity update
-"""
-input InputLegalEntityUpdate {
+
+type LegalEntityPayments {
+  id: ID!
+  owner: LegalEntity!
+  rs: String!
+  ks: String!
+  bic: String!
+  bank: String!
+
+  """
+  If the priority is «master» then these payment details are priority and will be used by default
+  Try not to allow one legal entity to have multiple «master» priorities
+  """
+  priority: legalEntityPaymentPriority!
+  comment: String
+}
+
+input LegalEntityInputPayments {
   id: ID
-  name: String
-  address: String
-  ogrn: String
-  inn: String
-  kpp: String
   rs: String
   ks: String
   bic: String
   bank: String
+  priority: legalEntityPaymentPriority
+  comment: String
+}
+
+"""
+Possible data to legal entity update
+"""
+input LegalEntityInputUpdate {
+  id: ID
+  label: String
+  nameFull: String
+  nameShort: String
+  address: String
+  ogrn: String
+  inn: String
+  kpp: String
+  payments: [LegalEntityInputPayments!]
   directorNameNominative: String
   directorNameGenitive: String
   directorNameShortNominative: String
@@ -187,17 +227,16 @@ input InputLegalEntityUpdate {
 """
 Possible data to legal entity update
 """
-input InputLegalEntityCreate {
+input LegalEntityInputCreate {
   ogrn: String!
   inn: String!
   id: ID
-  name: String
+  label: String
+  nameFull: String
+  nameShort: String
   address: String
   kpp: String
-  rs: String
-  ks: String
-  bic: String
-  bank: String
+  payments: [LegalEntityInputPayments!]!
   directorNameNominative: String
   directorNameGenitive: String
   directorNameShortNominative: String
