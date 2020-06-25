@@ -614,6 +614,14 @@
   dependencies:
     moment ">=2.14.0"
 
+"@types/node-fetch@^2.5.7":
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.5.7.tgz#20a2afffa882ab04d44ca786449a276f9f6bbf3c"
+  integrity sha512-o2WVNf5UhWRkxlf6eq+jMZDu7kjgpgJfl4xVNlvryc95O/6F2ld8ztKX+qu+Rjyet93WAWm5LjeX9H5FGkODvw==
+  dependencies:
+    "@types/node" "*"
+    form-data "^3.0.0"
+
 "@types/node@*":
   version "13.9.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.9.0.tgz#5b6ee7a77faacddd7de719017d0bc12f52f81589"
@@ -788,13 +796,14 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.23.0":
-  version "0.23.0"
-  resolved "ssh://git@gitlab.com:via-profit-services/core.git#663588843f3ef0df8ad70631f2f28b2249df441a"
+"@via-profit-services/core@ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.23.5":
+  version "0.23.5"
+  resolved "ssh://git@gitlab.com:via-profit-services/core.git#a56eebd947287c70ea00a0426b1960c0c193e5a7"
   dependencies:
     "@graphql-toolkit/core" "^0.9.1"
     "@graphql-toolkit/schema-merging" "^0.9.1"
     "@types/ws" "^7.2.4"
+    altair-static "^2.4.9"
     bcryptjs "^2.4.3"
     chalk "^3.0.0"
     cookie-parser "^1.4.5"
@@ -809,7 +818,6 @@
     express-session "^1.17.1"
     graphql "^14.5.8"
     graphql-middleware "^4.0.2"
-    graphql-playground-middleware-express "^1.7.12"
     graphql-redis-subscriptions "^2.2.1"
     graphql-subscriptions "^1.1.0"
     graphql-tag "^2.10.1"
@@ -1086,6 +1094,11 @@ ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.0, ajv@^6.5.5:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
+
+altair-static@^2.4.9:
+  version "2.4.11"
+  resolved "https://registry.yarnpkg.com/altair-static/-/altair-static-2.4.11.tgz#f6f48595c8073214d23bad9a48040847e0268a5f"
+  integrity sha512-VyW+a/lnyBbafyu5p3+R2a+su+IFjFqicFdRHDEPr3QYfEa8pEKvUK+M2nLjXKYt4jN8+9Q6kUB+UDDr/TEBRQ==
 
 ansi-align@^2.0.0:
   version "2.0.0"
@@ -4286,18 +4299,6 @@ graphql-middleware@^4.0.2:
   integrity sha512-ESVDvMXeN00S1BNsjNS18uExcR16J8zbT31CuKcpyeBa7IMbidG0Pnqnu5P1wKkJLmPmKOfCljWlhXpD/Fawqg==
   dependencies:
     graphql-tools "^4.0.5"
-
-graphql-playground-html@^1.6.19:
-  version "1.6.19"
-  resolved "https://registry.yarnpkg.com/graphql-playground-html/-/graphql-playground-html-1.6.19.tgz#3883ecf5e8c18b3c0f08145b5417b9c01a1f0bef"
-  integrity sha512-cLAqoOlxHbGj/LBpr4l2BE9qXf3g8ShjQqU2daVueITI/3wIkcDQTaQaQp+HWv0uaX0dCsgMCFW/TooLj8yJOg==
-
-graphql-playground-middleware-express@^1.7.12:
-  version "1.7.14"
-  resolved "https://registry.yarnpkg.com/graphql-playground-middleware-express/-/graphql-playground-middleware-express-1.7.14.tgz#19ec806c54e3d8c213e1bf00088e9e236f49b258"
-  integrity sha512-EqoAhbRBd7rEEEDFfvECQVmZnC4cOEmRc5goiiZldozt2GZB2UBK3/7p0DAtflg6S1w6SNUR8Tg9cDLjiL1Dew==
-  dependencies:
-    graphql-playground-html "^1.6.19"
 
 graphql-redis-subscriptions@^2.2.1:
   version "2.2.1"

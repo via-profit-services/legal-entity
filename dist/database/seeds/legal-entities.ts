@@ -59,34 +59,63 @@ const generateRSKS = () => {
 };
 
 export async function seed(knex: Knex): Promise<any> {
-  // Deletes ALL existing entries
+  const legalEntitiesData = [...Array(LEGAL_ENTITIES_QUANTITY).keys()].map(() => {
+    const id = faker.random.uuid();
+    const companyName = faker.company.companyName();
+    const paymentsArray = [...Array(3).keys()].map(() => ({
+      id: faker.random.uuid(),
+      bic: generateBIC(),
+      rs: generateRSKS(),
+      ks: generateRSKS(),
+      bank: [
+        'Публичное акционерное общество «Сбербанк России»',
+        'АО «Тинькофф Банк»',
+        'Точка ПАО Банка «ФК Открытие»',
+        'АКЦИОНЕРНОЕ ОБЩЕСТВО «АЛЬФА-БАНК»',
+      ][randomInt(0, 3)],
+      owner: id,
+    }));
+    return {
+      id,
+      label: `Company ${companyName}`,
+      nameFull: `Full name of ${companyName}`,
+      nameShort: `Short name of ${companyName}`,
+      address: [
+        faker.address.zipCode(),
+        ',',
+        faker.address.state(),
+        faker.address.city(),
+        faker.address.streetAddress(),
+        faker.address.secondaryAddress(),
+      ].join(' '),
+      ogrn: generateOGRN(),
+      inn: generateINN(),
+      kpp: generateKPP(),
+      payments: paymentsArray.splice(0, randomInt(1, 3)),
+      ...getDirectorName(),
+    };
+  });
+
+
   return knex('legalEntities')
     .del()
     .then(() => knex('legalEntities').insert(
-      [...Array(LEGAL_ENTITIES_QUANTITY).keys()].map(() => ({
-        id: faker.random.uuid(),
-        name: faker.company.companyName(),
-        address: [
-          faker.address.zipCode(),
-          ',',
-          faker.address.state(),
-          faker.address.city(),
-          faker.address.streetAddress(),
-          faker.address.secondaryAddress(),
-        ].join(' '),
-        ogrn: generateOGRN(),
-        kpp: generateKPP(),
-        inn: generateINN(),
-        bic: generateBIC(),
-        rs: generateRSKS(),
-        ks: generateRSKS(),
-        bank: [
-          'Публичное акционерное общество «Сбербанк России»',
-          'АО «Тинькофф Банк»',
-          'Точка ПАО Банка «ФК Открытие»',
-          'АКЦИОНЕРНОЕ ОБЩЕСТВО «АЛЬФА-БАНК»',
-        ][randomInt(0, 3)],
-        ...getDirectorName(),
-      })),
-    ));
+      legalEntitiesData.map((legalEntity) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { payments, ...data } = legalEntity;
+        return data;
+      }),
+    ))
+    .then(async () => {
+      await knex('legalEntitiesPayments').del();
+
+      const paymentsInsertData: any[] = [];
+      legalEntitiesData.forEach((legalEntity) => {
+        legalEntity.payments.forEach((payment) => {
+          paymentsInsertData.push(payment);
+        });
+      });
+
+      await knex('legalEntitiesPayments').insert(paymentsInsertData);
+    });
 }

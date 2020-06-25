@@ -1,16 +1,25 @@
+/* eslint-disable camelcase */
 import {
   IListResponse,
   TOutputFilter,
   convertOrderByToKnex,
   convertWhereToKnex,
   TWhereAction,
+  arrayOfIdsToArrayOfObjectIds,
 } from '@via-profit-services/core';
 import moment from 'moment-timezone';
+import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
-  Context, ILegalEntity, TLegalEntityInputTable, ILegalEntityOutputTable,
+  EXTERNAL_SEARCH_API_TOKEN,
+  EXTERNAL_SEARCH_API_URL,
+} from './constants';
+import {
+  Context, ILegalEntity, TLegalEntityInputTable, ILegalEntityPayment, ILegalEntityPaymentInputTable,
+  ILegalEntityPaymentOutputTable, ILegalEntityOutputTable, ILegalEntityExternalSearchResult,
 } from './types';
+
 
 class LegalEntitiesService {
   public props: IProps;
@@ -24,15 +33,13 @@ class LegalEntitiesService {
       id: uuidv4(),
       createdAt: new Date(),
       updatedAt: new Date(),
-      name: '',
+      label: '',
+      nameFull: '',
+      nameShort: '',
       address: '',
       ogrn: uuidv4(),
       inn: uuidv4(),
       kpp: null,
-      rs: '',
-      ks: '',
-      bic: '',
-      bank: '',
       directorNameNominative: '',
       directorNameGenitive: '',
       directorNameShortNominative: '',
@@ -42,16 +49,43 @@ class LegalEntitiesService {
     };
   }
 
-  public prepareDataToInsert(legalEntityInputData: Partial<TLegalEntityInputTable>) {
+  public static getLegalEntityPaymentDefaultData(): ILegalEntityPaymentInputTable {
+    return {
+      id: uuidv4(),
+      owner: uuidv4(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      rs: '',
+      ks: '',
+      bic: '',
+      bank: '',
+      comment: '',
+      deleted: false,
+    };
+  }
+
+  public prepareLegalEntityDataToInsert(legalEntityInputData: Partial<TLegalEntityInputTable>) {
     const { timezone } = this.props.context;
 
-    const driverData: Partial<TLegalEntityInputTable> = {
+    const data: Partial<TLegalEntityInputTable> = {
       ...legalEntityInputData,
       updatedAt: moment.tz(timezone).format(),
     };
 
 
-    return driverData;
+    return data;
+  }
+
+  public prepareLegalEntityPaymentToInsert(paymentInout: Partial<ILegalEntityPaymentInputTable>) {
+    const { timezone } = this.props.context;
+
+    const data: Partial<ILegalEntityPaymentInputTable> = {
+      ...paymentInout,
+      updatedAt: moment.tz(timezone).format(),
+    };
+
+
+    return data;
   }
 
 
@@ -70,14 +104,23 @@ class LegalEntitiesService {
 
     const connection = await knex
       .select([
-        '*',
+        knex.raw('"legalEntities".*'),
         knex.raw('count(*) over() as "totalCount"'),
+        knex.raw('string_agg(payments."id"::text, \'|\') as "payments"'),
       ])
       .from<any, ILegalEntityOutputTable[]>('legalEntities')
       .limit(limit || 1)
       .offset(offset || 0)
-      .where((builder) => convertWhereToKnex(builder, where))
-      .where((builder) => builder.where('deleted', false))
+      .leftJoin('legalEntitiesPayments as payments', (builder) => {
+        return builder
+          .on('payments.owner', '=', 'legalEntities.id')
+          .onIn('payments.deleted', [false]);
+      })
+      .where((builder) => convertWhereToKnex(builder, where, {
+        payments: ['bank', 'bic', 'rs', 'ks', 'owner', 'priority'],
+        legalEntities: '*',
+      }))
+      .where((builder) => builder.where('legalEntities.deleted', 'false'))
       .where((builder) => {
         if (search) {
           search.forEach(({ field, query }) => {
@@ -90,11 +133,21 @@ class LegalEntitiesService {
         return builder;
       })
       .orderBy(convertOrderByToKnex(orderBy))
-
-      .then((nodes) => ({
-        totalCount: nodes.length ? Number(nodes[0].totalCount) : 0,
-        nodes,
-      }));
+      .groupBy('legalEntities.id')
+      .then((nodes) => {
+        return {
+          totalCount: nodes.length ? Number(nodes[0].totalCount) : 0,
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          nodes: nodes.map(({ totalCount, ...nodeData }) => {
+            return {
+              ...nodeData,
+              payments: nodeData.payments
+                ? arrayOfIdsToArrayOfObjectIds(nodeData.payments.split('|'))
+                : null,
+            };
+          }),
+        };
+      });
 
     return {
       ...connection,
@@ -130,7 +183,7 @@ class LegalEntitiesService {
       updatedAt: moment.tz(timezone).format(),
     };
     const result = await knex<TLegalEntityInputTable>('legalEntities')
-      .update(data)
+      .update(this.prepareLegalEntityDataToInsert(data))
       .where('id', id)
       .returning('id');
 
@@ -150,7 +203,7 @@ class LegalEntitiesService {
     };
 
     const result = await knex<TLegalEntityInputTable>('legalEntities')
-      .insert(data)
+      .insert(this.prepareLegalEntityDataToInsert(data))
       .returning('id');
 
     return result[0];
@@ -168,6 +221,179 @@ class LegalEntitiesService {
 
   public async restoreLegalEntity(id: string) {
     const result = this.updateLegalEntity(id, {
+      deleted: false,
+    });
+
+    return Boolean(result);
+  }
+
+  public async externalSearch(query: string): Promise<ILegalEntityExternalSearchResult[] | null> {
+    const { context } = this.props;
+    const { logger } = context;
+    try {
+      const response = await fetch(EXTERNAL_SEARCH_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Token ${EXTERNAL_SEARCH_API_TOKEN}`,
+        },
+        body: JSON.stringify({
+          query,
+        }),
+      });
+      const body = await response.json();
+
+      if (!body || !body.suggestions) {
+        return null;
+      }
+
+      return body.suggestions.map((suggestion: any) => {
+        const data = suggestion.data || {};
+        const directorNameNominative = String(data?.management?.name).toLowerCase() === 'генеральный директор'
+          ? String(data?.management?.name)
+          : '';
+        return {
+          name: String(data?.name?.short_with_opf),
+          address: String(data?.address?.value),
+          ogrn: String(data?.ogrn),
+          kpp: String(data?.kpp),
+          inn: String(data?.inn),
+          city: String(data?.address?.data?.city),
+          country: String(data?.address?.data?.country),
+          countryCode: String(data?.address?.data?.country_iso_code),
+          state: String(data?.address?.data?.region),
+          directorNameNominative,
+        };
+      });
+    } catch (err) {
+      logger.server.error(`External API request to ${EXTERNAL_SEARCH_API_URL} failure`, {
+        err,
+      });
+      return null;
+    }
+  }
+
+  public async getLegalEntityPayments(
+    filter: Partial<TOutputFilter>,
+  ): Promise<IListResponse<ILegalEntityPayment>> {
+    const { context } = this.props;
+    const { knex } = context;
+    const {
+      limit,
+      offset,
+      orderBy,
+      where,
+      search,
+    } = filter;
+
+    const connection = await knex
+      .select([
+        '*',
+        knex.raw('count(*) over() as "totalCount"'),
+      ])
+      .from<any, ILegalEntityPaymentOutputTable[]>('legalEntitiesPayments')
+      .limit(limit || 1)
+      .offset(offset || 0)
+      .where((builder) => convertWhereToKnex(builder, where))
+      .where((builder) => builder.where('deleted', false))
+      .where((builder) => {
+        if (search) {
+          search.forEach(({ field, query }) => {
+            query.split(' ').forEach((subquery) => {
+              builder.orWhere(field, TWhereAction.ILIKE, `%${subquery}%`);
+            });
+          });
+        }
+
+        return builder;
+      })
+      .orderBy(convertOrderByToKnex(orderBy))
+      .then((nodes) => {
+        return {
+          totalCount: nodes.length ? Number(nodes[0].totalCount) : 0,
+          nodes: nodes.map((node) => ({
+            ...node,
+            owner: typeof node.owner === 'string' ? {
+              id: node.owner,
+            } : node.owner,
+          })),
+        };
+      });
+
+    return {
+      ...connection,
+      offset,
+      limit,
+      where,
+      orderBy,
+    };
+  }
+
+
+  public async getLegalEntityPaymentsByIds(ids: string[]): Promise<ILegalEntityPayment[]> {
+    const { nodes } = await this.getLegalEntityPayments({
+      where: [['id', TWhereAction.IN, ids]],
+      offset: 0,
+      limit: ids.length,
+    });
+
+    return nodes;
+  }
+
+  public async getLegalEntityPayment(id: string): Promise<ILegalEntityPayment | false> {
+    const nodes = await this.getLegalEntityPaymentsByIds([id]);
+    return nodes.length ? nodes[0] : false;
+  }
+
+  public async updateLegalEntityPayment(
+    id: string,
+    paymentData: Partial<ILegalEntityPaymentInputTable>,
+  ) {
+    const { knex, timezone } = this.props.context;
+
+    const data = {
+      ...paymentData,
+      id, // force set id
+      updatedAt: moment.tz(timezone).format(),
+    };
+    const result = await knex<ILegalEntityPaymentInputTable>('legalEntitiesPayments')
+      .update(this.prepareLegalEntityPaymentToInsert(data))
+      .where('id', id)
+      .returning('id');
+
+    return result[0];
+  }
+
+  public async createLegalEntityPayment(
+    paymentData: Partial<ILegalEntityPaymentInputTable>,
+  ): Promise<string> {
+    const { knex, timezone } = this.props.context;
+
+    const data = {
+      ...paymentData,
+      id: paymentData.id || uuidv4(),
+      createdAt: moment.tz(timezone).format(),
+      updatedAt: moment.tz(timezone).format(),
+    };
+
+    const result = await knex<ILegalEntityPaymentInputTable>('legalEntitiesPayments')
+      .insert(this.prepareLegalEntityPaymentToInsert(data))
+      .returning('id');
+
+    return result[0];
+  }
+
+  public async deleteLegalEntityPayment(id: string) {
+    const result = this.updateLegalEntityPayment(id, {
+      deleted: true,
+    });
+
+    return Boolean(result);
+  }
+
+  public async restoreLegalEntityPayment(id: string) {
+    const result = this.updateLegalEntityPayment(id, {
       deleted: false,
     });
 
