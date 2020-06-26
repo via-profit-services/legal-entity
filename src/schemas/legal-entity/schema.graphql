@@ -19,7 +19,7 @@ enum LegalEntityOrderField {
   directorNameNominative
 }
 
-enum legalEntityPaymentPriority {
+enum LegalEntityPaymentPriority {
   master
   slave
 }
@@ -190,7 +190,7 @@ type LegalEntityPayments {
   If the priority is «master» then these payment details are priority and will be used by default
   Try not to allow one legal entity to have multiple «master» priorities
   """
-  priority: legalEntityPaymentPriority!
+  priority: LegalEntityPaymentPriority!
   comment: String
 }
 
@@ -200,7 +200,7 @@ input LegalEntityInputPayments {
   ks: String
   bic: String
   bank: String
-  priority: legalEntityPaymentPriority
+  priority: LegalEntityPaymentPriority
   comment: String
 }
 
