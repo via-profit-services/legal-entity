@@ -6,8 +6,15 @@
 
 ## Содержание
 
+- [Зависимости](#dependencies)
 - [Установка и настройка](#setup)
 - [Как использовать](#how-to-use)
+
+
+## <a name="dependencies"></a> Зависимости
+
+ - [Geography](https://gitlab.com/via-profit-services/geography)
+
 
 ## <a name="setup"></a> Установка и настройка
 

@@ -8,7 +8,7 @@ import { IResolverObject } from 'graphql-tools';
 
 import createLoaders from '../loaders';
 import LegalEntityService from '../service';
-import { Context, IExternalSearchArgs } from '../types';
+import { Context } from '../types';
 
 export const queryResolver: IResolverObject<any, Context> = {
 
@@ -40,13 +40,7 @@ export const queryResolver: IResolverObject<any, Context> = {
 
     return legalEntity || null;
   },
-  externalSearch: async (parent, args: IExternalSearchArgs, context) => {
-    const { query } = args;
-    const legalEntitiesService = new LegalEntityService({ context });
-    const result = await legalEntitiesService.externalSearch(query);
-
-    return result;
-  },
+  externalSearch: (parent, args) => args,
 };
 
 

@@ -4,7 +4,7 @@ import { Context } from '../types';
 import LegalEntitiesMutation from './LegalEntitiesMutation';
 import LegalEntitiesQuery from './LegalEntitiesQuery';
 import LegalEntity from './LegalEntity';
-import LegalEntityExternalSearchResult from './LegalEntityExternalSearchResult';
+import LegalEntityExternalSearch from './LegalEntityExternalSearch';
 import LegalEntityPayments from './LegalEntityPayments';
 
 const resolvers: IResolvers<any, Context> = {
@@ -16,8 +16,8 @@ const resolvers: IResolvers<any, Context> = {
   },
   LegalEntity,
   LegalEntitiesQuery,
+  LegalEntityExternalSearch,
   LegalEntitiesMutation,
-  LegalEntityExternalSearchResult,
   LegalEntityPayments,
 };
 

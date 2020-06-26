@@ -16,6 +16,7 @@ enum LegalEntityOrderField {
   label
   nameFull
   nameShort
+  city
   directorNameNominative
 }
 
@@ -43,21 +44,45 @@ type LegalEntitiesQuery {
 
   get(id: ID!): LegalEntity
 
-  externalSearch(query: String!): [LegalEntityExternalSearchResult!]
+  """
+  Search data in external resources
+  """
+  externalSearch: LegalEntityExternalSearch!
 }
 
-type LegalEntityExternalSearchResult {
-  name: String!
+type LegalEntityExternalSearch {
+  """
+  Search companies in external resources
+  """
+  companies(query: String!): [LegalEntityExternal!]
+
+  """
+  Search bank details in external resources
+  """
+  payments(query: String!): [LegalEntityPaymentsExternal!]
+}
+
+type LegalEntityExternal {
+  label: String!
+  nameFull: String!
+  nameShort: String!
   address: String!
   ogrn: String!
+  kpp: String
   inn: String!
-  kpp: String!
-  city: String!
-  region: String!
-  country: String!
-  countryCode: String!
-
+  city: City
+  directorNameNominative: String!
+  directorNameShortNominative: String!
 }
+
+type LegalEntityPaymentsExternal {
+  ks: String!
+  bic: String!
+  bank: String!
+}
+
+
+
 
 type LegalEntitiesMutation {
   
@@ -102,6 +127,7 @@ input LegalEntityListFilter {
   ogrn: [String!]
   inn: [String!]
   nameShort: [String!]
+  city: [ID!]
 }
 
 enum LegalEntityFilterSearchField {
@@ -148,7 +174,8 @@ type LegalEntity implements Node {
   ogrn: String!
   kpp: String
   inn: String!
-  payments: [LegalEntityPayments!]!
+  payments: [LegalEntityPayments!]
+  city: City
 
   """
   Director name in Nominative case
@@ -194,6 +221,7 @@ type LegalEntityPayments {
   comment: String
 }
 
+
 input LegalEntityInputPayments {
   id: ID
   rs: String
@@ -222,6 +250,7 @@ input LegalEntityInputUpdate {
   directorNameShortNominative: String
   directorNameShortGenitive: String
   comment: String
+  city: ID
 }
 
 """
@@ -242,4 +271,5 @@ input LegalEntityInputCreate {
   directorNameShortNominative: String
   directorNameShortGenitive: String
   comment: String
+  city: ID
 }

@@ -28,6 +28,7 @@ export const legalEntityResolver = new Proxy({
   directorNameShortGenitive: () => ({}),
   comment: () => ({}),
   payments: () => ({}),
+  city: () => ({}),
 }, {
   get: (target, prop: keyof ILegalEntityProxy) => {
     const resolver: IFieldResolver<IParent, Context, IArgs> = async (parent, args, context) => {

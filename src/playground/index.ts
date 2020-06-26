@@ -1,14 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { App, schemas } from '@via-profit-services/core';
+import * as geography from '@via-profit-services/geography';
 import chalk from 'chalk';
 import { v4 as uuidv4 } from 'uuid';
 
-import { typeDefs, resolvers } from '../schemas/legal-entity';
+import * as legalEntity from '../schemas/legal-entity';
 import { configureApp } from '../utils/configureApp';
 
 const config = configureApp({
-  typeDefs: [typeDefs],
-  resolvers: [resolvers],
+  typeDefs: [legalEntity.typeDefs, geography.typeDefs],
+  resolvers: [legalEntity.resolvers, geography.resolvers],
 });
 const app = new App(config);
 const AuthService = schemas.auth.service;
