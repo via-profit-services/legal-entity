@@ -1,3 +1,8 @@
+/**
+ * @via-profit-services/legal-entity
+ *
+ * This migration file was created by the @via-profit-services/legal-entity package
+ */
 /* eslint-disable import/no-extraneous-dependencies */
 import * as Knex from 'knex';
 

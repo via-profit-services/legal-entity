@@ -1,5 +1,5 @@
 import { IListResponse, TOutputFilter } from '@via-profit-services/core';
-import { Context, ILegalEntity, TLegalEntityInputTable, ILegalEntityPayment, ILegalEntityPaymentInputTable, ILegalEntityExternalSearchResult } from './types';
+import { Context, ILegalEntity, TLegalEntityInputTable, ILegalEntityPayment, ILegalEntityPaymentInputTable } from './types';
 declare class LegalEntitiesService {
     props: IProps;
     constructor(props: IProps);
@@ -14,7 +14,8 @@ declare class LegalEntitiesService {
     createLegalEntity(legalEntityData: Partial<TLegalEntityInputTable>): Promise<string>;
     deleteLegalEntity(id: string): Promise<boolean>;
     restoreLegalEntity(id: string): Promise<boolean>;
-    externalSearch(query: string): Promise<ILegalEntityExternalSearchResult[] | null>;
+    externalSearchCompanies(query: string): Promise<ILegalEntity[] | null>;
+    externalSearchPayments(query: string): Promise<ILegalEntityPayment[] | null>;
     getLegalEntityPayments(filter: Partial<TOutputFilter>): Promise<IListResponse<ILegalEntityPayment>>;
     getLegalEntityPaymentsByIds(ids: string[]): Promise<ILegalEntityPayment[]>;
     getLegalEntityPayment(id: string): Promise<ILegalEntityPayment | false>;
