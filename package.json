@@ -2,7 +2,7 @@
     "name": "@via-profit-services/legal-entity",
     "private": true,
     "support": "https://via-profit.ru",
-    "version": "0.5.1",
+    "version": "0.6.0",
     "description": "Via Profit Legal Entity Schema",
     "main": "dist/index.js",
     "scripts": {
@@ -39,6 +39,7 @@
     "license": "MIT",
     "dependencies": {
         "@via-profit-services/core": "ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.23.5",
+        "@via-profit-services/geography": "ssh://git@gitlab.com:via-profit-services/geography.git#semver:^0.3.0",
         "graphql": "^14.6.0",
         "graphql-tools": "^4.0.7",
         "moment": "^2.24.0",

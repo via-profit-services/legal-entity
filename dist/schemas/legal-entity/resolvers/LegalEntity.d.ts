@@ -15,5 +15,6 @@ export declare const legalEntityResolver: {
     directorNameShortGenitive: () => {};
     comment: () => {};
     payments: () => {};
+    city: () => {};
 };
 export default legalEntityResolver;

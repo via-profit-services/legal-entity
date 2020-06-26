@@ -7,17 +7,19 @@ import {
   TWhereAction,
   arrayOfIdsToArrayOfObjectIds,
 } from '@via-profit-services/core';
+import cities from '@via-profit-services/geography/dist/countries/RU/cities.json';
 import moment from 'moment-timezone';
 import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
   EXTERNAL_SEARCH_API_TOKEN,
-  EXTERNAL_SEARCH_API_URL,
+  EXTERNAL_SEARCH_API_URL_COMPANIES,
+  EXTERNAL_SEARCH_API_URL_PAYMENTS,
 } from './constants';
 import {
   Context, ILegalEntity, TLegalEntityInputTable, ILegalEntityPayment, ILegalEntityPaymentInputTable,
-  ILegalEntityPaymentOutputTable, ILegalEntityOutputTable, ILegalEntityExternalSearchResult,
+  ILegalEntityPaymentOutputTable, ILegalEntityOutputTable,
 } from './types';
 
 
@@ -46,6 +48,7 @@ class LegalEntitiesService {
       directorNameShortGenitive: '',
       comment: '',
       deleted: false,
+      city: null,
     };
   }
 
@@ -141,6 +144,7 @@ class LegalEntitiesService {
           nodes: nodes.map(({ totalCount, ...nodeData }) => {
             return {
               ...nodeData,
+              city: nodeData.city ? { id: nodeData.city } : null,
               payments: nodeData.payments
                 ? arrayOfIdsToArrayOfObjectIds(nodeData.payments.split('|'))
                 : null,
@@ -227,11 +231,11 @@ class LegalEntitiesService {
     return Boolean(result);
   }
 
-  public async externalSearch(query: string): Promise<ILegalEntityExternalSearchResult[] | null> {
+  public async externalSearchCompanies(query: string): Promise<ILegalEntity[] | null> {
     const { context } = this.props;
     const { logger } = context;
     try {
-      const response = await fetch(EXTERNAL_SEARCH_API_URL, {
+      const response = await fetch(EXTERNAL_SEARCH_API_URL_COMPANIES, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -248,26 +252,86 @@ class LegalEntitiesService {
         return null;
       }
 
-      return body.suggestions.map((suggestion: any) => {
-        const data = suggestion.data || {};
-        const directorNameNominative = String(data?.management?.name).toLowerCase() === 'генеральный директор'
+
+      const suggestions: ILegalEntity[] = body.suggestions.map((suggestion: any) => {
+        const data = suggestion?.data || {};
+        const directorNameNominative = String(data?.management?.post).toLowerCase().indexOf('директор') !== -1
           ? String(data?.management?.name)
           : '';
+
+        const directorNameShortNominative = directorNameNominative !== ''
+          ? directorNameNominative.split(' ').reduce((prev, current, index) => {
+            return index === 0 ? current : `${prev} ${current[0]}.`;
+          }, '')
+          : '';
+
+
+        // search city in Geography database
+        const cityData = data?.address?.data?.country_iso_code === 'RU'
+          ? cities.find((currentCity) => {
+            return currentCity.ru.toLowerCase() === String(data?.address?.data?.city).toLowerCase();
+          })
+          : null;
         return {
-          name: String(data?.name?.short_with_opf),
-          address: String(data?.address?.value),
-          ogrn: String(data?.ogrn),
-          kpp: String(data?.kpp),
-          inn: String(data?.inn),
-          city: String(data?.address?.data?.city),
-          country: String(data?.address?.data?.country),
-          countryCode: String(data?.address?.data?.country_iso_code),
-          state: String(data?.address?.data?.region),
+          ...LegalEntitiesService.getLegalEntityDefaultData(),
+          label: data?.name?.short || '',
+          nameFull: data?.name?.full_with_opf || '',
+          nameShort: data?.name?.short_with_opf || '',
+          address: data?.address?.value || '',
+          ogrn: data?.ogrn || '',
+          kpp: data?.kpp || '',
+          inn: data?.inn || '',
+          city: cityData ? { id: cityData.id } : null,
           directorNameNominative,
-        };
+          directorNameShortNominative,
+          payments: null,
+        } as ILegalEntity;
       });
+
+      return suggestions;
     } catch (err) {
-      logger.server.error(`External API request to ${EXTERNAL_SEARCH_API_URL} failure`, {
+      logger.server.error(`External API request to ${EXTERNAL_SEARCH_API_URL_PAYMENTS} failure`, {
+        err,
+      });
+      return null;
+    }
+  }
+
+  public async externalSearchPayments(query: string): Promise<ILegalEntityPayment[] | null> {
+    const { context } = this.props;
+    const { logger } = context;
+    try {
+      const response = await fetch(EXTERNAL_SEARCH_API_URL_PAYMENTS, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Token ${EXTERNAL_SEARCH_API_TOKEN}`,
+        },
+        body: JSON.stringify({
+          query,
+        }),
+      });
+      const body = await response.json();
+
+      if (!body || !body.suggestions) {
+        return null;
+      }
+
+      const suggestions: ILegalEntityPayment[] = body.suggestions.map((suggestion: any) => {
+        const data = suggestion?.data || {};
+
+        return {
+          ...LegalEntitiesService.getLegalEntityPaymentDefaultData(),
+          bank: data?.name?.payment || '',
+          bic: data?.bic || '',
+          ks: data?.correspondent_account || '',
+        } as ILegalEntityPayment;
+      });
+
+      return suggestions;
+    } catch (err) {
+      logger.server.error(`External API request to ${EXTERNAL_SEARCH_API_URL_PAYMENTS} failure`, {
         err,
       });
       return null;

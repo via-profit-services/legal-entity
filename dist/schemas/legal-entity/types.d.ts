@@ -19,28 +19,21 @@ export interface ILegalEntity {
     deleted: Boolean;
     payments: Array<{
         id: string;
-    }>;
+    }> | null;
+    city: {
+        id: string;
+    } | null;
 }
-export interface ILegalEntityExternalSearchResult {
-    name: string;
-    address: string;
-    ogrn: string;
-    kpp: string;
-    inn: string;
-    city: string;
-    country: string;
-    countryCode: string;
-    region: string;
-    directorNameNominative: string;
-}
-export declare type TLegalEntityInputTable = Omit<ILegalEntity, 'id' | 'createdAt' | 'updatedAt' | 'directorNameShort' | 'payments'> & {
+export declare type TLegalEntityInputTable = Omit<ILegalEntity, 'id' | 'createdAt' | 'updatedAt' | 'directorNameShort' | 'payments' | 'city'> & {
     id?: string;
     createdAt: string | Date;
     updatedAt: string | Date;
+    city: string | ILegalEntity['city'];
 };
-export declare type ILegalEntityOutputTable = ILegalEntity & {
+export declare type ILegalEntityOutputTable = Omit<ILegalEntity, 'payments' | 'city'> & {
     totalCount: number;
     payments: string;
+    city: string | null;
 };
 export interface ICreateArgs {
     input: Omit<TLegalEntityInputTable, 'payments'> & {
