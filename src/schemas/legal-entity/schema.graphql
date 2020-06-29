@@ -73,6 +73,31 @@ type LegalEntityExternal {
   city: City
   directorNameNominative: String!
   directorNameShortNominative: String!
+  state: LegalEntityExternalStatus!
+  branchType: LegalEntityExternalBranchType!
+  type: LegalEntityExternalType!
+  registrationDate: Date!
+  liquidationDate: Date
+}
+
+enum LegalEntityExternalStatus {
+  ACTIVE
+  LIQUIDATING
+  LIQUIDATED
+  """
+  In the process of joining another legal entity, with subsequent liquidation
+  """
+  REORGANIZING
+}
+
+enum LegalEntityExternalBranchType {
+  MAIN
+  BRANCH
+}
+
+enum LegalEntityExternalType {
+  LEGAL
+  INDIVIDUAL
 }
 
 type LegalEntityPaymentsExternal {
