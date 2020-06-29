@@ -78,3 +78,36 @@ export declare type ILegalEntityPaymentInputTable = Omit<ILegalEntityPayment, 'c
 export declare type ILegalEntityPaymentOutputTable = ILegalEntityPayment & {
     totalCount: number;
 };
+export declare enum ILegalEntityExternalSearchState {
+    ACTIVE = 0,
+    LIQUIDATING = 1,
+    LIQUIDATED = 2,
+    REORGANIZING = 3
+}
+export declare enum ILegalEntityExternalSearchBranchType {
+    MAIN = 0,
+    BRAHCN = 1
+}
+export declare enum ILegalEntityExternalSearchType {
+    LEGAL = 0,
+    INDIVIDUAL = 1
+}
+export interface ILegalEntityExternalSearchResult {
+    label: string;
+    nameFull: string;
+    nameShort: string;
+    address: string;
+    ogrn: string;
+    kpp?: string;
+    inn: string;
+    directorNameNominative: string;
+    directorNameShortNominative: string;
+    state: ILegalEntityExternalSearchState;
+    branchType: ILegalEntityExternalSearchBranchType;
+    city: {
+        id: string;
+    } | null;
+    registrationDate: Date;
+    liquidationDate: Date | null;
+    type: ILegalEntityExternalSearchType;
+}
