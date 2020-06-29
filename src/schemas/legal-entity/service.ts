@@ -19,7 +19,7 @@ import {
 } from './constants';
 import {
   Context, ILegalEntity, TLegalEntityInputTable, ILegalEntityPayment, ILegalEntityPaymentInputTable,
-  ILegalEntityPaymentOutputTable, ILegalEntityOutputTable,
+  ILegalEntityPaymentOutputTable, ILegalEntityOutputTable, ILegalEntityExternalSearchResult,
 } from './types';
 
 
@@ -231,7 +231,9 @@ class LegalEntitiesService {
     return Boolean(result);
   }
 
-  public async externalSearchCompanies(query: string): Promise<ILegalEntity[] | null> {
+  public async externalSearchCompanies(
+    query: string,
+  ): Promise<ILegalEntityExternalSearchResult[] | null> {
     const { context } = this.props;
     const { logger } = context;
     try {
@@ -253,40 +255,50 @@ class LegalEntitiesService {
       }
 
 
-      const suggestions: ILegalEntity[] = body.suggestions.map((suggestion: any) => {
-        const data = suggestion?.data || {};
-        const directorNameNominative = String(data?.management?.post).toLowerCase().indexOf('директор') !== -1
-          ? String(data?.management?.name)
-          : '';
+      const suggestions: ILegalEntityExternalSearchResult[] = body.suggestions
+        .map((suggestion: any) => {
+          const data = suggestion?.data || {};
+          const directorNameNominative = String(data?.management?.post).toLowerCase().indexOf('директор') !== -1
+            ? String(data?.management?.name)
+            : '';
 
-        const directorNameShortNominative = directorNameNominative !== ''
-          ? directorNameNominative.split(' ').reduce((prev, current, index) => {
-            return index === 0 ? current : `${prev} ${current[0]}.`;
-          }, '')
-          : '';
+          const directorNameShortNominative = directorNameNominative !== ''
+            ? directorNameNominative.split(' ').reduce((prev, current, index) => {
+              return index === 0 ? current : `${prev} ${current[0]}.`;
+            }, '')
+            : '';
 
 
-        // search city in Geography database
-        const cityData = data?.address?.data?.country_iso_code === 'RU'
-          ? cities.find((currentCity) => {
-            return currentCity.ru.toLowerCase() === String(data?.address?.data?.city).toLowerCase();
-          })
-          : null;
-        return {
-          ...LegalEntitiesService.getLegalEntityDefaultData(),
-          label: data?.name?.short || '',
-          nameFull: data?.name?.full_with_opf || '',
-          nameShort: data?.name?.short_with_opf || '',
-          address: data?.address?.value || '',
-          ogrn: data?.ogrn || '',
-          kpp: data?.kpp || '',
-          inn: data?.inn || '',
-          city: cityData ? { id: cityData.id } : null,
-          directorNameNominative,
-          directorNameShortNominative,
-          payments: null,
-        } as ILegalEntity;
-      });
+          // search city in Geography database
+          const cityData = data?.address?.data?.country_iso_code === 'RU'
+            ? cities.find((currentCity) => {
+              return currentCity.ru.toLowerCase() === String(data?.address?.data?.city)
+                .toLowerCase();
+            })
+            : null;
+
+          const result: ILegalEntityExternalSearchResult = {
+            label: data?.name?.short || '',
+            nameFull: data?.name?.full_with_opf || '',
+            nameShort: data?.name?.short_with_opf || '',
+            address: data?.address?.value || '',
+            ogrn: data?.ogrn || '',
+            kpp: data?.kpp || '',
+            inn: data?.inn || '',
+            city: cityData ? { id: cityData.id } : null,
+            directorNameNominative,
+            directorNameShortNominative,
+            state: data?.state?.status || 'ACTIVE',
+            branchType: data?.branch_type || 'MAIN',
+            type: data?.type || 'LEGAL',
+            registrationDate: new Date(data?.state?.registration_date || 0),
+            liquidationDate: data?.state?.liquidation_date
+              ? new Date(data?.state?.liquidation_date || 0)
+              : null,
+          };
+
+          return result;
+        });
 
       return suggestions;
     } catch (err) {

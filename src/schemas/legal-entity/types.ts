@@ -93,3 +93,41 @@ export type ILegalEntityPaymentInputTable = Omit<ILegalEntityPayment,
 export type ILegalEntityPaymentOutputTable = ILegalEntityPayment & {
   totalCount: number;
 };
+
+
+export enum ILegalEntityExternalSearchState {
+  ACTIVE,
+  LIQUIDATING,
+  LIQUIDATED,
+  REORGANIZING,
+}
+
+export enum ILegalEntityExternalSearchBranchType {
+  MAIN,
+  BRAHCN,
+}
+
+export enum ILegalEntityExternalSearchType {
+  LEGAL,
+  INDIVIDUAL,
+}
+
+export interface ILegalEntityExternalSearchResult {
+  label: string;
+  nameFull: string;
+  nameShort: string;
+  address: string;
+  ogrn: string;
+  kpp?: string;
+  inn: string;
+  directorNameNominative: string;
+  directorNameShortNominative: string;
+  state: ILegalEntityExternalSearchState;
+  branchType: ILegalEntityExternalSearchBranchType;
+  city: {
+    id: string;
+  } | null;
+  registrationDate: Date;
+  liquidationDate: Date | null;
+  type: ILegalEntityExternalSearchType;
+}
