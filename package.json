@@ -39,7 +39,7 @@
     "license": "MIT",
     "dependencies": {
         "@via-profit-services/core": "ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.23.5",
-        "@via-profit-services/geography": "ssh://git@gitlab.com:via-profit-services/geography.git#semver:^0.3.0",
+        "@via-profit-services/geography": "ssh://git@gitlab.com:via-profit-services/geography.git#semver:^0.3.3",
         "graphql": "^14.6.0",
         "graphql-tools": "^4.0.7",
         "moment": "^2.24.0",
