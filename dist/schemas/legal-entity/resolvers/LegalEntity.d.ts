@@ -16,5 +16,6 @@ export declare const legalEntityResolver: {
     comment: () => {};
     payments: () => {};
     city: () => {};
+    deleted: () => {};
 };
 export default legalEntityResolver;
