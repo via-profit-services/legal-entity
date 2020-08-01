@@ -227,6 +227,7 @@ type LegalEntity implements Node {
   directorNameShortGenitive: String!
 
   comment: String
+  deleted: Boolean!
 }
 
 

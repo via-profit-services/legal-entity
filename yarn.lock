@@ -852,9 +852,9 @@
     winston-daily-rotate-file "^4.4.2"
     ws "^7.2.3"
 
-"@via-profit-services/geography@ssh://git@gitlab.com:via-profit-services/geography.git#semver:^0.3.0":
-  version "0.3.2"
-  resolved "ssh://git@gitlab.com:via-profit-services/geography.git#2d9d5628b399980e8dddcee14c116b2789e94c26"
+"@via-profit-services/geography@ssh://git@gitlab.com:via-profit-services/geography.git#semver:^0.3.3":
+  version "0.3.3"
+  resolved "ssh://git@gitlab.com:via-profit-services/geography.git#64e316133181f63e96dfe8511c59379db08f37cc"
   dependencies:
     "@via-profit-services/core" "ssh://git@gitlab.com:via-profit-services/core.git#semver:^0.23.0"
     graphql "^14.6.0"

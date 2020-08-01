@@ -123,7 +123,6 @@ class LegalEntitiesService {
         payments: ['bank', 'bic', 'rs', 'ks', 'owner', 'priority'],
         legalEntities: '*',
       }))
-      .where((builder) => builder.where('legalEntities.deleted', 'false'))
       .where((builder) => {
         if (search) {
           search.forEach(({ field, query }) => {
@@ -372,7 +371,6 @@ class LegalEntitiesService {
       .limit(limit || 1)
       .offset(offset || 0)
       .where((builder) => convertWhereToKnex(builder, where))
-      .where((builder) => builder.where('deleted', false))
       .where((builder) => {
         if (search) {
           search.forEach(({ field, query }) => {

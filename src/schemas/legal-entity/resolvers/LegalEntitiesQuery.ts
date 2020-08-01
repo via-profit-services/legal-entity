@@ -3,6 +3,7 @@ import {
   buildCursorConnection,
   buildQueryFilter,
   TInputFilter,
+  TWhereAction,
 } from '@via-profit-services/core';
 import { IResolverObject } from 'graphql-tools';
 
@@ -16,6 +17,8 @@ export const queryResolver: IResolverObject<any, Context> = {
     const filter = buildQueryFilter(args);
     const legalEntitiesService = new LegalEntityService({ context });
     const loaders = createLoaders(context);
+
+    filter.where.push(['deleted', TWhereAction.EQ, false]);
 
     try {
       const legalEntitiesConnection = await legalEntitiesService.getLegalEntities(filter);
