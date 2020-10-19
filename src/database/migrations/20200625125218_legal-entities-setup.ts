@@ -4,7 +4,7 @@
  * This migration file was created by the @via-profit-services/legal-entity package
  */
 /* eslint-disable import/no-extraneous-dependencies */
-import * as Knex from 'knex';
+import { Knex } from '@via-profit-services/core';
 
 export async function up(knex: Knex): Promise<any> {
   return knex.raw(`

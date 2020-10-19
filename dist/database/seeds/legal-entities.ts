@@ -2,7 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 import { cities } from '@via-profit-services/geography/dist/countries/RU';
 import faker from 'faker/locale/ru';
-import * as Knex from 'knex';
+import { Knex } from '@via-profit-services/core';
 
 const LEGAL_ENTITIES_QUANTITY = 109;
 
