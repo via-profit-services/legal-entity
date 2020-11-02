@@ -2,7 +2,7 @@
  * 
  *  Via Profit services / legal-entity
  * 
- *  Repository https://gitlab.com/via-profit-services/legal-entity
+ *  Repository https://github.com/via-profit-services/legal-entity
  *  Contact    promo@via-profit.ru
  *  Website    https://via-profit.ru
  *       

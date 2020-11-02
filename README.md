@@ -13,7 +13,7 @@
 
 ## <a name="dependencies"></a> Зависимости
 
- - [Geography](https://gitlab.com/via-profit-services/geography)
+ - [Geography](https://github.com/via-profit-services/geography)
 
 
 ## <a name="setup"></a> Установка и настройка
@@ -21,10 +21,10 @@
 ### Установка
 
 ```bash
-yarn add ssh://git@gitlab.com:via-profit-services/legal-entity.git#semver:^0.6.5
+yarn add ssh://git@github.com:via-profit-services/legal-entity.git#semver:^0.6.5
 ```
 
-Список версий [см. здесь](https://gitlab.com/via-profit-services/legal-entity/-/tags)
+Список версий [см. здесь](https://github.com/via-profit-services/legal-entity/-/tags)
 
 ### Миграции
 
