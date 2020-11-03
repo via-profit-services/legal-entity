@@ -8,12 +8,14 @@ export const legalEntityExternalSearchResolver: IResolverObject<any, Context> = 
     const { query } = args;
     const legalEntitiesService = new LegalEntityService({ context });
     const result = await legalEntitiesService.externalSearchCompanies(query);
+
     return result;
   },
   payments: async (parent, args: IExternalSearchArgs, context) => {
     const { query } = args;
     const legalEntitiesService = new LegalEntityService({ context });
     const result = await legalEntitiesService.externalSearchPayments(query);
+
     return result;
   },
 };

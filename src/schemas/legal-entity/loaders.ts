@@ -1,6 +1,7 @@
 import {
   Node, DataLoader, collateForDataloader,
 } from '@via-profit-services/core';
+
 import LegalEntityService from './service';
 import { ILegalEntity, ILegalEntityPayment, Context } from './types';
 
@@ -25,11 +26,13 @@ export default function createLoaders(context: Context) {
 
   loaders.legalEntities = new DataLoader(async (ids: string[]) => {
     const nodes = await service.getLegalEntitiesByIds(ids);
+
     return collateForDataloader(ids, nodes);
   });
 
   loaders.payments = new DataLoader(async (ids: string[]) => {
     const nodes = await service.getLegalEntityPaymentsByIds(ids);
+
     return collateForDataloader(ids, nodes);
   });
 

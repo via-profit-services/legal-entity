@@ -26,6 +26,7 @@ export const legalEntityPaymentResolver = new Proxy({
       const { id } = parent;
       const loaders = createLoaders(context);
       const payment = await loaders.payments.load(id);
+
       return payment[prop];
     };
 

@@ -1,4 +1,5 @@
 import { IResolvers } from 'graphql-tools';
+
 import { Context } from '../types';
 
 import LegalEntitiesMutation from './LegalEntitiesMutation';

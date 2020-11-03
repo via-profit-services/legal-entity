@@ -76,6 +76,7 @@ const serverConfig: IInitProps = {
 
 const configureApp = (props?: IProps): IInitProps => {
   const { typeDefs, resolvers } = props || {};
+
   return {
     ...serverConfig,
     typeDefs,

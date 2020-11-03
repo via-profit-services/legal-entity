@@ -110,6 +110,7 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
       try {
         await Promise.all(toDeletePaymentIds.map((((idToDelete) => {
           loaders.payments.clear(idToDelete);
+
           return legalEntityService.deleteLegalEntityPayment(idToDelete);
         }))));
       } catch (err) {
@@ -119,6 +120,7 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
 
     // clear cache of this legal entity
     loaders.legalEntities.clear(id);
+
     return { id };
   },
   create: async (parent, args: ICreateArgs, context) => {

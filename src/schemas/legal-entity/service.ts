@@ -114,11 +114,9 @@ class LegalEntitiesService {
       .from<any, ILegalEntityOutputTable[]>('legalEntities')
       .limit(limit || 1)
       .offset(offset || 0)
-      .leftJoin('legalEntitiesPayments as payments', (builder) => {
-        return builder
+      .leftJoin('legalEntitiesPayments as payments', (builder) => builder
           .on('payments.owner', '=', 'legalEntities.id')
-          .onIn('payments.deleted', [false]);
-      })
+          .onIn('payments.deleted', [false]))
       .where((builder) => convertWhereToKnex(builder, where, {
         payments: ['bank', 'bic', 'rs', 'ks', 'owner', 'priority'],
         legalEntities: '*',
@@ -136,21 +134,17 @@ class LegalEntitiesService {
       })
       .orderBy(convertOrderByToKnex(orderBy))
       .groupBy('legalEntities.id')
-      .then((nodes) => {
-        return {
+      .then((nodes) => ({
           totalCount: nodes.length ? Number(nodes[0].totalCount) : 0,
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          nodes: nodes.map(({ totalCount, ...nodeData }) => {
-            return {
+          nodes: nodes.map(({ totalCount, ...nodeData }) => ({
               ...nodeData,
               city: nodeData.city ? { id: nodeData.city } : null,
               payments: nodeData.payments
                 ? arrayOfIdsToArrayOfObjectIds(nodeData.payments.split('|'))
                 : null,
-            };
-          }),
-        };
-      });
+            })),
+        }));
 
     return {
       ...connection,
@@ -174,6 +168,7 @@ class LegalEntitiesService {
 
   public async getLegalEntity(id: string): Promise<ILegalEntity | false> {
     const nodes = await this.getLegalEntitiesByIds([id]);
+
     return nodes.length ? nodes[0] : false;
   }
 
@@ -262,18 +257,15 @@ class LegalEntitiesService {
             : '';
 
           const directorNameShortNominative = directorNameNominative !== ''
-            ? directorNameNominative.split(' ').reduce((prev, current, index) => {
-              return index === 0 ? current : `${prev} ${current[0]}.`;
-            }, '')
+            ? directorNameNominative.split(' ').reduce((prev, current, index) => index === 0 ? current : `${prev} ${current[0]}.`, '')
             : '';
 
 
           // search city in Geography database
           const cityData = data?.address?.data?.country_iso_code === 'RU'
-            ? cities.find((currentCity) => {
-              return currentCity.ru.toLowerCase() === String(data?.address?.data?.city)
-                .toLowerCase();
-            })
+            // eslint-disable-next-line max-len
+            ? cities.find((currentCity) => currentCity.ru.toLowerCase() === String(data?.address?.data?.city)
+                .toLowerCase())
             : null;
 
           const result: ILegalEntityExternalSearchResult = {
@@ -304,6 +296,7 @@ class LegalEntitiesService {
       logger.server.error(`External API request to ${EXTERNAL_SEARCH_API_URL_PAYMENTS} failure`, {
         err,
       });
+
       return null;
     }
   }
@@ -345,6 +338,7 @@ class LegalEntitiesService {
       logger.server.error(`External API request to ${EXTERNAL_SEARCH_API_URL_PAYMENTS} failure`, {
         err,
       });
+
       return null;
     }
   }
@@ -383,8 +377,7 @@ class LegalEntitiesService {
         return builder;
       })
       .orderBy(convertOrderByToKnex(orderBy))
-      .then((nodes) => {
-        return {
+      .then((nodes) => ({
           totalCount: nodes.length ? Number(nodes[0].totalCount) : 0,
           nodes: nodes.map((node) => ({
             ...node,
@@ -392,8 +385,7 @@ class LegalEntitiesService {
               id: node.owner,
             } : node.owner,
           })),
-        };
-      });
+        }));
 
     return {
       ...connection,
@@ -417,6 +409,7 @@ class LegalEntitiesService {
 
   public async getLegalEntityPayment(id: string): Promise<ILegalEntityPayment | false> {
     const nodes = await this.getLegalEntityPaymentsByIds([id]);
+
     return nodes.length ? nodes[0] : false;
   }
 

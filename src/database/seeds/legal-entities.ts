@@ -21,9 +21,7 @@ const randomInt = (min?: number, max?: number) => {
   return Math.floor(Math.random() * (data.max - data.min + 1) + data.min);
 };
 
-const getRandomCity = () => {
-  return cities[randomInt(0, cities.length - 1)];
-};
+const getRandomCity = () => cities[randomInt(0, cities.length - 1)];
 
 
 const getDirectorName = () => {
@@ -45,23 +43,28 @@ const getDirectorName = () => {
 
 const generateINN = () => {
   const str = String(Math.floor(new Date().valueOf() * Math.random()));
+
   return `000${str}`.substr(0, 12);
 };
 
 const generateOGRN = () => {
   const str = String(Math.floor(new Date().valueOf() * Math.random()));
+
   return `000${str}`.substr(0, 13);
 };
 const generateKPP = () => {
   const str = String(Math.floor(new Date().valueOf() * Math.random()));
+
   return `000${str}`.substr(0, 9);
 };
 const generateBIC = () => {
   const str = String(Math.floor(new Date().valueOf() * Math.random()));
+
   return `04${str}`.substr(0, 9);
 };
 const generateRSKS = () => {
   const str = String(Math.floor(new Date().valueOf() * Math.random()));
+
   return `000000000${str}`.substr(0, 20);
 };
 
@@ -82,6 +85,7 @@ export async function seed(knex: Knex): Promise<any> {
       ][randomInt(0, 3)],
       owner: id,
     }));
+
     return {
       id,
       label: `Company ${companyName}`,
@@ -111,6 +115,7 @@ export async function seed(knex: Knex): Promise<any> {
       legalEntitiesData.map((legalEntity) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { payments, ...data } = legalEntity;
+
         return data;
       }),
     ))

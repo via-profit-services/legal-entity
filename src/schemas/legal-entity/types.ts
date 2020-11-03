@@ -18,7 +18,7 @@ export interface ILegalEntity {
   directorNameShortNominative: string;
   directorNameShortGenitive: string;
   comment: string;
-  deleted: Boolean;
+  deleted: boolean;
   payments: Array<{
     id: string;
   }> | null;
