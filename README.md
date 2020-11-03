@@ -4,6 +4,10 @@
 
 > Via Profit services / **Legal-entity** - это пакет, который является частью сервиса, базирующегося на `via-profit-services` и представляет собой реализацию схемы для работы с данными юридических лиц.
 
+![npm (scoped)](https://img.shields.io/npm/v/@via-profit-services/legal-entity?color=blue)
+![Libraries.io dependency status for latest release, scoped npm package](https://img.shields.io/librariesio/release/npm/@via-profit-services/legal-entity?color=red)
+
+
 ## Содержание
 
 - [Зависимости](#dependencies)
@@ -13,6 +17,7 @@
 
 ## <a name="dependencies"></a> Зависимости
 
+ - [Core](https://github.com/via-profit-services/core)
  - [Geography](https://github.com/via-profit-services/geography)
 
 
@@ -21,11 +26,8 @@
 ### Установка
 
 ```bash
-yarn add ssh://git@github.com:via-profit-services/legal-entity.git#semver:^0.6.5
+yarn add @via-profit-services/legal-entity
 ```
-
-Список версий [см. здесь](https://github.com/via-profit-services/legal-entity/-/tags)
-
 ### Миграции
 
 После первой установки примените все необходимые миграции:

@@ -1,5 +1,4 @@
-import { ServerError, TWhereAction } from '@via-profit-services/core';
-import { IResolverObject } from 'graphql-tools';
+import { ServerError, TWhereAction, IObjectTypeResolver } from '@via-profit-services/core';
 import { v4 as uuidv4 } from 'uuid';
 
 import createLoaders from '../loaders';
@@ -8,7 +7,7 @@ import {
   Context, IUpdateArgs, ICreateArgs, IDeleteArgs,
 } from '../types';
 
-export const legalEntityMutationResolver: IResolverObject<any, Context> = {
+export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
 
   update: async (parent, args: IUpdateArgs, context) => {
     const { id, input } = args;
@@ -110,6 +109,7 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
       try {
         await Promise.all(toDeletePaymentIds.map((((idToDelete) => {
           loaders.payments.clear(idToDelete);
+
           return legalEntityService.deleteLegalEntityPayment(idToDelete);
         }))));
       } catch (err) {
@@ -119,6 +119,7 @@ export const legalEntityMutationResolver: IResolverObject<any, Context> = {
 
     // clear cache of this legal entity
     loaders.legalEntities.clear(id);
+
     return { id };
   },
   create: async (parent, args: ICreateArgs, context) => {

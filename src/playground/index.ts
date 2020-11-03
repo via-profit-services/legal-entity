@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 import { App, schemas } from '@via-profit-services/core';
 import * as geography from '@via-profit-services/geography';
@@ -18,6 +19,7 @@ app.bootstrap((props) => {
   const { resolveUrl, context } = props;
   if (process.env.NODE_ENV !== 'development') {
     console.log(`GraphQL server was started at ${resolveUrl.graphql}`);
+
     return;
   }
 

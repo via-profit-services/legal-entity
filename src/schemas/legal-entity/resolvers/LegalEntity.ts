@@ -1,4 +1,4 @@
-import { IFieldResolver } from 'graphql-tools';
+import { IObjectTypeResolver, IFieldResolver } from '@via-profit-services/core';
 
 import createLoaders from '../loaders';
 import { Context, ILegalEntity } from '../types';
@@ -11,7 +11,7 @@ interface IArgs {
 }
 type ILegalEntityProxy = Omit<ILegalEntity, 'deleted'>;
 
-export const legalEntityResolver = new Proxy({
+export const legalEntityResolver:IObjectTypeResolver<IParent, Context, any> = new Proxy({
   id: () => ({}),
   createdAt: () => ({}),
   updatedAt: () => ({}),
@@ -32,7 +32,8 @@ export const legalEntityResolver = new Proxy({
   deleted: () => ({}),
 }, {
   get: (target, prop: keyof ILegalEntityProxy) => {
-    const resolver: IFieldResolver<IParent, Context, IArgs> = async (parent, args, context) => {
+    const resolver: IFieldResolver<IParent, Context, IArgs> = async (
+      parent, args, context) => {
       const { id } = parent;
       const loaders = createLoaders(context);
       const legalEntity = await loaders.legalEntities.load(id);

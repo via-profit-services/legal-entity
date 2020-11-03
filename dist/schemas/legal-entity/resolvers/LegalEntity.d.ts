@@ -1,21 +1,7 @@
-export declare const legalEntityResolver: {
-    id: () => {};
-    createdAt: () => {};
-    updatedAt: () => {};
-    label: () => {};
-    nameFull: () => {};
-    nameShort: () => {};
-    address: () => {};
-    ogrn: () => {};
-    kpp: () => {};
-    inn: () => {};
-    directorNameNominative: () => {};
-    directorNameGenitive: () => {};
-    directorNameShortNominative: () => {};
-    directorNameShortGenitive: () => {};
-    comment: () => {};
-    payments: () => {};
-    city: () => {};
-    deleted: () => {};
-};
+import { IObjectTypeResolver } from '@via-profit-services/core';
+import { Context } from '../types';
+interface IParent {
+    id: string;
+}
+export declare const legalEntityResolver: IObjectTypeResolver<IParent, Context, any>;
 export default legalEntityResolver;
