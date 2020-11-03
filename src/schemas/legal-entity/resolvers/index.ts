@@ -1,4 +1,4 @@
-import { IResolvers } from 'graphql-tools';
+import { IResolvers } from '@via-profit-services/core';
 
 import { Context } from '../types';
 

@@ -4,14 +4,14 @@ import {
   buildQueryFilter,
   TInputFilter,
   TWhereAction,
+  IObjectTypeResolver,
 } from '@via-profit-services/core';
-import { IResolverObject } from 'graphql-tools';
 
 import createLoaders from '../loaders';
 import LegalEntityService from '../service';
 import { Context } from '../types';
 
-export const queryResolver: IResolverObject<any, Context> = {
+export const queryResolver: IObjectTypeResolver<any, Context> = {
 
   list: async (parent, args: TInputFilter, context) => {
     const filter = buildQueryFilter(args);

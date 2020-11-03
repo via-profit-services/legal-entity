@@ -1,9 +1,9 @@
-import { IResolverObject } from 'graphql-tools';
+import { IObjectTypeResolver } from '@via-profit-services/core';
 
 import LegalEntityService from '../service';
 import { Context, IExternalSearchArgs } from '../types';
 
-export const legalEntityExternalSearchResolver: IResolverObject<any, Context> = {
+export const legalEntityExternalSearchResolver: IObjectTypeResolver<any, Context> = {
   companies: async (parent, args: IExternalSearchArgs, context) => {
     const { query } = args;
     const legalEntitiesService = new LegalEntityService({ context });
