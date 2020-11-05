@@ -53,6 +53,12 @@ Contact    ${packageInfo.support}
   ],
 
   externals: {
+    '@via-profit-services/core': {
+      commonjs2: '@via-profit-services/core',
+    },
+    '@via-profit-services/geography': {
+      commonjs2: '@via-profit-services/geography',
+    },
     moment: {
       commonjs2: 'moment',
     },
