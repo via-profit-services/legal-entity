@@ -17,15 +17,23 @@
 
 ## <a name="dependencies"></a> Зависимости
 
+Модули, которые необходимо установить вручную
+
  - [Core](https://github.com/via-profit-services/core)
  - [Geography](https://github.com/via-profit-services/geography)
 
 
 ## <a name="setup"></a> Установка и настройка
 
+Предполагается, что у вас уже установлен пакет [@via-profit-services/core](https://github.com/via-profit-services/core). Если нет, то перейдите на страницу проекта и установите модуль согласно документации.
+
+Также, необходимо установить и подключить модуль [Geography](https://github.com/via-profit-services/geography)
+
+
 ### Установка
 
 ```bash
+yarn add @via-profit-services/geography
 yarn add @via-profit-services/legal-entity
 ```
 ### Миграции
@@ -33,7 +41,8 @@ yarn add @via-profit-services/legal-entity
 После первой установки примените все необходимые миграции:
 
 ```bash
-yarn knex:migrate:latest
+yarn via-profit-core get-migrations -m ./src/database/migrations
+yarn via-profit-core knex migrate latest --knexfile ./src/utils/knexfile.ts
 ```
 
 После применения миграций будут созданы все необходимые таблицы в вашей базе данных
