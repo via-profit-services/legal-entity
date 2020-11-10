@@ -157,6 +157,7 @@ input LegalEntityListFilter {
 
 enum LegalEntityFilterSearchField {
   label
+  inn
   nameFull
   nameShort
   directorNameNominative

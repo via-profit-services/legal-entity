@@ -4,8 +4,8 @@
 
 > Via Profit services / **Legal-entity** - это пакет, который является частью сервиса, базирующегося на `via-profit-services` и представляет собой реализацию схемы для работы с данными юридических лиц.
 
-![npm (scoped)](https://img.shields.io/npm/v/@via-profit-services/legal-entity?color=blue)
-![Libraries.io dependency status for latest release, scoped npm package](https://img.shields.io/librariesio/release/npm/@via-profit-services/legal-entity?color=red)
+![npm (scoped)](https://img.shields.io/npm/v/@via-profit-services/core?color=blue)
+![NPM](https://img.shields.io/npm/l/@via-profit-services/core?color=blue)
 
 
 ## Содержание
@@ -53,7 +53,8 @@ yarn via-profit-core knex migrate latest --knexfile ./src/utils/knexfile.ts
 Модуль экспортирует наружу:
  - typeDefs - Типы
  - resolvers - Резолверы
- - service - Класс, реализующий модель данного модуля
+ - LegalEntity - Класс, реализующий модель данного модуля
+ - loaders - Даталоадеры
 
 Для интеграции модуля, просто, задействуйте в своем приложении экспортируемые типы и резолверы
 
