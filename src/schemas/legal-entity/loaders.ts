@@ -18,7 +18,7 @@ const loaders: Loaders = {
 
 
 export default function createLoaders(context: Context) {
-  if (loaders.legalEntities !== null) {
+  if (loaders.legalEntities !== null && loaders.payments !== null) {
     return loaders;
   }
 
