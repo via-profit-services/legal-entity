@@ -157,6 +157,7 @@ class LegalEntitiesService {
 
 
   public async getLegalEntitiesByIds(ids: string[]): Promise<ILegalEntity[]> {
+
     const { nodes } = await this.getLegalEntities({
       where: [['id', TWhereAction.IN, ids]],
       offset: 0,
@@ -443,10 +444,9 @@ class LegalEntitiesService {
       createdAt: moment.tz(timezone).format(),
       updatedAt: moment.tz(timezone).format(),
     };
-
     const result = await knex<ILegalEntityPaymentInputTable>('legalEntitiesPayments')
-      .insert(this.prepareLegalEntityPaymentToInsert(data))
-      .returning('id');
+    .insert(this.prepareLegalEntityPaymentToInsert(data))
+    .returning('id');
 
     return result[0];
   }

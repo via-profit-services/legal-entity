@@ -127,6 +127,7 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
     const { payments, ...otherInput } = input;
     const id = input.id || uuidv4();
     const legalEntityService = new LegalEntityService({ context });
+    const loaders = createLoaders(context);
 
     // check INN unique
     if (input.inn) {
@@ -146,20 +147,20 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
 
 
     // check OGRN unique
-    if (input.ogrn) {
-      const { totalCount } = await legalEntityService.getLegalEntities({
-        limit: 1,
-        where: [
-          ['ogrn', TWhereAction.EQ, input.ogrn],
-        ],
-      });
+    // if (input.ogrn) {
+    //   const { totalCount } = await legalEntityService.getLegalEntities({
+    //     limit: 1,
+    //     where: [
+    //       ['ogrn', TWhereAction.EQ, input.ogrn],
+    //     ],
+    //   });
 
-      if (totalCount) {
-        throw new ServerError(
-          `Legal entity record already exists with ogrn ${input.ogrn} value`, { input },
-        );
-      }
-    }
+    //   if (totalCount) {
+    //     throw new ServerError(
+    //       `Legal entity record already exists with ogrn ${input.ogrn} value`, { input },
+    //     );
+    //   }
+    // }
 
     try {
       await legalEntityService.createLegalEntity({
@@ -189,6 +190,8 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
       throw new ServerError('Failed to create legal entity payments', { err, input });
     }
 
+
+    loaders.legalEntities.clear(id);
 
     return { id };
   },
