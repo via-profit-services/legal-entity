@@ -4,8 +4,8 @@
 
 > Via Profit services / **Legal-entity** - это пакет, который является частью сервиса, базирующегося на `via-profit-services` и представляет собой реализацию схемы для работы с данными юридических лиц.
 
-![npm (scoped)](https://img.shields.io/npm/v/@via-profit-services/core?color=blue)
-![NPM](https://img.shields.io/npm/l/@via-profit-services/core?color=blue)
+![npm (scoped)](https://img.shields.io/npm/v/@via-profit-services/legal-entity?color=blue)
+![NPM](https://img.shields.io/npm/l/@via-profit-services/legal-entity?color=blue)
 
 
 ## Содержание
