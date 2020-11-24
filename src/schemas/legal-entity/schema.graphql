@@ -37,7 +37,7 @@ type LegalEntitiesQuery {
     first: Int
     offset: Int
     after: String
-    orderBy: [LegalEntityOrderBy]
+    orderBy: [LegalEntityOrderBy!]
     filter: LegalEntityListFilter
     search: LegalEntityFilterSearch
   ): LegalEntityListConnection!
@@ -182,7 +182,7 @@ Legal entities list bundle
 type LegalEntityListConnection implements Connection {
   totalCount: Int!
   pageInfo: PageInfo!
-  edges: [LegalEntityEdge]!
+  edges: [LegalEntityEdge!]!
 }
 
 
