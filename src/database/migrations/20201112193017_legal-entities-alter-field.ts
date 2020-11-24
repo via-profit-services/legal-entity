@@ -26,6 +26,6 @@ export async function down(knex: Knex): Promise<unknown> {
     );
     
     -- add constraint
-    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesOgrnUniqe" UNIQUE (rs);
+    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesOgrnUniqe" UNIQUE (ogrn);
   `);
 }
