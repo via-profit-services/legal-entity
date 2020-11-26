@@ -51,10 +51,11 @@ yarn via-profit-core knex migrate latest --knexfile ./src/utils/knexfile.ts
 ## <a name="how-to-use"></a> Как использовать
 
 Модуль экспортирует наружу:
- - typeDefs - Типы
  - resolvers - Резолверы
  - LegalEntity - Класс, реализующий модель данного модуля
  - loaders - Даталоадеры
+
+Сама схема доступна по импорту `@via-profit-services/legal-entity/schema`.
 
 Для интеграции модуля, просто, задействуйте в своем приложении экспортируемые типы и резолверы
 
@@ -62,7 +63,8 @@ yarn via-profit-core knex migrate latest --knexfile ./src/utils/knexfile.ts
 
 ```ts
 import { App } from '@via-profit-services/core';
-import { typeDefs, resolvers } from '@via-profit-services/legal-entity';
+import { resolvers } from '@via-profit-services/legal-entity';
+import typeDefs from '@via-profit-services/legal-entity/schema';
 
 const app = new App({
   ...
@@ -73,10 +75,3 @@ const app = new App({
 app.bootstrap();
 
 ```
-
-
-## TODO
-
-- [ ] Write the CONTRIBUTING docs
-- [ ] Write the tests
-- [ ] Create Subscriptions

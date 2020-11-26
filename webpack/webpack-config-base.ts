@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const path = require('path');
+import path from 'path';
+import { Configuration } from 'webpack';
 
-module.exports = {
+const webpackBaseConfig: Configuration = {
   target: 'node',
   module: {
     rules: [
@@ -34,3 +34,5 @@ module.exports = {
     },
   },
 };
+
+export default webpackBaseConfig;

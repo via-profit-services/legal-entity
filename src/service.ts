@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import {
   IListResponse,
   TOutputFilter,
@@ -11,11 +10,11 @@ import cities from '@via-profit-services/geography/dist/countries/RU/cities.json
 import moment from 'moment-timezone';
 import { v4 as uuidv4 } from 'uuid';
 
-import fetchExternal, { RequestType } from './utils/fetch-external';
 import {
   Context, ILegalEntity, TLegalEntityInputTable, ILegalEntityPayment, ILegalEntityPaymentInputTable,
   ILegalEntityPaymentOutputTable, ILegalEntityOutputTable, ILegalEntityExternalSearchResult,
 } from './types';
+import fetchExternal, { RequestType } from './utils/fetch-external';
 
 
 class LegalEntitiesService {

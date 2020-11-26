@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const path = require('path');
-const fs = require('fs-extra');
-const { ProgressPlugin, BannerPlugin } = require('webpack');
-const merge = require('webpack-merge');
-const ViaProfitPlugin = require('@via-profit-services/core/dist/webpack');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+import ViaProfitPlugin from '@via-profit-services/core/dist/webpack-plugin';
+import fs from 'fs-extra';
+import path from 'path';
+import { ProgressPlugin, BannerPlugin, Configuration, Compiler } from 'webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import { merge } from 'webpack-merge';
 
-const packageInfo = require('../package.json');
-const baseConfig = require('./webpack.config.base');
+import packageInfo from '../package.json';
+import webpackbaseConfig from './webpack-config-base';
 
-module.exports = merge(baseConfig, {
+const webpackProdConfig: Configuration = merge(webpackbaseConfig, {
   entry: {
     index: path.resolve(__dirname, '../src/index.ts'),
     schema: path.resolve(__dirname, '../src/schema.ts'),
@@ -27,7 +26,7 @@ module.exports = merge(baseConfig, {
       analyzerMode: process.env.ANALYZE ? 'server' : 'disabled',
     }),
     new ViaProfitPlugin(),
-    new ProgressPlugin(),
+    new ProgressPlugin({}),
     new BannerPlugin({
       banner: `
 Via Profit services / legal-entity
@@ -37,7 +36,7 @@ Contact    ${packageInfo.support}
       `,
     }),
     {
-      apply: (compiler) => {
+      apply: (compiler: Compiler) => {
         compiler.hooks.beforeRun.tapAsync('WebpackBeforeBuild', (_, callback) => {
           fs.rmdirSync(path.resolve(__dirname, '../dist/'), { recursive: true });
           callback();
@@ -80,18 +79,13 @@ Contact    ${packageInfo.support}
     },
   ],
   externals: [
-    {
-      '@via-profit-services/core': 'commonjs2 @via-profit-services/core',
-      'moment-timezone': 'commonjs2 moment-timezone',
-      moment: 'commonjs2 moment',
-      uuid: 'commonjs2 uuid',
-    },
-    (_, request, callback) => {
-      if (request.match(/^@via-profit-services\/geography\//)) {
-        return callback(null, { commonjs: request });
-      }
-
-      return callback();
-    },
+    /^@via-profit-services\/core/,
+    /^@via-profit-services\/geography/,
+    /^moment-timezone$/,
+    /^moment$/,
+    /$uuid$/,
   ],
 });
+
+
+export default webpackProdConfig;
