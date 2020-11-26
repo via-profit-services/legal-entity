@@ -38,8 +38,7 @@
         "release:patch": "yarn version patch",
         "release:minor": "yarn version minor",
         "release:major": "yarn version major",
-        "release:prerelease": "yarn version prerelease",
-        "npm:publish": "yarn npm publish dist"
+        "release:prerelease": "yarn version prerelease"
     },
     "repository": {
         "type": "git",
