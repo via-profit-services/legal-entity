@@ -34,11 +34,11 @@
         "knex:seed:make": "yarn run via-profit-core:knex seed make --name",
         "knex:seed:run": "yarn run via-profit-core:knex seed run --name",
         "postversion": "git push --tags",
-        "release:prepatch": "yarn version --prepatch",
-        "release:patch": "yarn version --patch",
-        "release:minor": "yarn version --minor",
-        "release:major": "yarn version --major",
-        "release:prerelease": "yarn version --prerelease",
+        "release:prepatch": "yarn version prepatch",
+        "release:patch": "yarn version patch",
+        "release:minor": "yarn version minor",
+        "release:major": "yarn version major",
+        "release:prerelease": "yarn version prerelease",
         "npm:publish": "yarn npm publish dist"
     },
     "repository": {
