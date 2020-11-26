@@ -4,12 +4,16 @@ import { App, schemas } from '@via-profit-services/core';
 import * as geography from '@via-profit-services/geography';
 import chalk from 'chalk';
 import { v4 as uuidv4 } from 'uuid';
+import dotenv from 'dotenv';
 
-import * as legalEntity from '../schemas/legal-entity';
+import typeDefs from '../../schema.graphql';
+import * as legalEntity from '../index';
 import { configureApp } from '../utils/configureApp';
 
+dotenv.config();
+
 const config = configureApp({
-  typeDefs: [legalEntity.typeDefs, geography.typeDefs],
+  typeDefs: [typeDefs, geography.typeDefs],
   resolvers: [legalEntity.resolvers, geography.resolvers],
 });
 const app = new App(config);

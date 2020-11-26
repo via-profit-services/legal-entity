@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
-const tsTransformPaths = require('@zerollup/ts-transform-paths');
 
 module.exports = {
   target: 'node',
@@ -8,25 +8,7 @@ module.exports = {
       {
         test: /\.ts$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              configFile: path.resolve(
-                __dirname,
-                process.env.NODE_ENV === 'development' ? '../tsconfig.json' : '../tsconfig.prod.json',
-              ),
-              getCustomTransformers: program => {
-                const transformer = tsTransformPaths(program);
-
-                return {
-                  before: [transformer.before], // for updating paths in generated code
-                  afterDeclarations: [transformer.afterDeclarations], // for updating paths in declaration files
-                };
-              },
-            },
-          },
-        ],
+        use: 'ts-loader',
       },
       {
         test: /\.mjs$/, // fixes https://github.com/graphql/graphql-js/issues/1272
@@ -36,7 +18,7 @@ module.exports = {
       {
         test: /\.(graphql|gql)$/,
         exclude: /node_modules/,
-        loader: 'graphql-tag/loader',
+        use: 'graphql-tag/loader',
       },
     ],
   },

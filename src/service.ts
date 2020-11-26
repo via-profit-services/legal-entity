@@ -16,7 +16,7 @@ import {
   EXTERNAL_SEARCH_API_TOKEN,
   EXTERNAL_SEARCH_API_URL_COMPANIES,
   EXTERNAL_SEARCH_API_URL_PAYMENTS,
-} from './constants';
+} from './utils/constants';
 import {
   Context, ILegalEntity, TLegalEntityInputTable, ILegalEntityPayment, ILegalEntityPaymentInputTable,
   ILegalEntityPaymentOutputTable, ILegalEntityOutputTable, ILegalEntityExternalSearchResult,

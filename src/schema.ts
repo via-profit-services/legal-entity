@@ -1,3 +1,5 @@
+const schema = /* GraphQL */`
+
 extend type Query {
   legalEntities: LegalEntitiesQuery!
 }
@@ -300,3 +302,6 @@ input LegalEntityInputCreate {
   comment: String
   city: ID
 }
+`;
+
+export default schema;
