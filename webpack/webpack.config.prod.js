@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
-const FileManagerPlugin = require('filemanager-webpack-plugin');
+const fs = require('fs-extra');
 const { ProgressPlugin, BannerPlugin } = require('webpack');
 const merge = require('webpack-merge');
 const ViaProfitPlugin = require('@via-profit-services/core/dist/webpack');
@@ -36,37 +36,53 @@ Repository ${packageInfo.repository.url}
 Contact    ${packageInfo.support}
       `,
     }),
-    new FileManagerPlugin({
-      onStart: {
-        delete: ['./dist'],
+    {
+      apply: (compiler) => {
+        compiler.hooks.beforeRun.tapAsync('WebpackBeforeBuild', (_, callback) => {
+          fs.rmdirSync(path.resolve(__dirname, '../dist/'), { recursive: true });
+          callback();
+        });
+
+        compiler.hooks.afterEmit.tapAsync('WebpackAfterBuild', (_, callback) => {
+
+          fs.rmdirSync(path.resolve(__dirname, '../dist/playground'), {
+            recursive: true,
+          });
+
+          fs.copySync(
+            path.resolve(__dirname, '../src/database/migrations/'),
+            path.resolve(__dirname, '../dist/database/migrations/'),
+          );
+
+          fs.copySync(
+            path.resolve(__dirname, '../src/database/seeds/'),
+            path.resolve(__dirname, '../dist/database/seeds/'),
+          );
+
+          fs.copyFileSync(
+            path.resolve(__dirname, '../package.json'),
+            path.resolve(__dirname, '../dist/package.json'),
+          );
+
+          fs.copyFileSync(
+            path.resolve(__dirname, '../README.md'),
+            path.resolve(__dirname, '../dist/README.md'),
+          );
+
+          fs.copyFileSync(
+            path.resolve(__dirname, '../LICENSE'),
+            path.resolve(__dirname, '../dist/LICENSE'),
+          );
+
+          callback();
+        });
       },
-      onEnd: {
-        copy: [
-          {
-            source: './src/database/migrations/*',
-            destination: './dist/database/migrations/',
-          },
-          {
-            source: './src/database/seeds/*',
-            destination: './dist/database/seeds/',
-          },
-          {
-            source: './package.json',
-            destination: './dist/package.json',
-          },
-        ],
-        delete: [
-          './dist/playground',
-          './dist/database/migrations/!(+([0-9])_legal-entities-*@(.ts|.d.ts))',
-        ],
-      },
-    }),
+    },
   ],
   externals: [
     {
       '@via-profit-services/core': 'commonjs2 @via-profit-services/core',
       'moment-timezone': 'commonjs2 moment-timezone',
-      'node-fetch': 'commonjs2 node-fetch',
       moment: 'commonjs2 moment',
       uuid: 'commonjs2 uuid',
     },
