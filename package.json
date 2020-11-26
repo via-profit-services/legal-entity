@@ -33,7 +33,6 @@
         "knex:migrate:rollback:all": "yarn run via-profit-core:knex migrate rollback-all",
         "knex:seed:make": "yarn run via-profit-core:knex seed make --name",
         "knex:seed:run": "yarn run via-profit-core:knex seed run --name",
-        "postversion": "git push --tags",
         "release:prepatch": "yarn version prepatch",
         "release:patch": "yarn version patch",
         "release:minor": "yarn version minor",
