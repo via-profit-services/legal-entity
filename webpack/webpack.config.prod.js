@@ -50,10 +50,10 @@ Contact    ${packageInfo.support}
             source: './src/database/seeds/*',
             destination: './dist/database/seeds/',
           },
-          // {
-          //   source: './src/schema.graphql',
-          //   destination: './schema.graphql',
-          // },
+          {
+            source: './package.json',
+            destination: './dist/package.json',
+          },
         ],
         delete: [
           './dist/playground',
