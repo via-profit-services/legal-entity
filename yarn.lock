@@ -288,6 +288,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-tools/merge@npm:^6.2.5":
+  version: 6.2.5
+  resolution: "@graphql-tools/merge@npm:6.2.5"
+  dependencies:
+    "@graphql-tools/schema": ^7.0.0
+    "@graphql-tools/utils": ^7.0.0
+    tslib: ~2.0.1
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 544be7eee97d0ecfba59b4eab8688157b74890a43b35c0f90facaf323cb8499ebbc7fb0adedd35c30f24ee9795e019df279cd3b14cbeee7bbf5186d36c751a9f
+  languageName: node
+  linkType: hard
+
 "@graphql-tools/schema@npm:^7.0.0":
   version: 7.0.0
   resolution: "@graphql-tools/schema@npm:7.0.0"
@@ -297,6 +310,18 @@ __metadata:
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
   checksum: 2c77907b4c68fe4e307112667b78818ebb129a50c6f28e89b05b61aec12f698afb207f2d8b48751e6af0525dc65c1929fdd9ca9475d8a3c529417fe5252c6fd0
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/schema@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "@graphql-tools/schema@npm:7.1.0"
+  dependencies:
+    "@graphql-tools/utils": ^7.1.0
+    tslib: ~2.0.1
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: a6c7ccd0390bdce84482262bfda513c9d0730b8a851f43c84b8acb273b13ab6b27129461c890132e44cad5da7c39f615d556455c63db5953b943adab20e00ead
   languageName: node
   linkType: hard
 
@@ -310,6 +335,19 @@ __metadata:
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
   checksum: ecc3e49af78fcef1e6bd7132f4be912c00fdb7202989da0e5d0be2d713342c740e3fea67f313b3e301e995e5c7c27665df35c6777464eeede00e70e8e06557ac
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/utils@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "@graphql-tools/utils@npm:7.1.0"
+  dependencies:
+    "@ardatan/aggregate-error": 0.0.6
+    camel-case: 4.1.1
+    tslib: ~2.0.1
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: d40f8021b26f3c7e1b517c4291f27d96ea42acf8c20e37a6874e54e6d819b1943fc4dcf2296994b80f5e87e9424fb524a378bbda69c882a0884d6958e4134d5a
   languageName: node
   linkType: hard
 
@@ -487,6 +525,19 @@ __metadata:
     "@types/istanbul-reports": ^1.1.1
     "@types/yargs": ^13.0.0
   checksum: 7cd388ad9d3a6de7e0ca29cbaf34dd9da9f6485d26747fc2ef6732bf06dc98d79519b7f3684b7287bd6d5168c394d8f806dc1343bd3c1b3cdc3e85486a518c63
+  languageName: node
+  linkType: hard
+
+"@jest/types@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "@jest/types@npm:26.6.2"
+  dependencies:
+    "@types/istanbul-lib-coverage": ^2.0.0
+    "@types/istanbul-reports": ^3.0.0
+    "@types/node": "*"
+    "@types/yargs": ^15.0.0
+    chalk: ^4.0.0
+  checksum: 5c511d7807f414b298299ae4a053abf265f39984942e0eefdfb17a7986a36f1047e0fd9a6f785bdddbf7343a5737595dfabe148719a80e118dd77486502009cc
   languageName: node
   linkType: hard
 
@@ -701,12 +752,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^24.0.23":
-  version: 24.9.1
-  resolution: "@types/jest@npm:24.9.1"
+"@types/istanbul-reports@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/istanbul-reports@npm:3.0.0"
   dependencies:
-    jest-diff: ^24.3.0
-  checksum: 2a950309a2d848c292b0c324aa124e4833f6446ddfcdb1f854c454000738ab918ac45f57ddbd667491381ad55b138a21d7aa049d7fe642b6ea87095990aa054b
+    "@types/istanbul-lib-report": "*"
+  checksum: 8aee794ea2e8065aa83e0a1017420068d10110f5e67f8473f5751e74462509306c451f79db3856e6848507519bf1d4de7d101daede6539701cc4d74b4646acd9
+  languageName: node
+  linkType: hard
+
+"@types/jest@npm:^26.0.15":
+  version: 26.0.15
+  resolution: "@types/jest@npm:26.0.15"
+  dependencies:
+    jest-diff: ^26.0.0
+    pretty-format: ^26.0.0
+  checksum: 42fe39d582de1d79f9d6b96f3dee43ba2e9336c9d1f0e31c4f2f58bbaa059c9f4295c42a213ea9450f91400515a3abde4aae2673522fc6e11ea33f7e21c25dbe
   languageName: node
   linkType: hard
 
@@ -943,6 +1004,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/yargs@npm:^15.0.0":
+  version: 15.0.10
+  resolution: "@types/yargs@npm:15.0.10"
+  dependencies:
+    "@types/yargs-parser": "*"
+  checksum: 151fc79f8146511722b3739ed0c7e83190da4c5fbd8bd0dbcbfedcf89349e7c40908c93656986e67c276a010e6749c59d5f317558bd47fed4ee51da2780a0284
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/eslint-plugin@npm:^4.6.1":
   version: 4.8.2
   resolution: "@typescript-eslint/eslint-plugin@npm:4.8.2"
@@ -1107,11 +1177,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@via-profit-services/legal-entity@workspace:."
   dependencies:
+    "@graphql-tools/merge": ^6.2.5
+    "@graphql-tools/schema": ^7.1.0
+    "@graphql-tools/utils": ^7.1.0
     "@jagi/jest-transform-graphql": ^1.0.2
     "@types/express-serve-static-core": ^4.17.2
     "@types/faker": ^5.1.4
     "@types/fs-extra": ^9.0.4
-    "@types/jest": ^24.0.23
+    "@types/jest": ^26.0.15
     "@types/moment-timezone": ^0.5.12
     "@types/node": ^14.14.10
     "@types/shelljs": ^0.8.8
@@ -1142,8 +1215,11 @@ __metadata:
     eslint-plugin-react: ^7.21.5
     eslint-plugin-standard: ^4.0.2
     faker: ^5.1.0
+    file-loader: ^6.2.0
     filemanager-webpack-plugin: ^2.0.5
     fs-extra: ^9.0.1
+    graphql: ^15.4.0
+    graphql-tag: ^2.11.0
     husky: ^4.2.3
     jest: ^24.9.0
     jest-transform-graphql: ^2.1.0
@@ -1607,7 +1683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-styles@npm:^4.1.0":
+"ansi-styles@npm:^4.0.0, ansi-styles@npm:^4.1.0":
   version: 4.3.0
   resolution: "ansi-styles@npm:4.3.0"
   dependencies:
@@ -3675,6 +3751,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"diff-sequences@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "diff-sequences@npm:26.6.2"
+  checksum: dd1eb6e52f0a200228b836876a69c90690003b8991cf7d9264d6e6063acde8fe852084b6a196f2a13f169d309e30c24c457e9c8db617aed186c665efb50af1d8
+  languageName: node
+  linkType: hard
+
 "diff@npm:^4.0.1":
   version: 4.0.2
   resolution: "diff@npm:4.0.2"
@@ -4819,6 +4902,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"file-loader@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "file-loader@npm:6.2.0"
+  dependencies:
+    loader-utils: ^2.0.0
+    schema-utils: ^3.0.0
+  peerDependencies:
+    webpack: ^4.0.0 || ^5.0.0
+  checksum: 0f103418c072ec66c081a9908cd7824ee19905e18be16889cb050f5f373998afaf7ca4c2fd2df4cabf703a2cd526aefe59105930e3f8d266a5b35e6d5f5b3cf4
+  languageName: node
+  linkType: hard
+
 "file-stream-rotator@npm:^0.5.7":
   version: 0.5.7
   resolution: "file-stream-rotator@npm:0.5.7"
@@ -5599,7 +5694,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"graphql@npm:^15.3.0":
+"graphql@npm:^15.3.0, graphql@npm:^15.4.0":
   version: 15.4.0
   resolution: "graphql@npm:15.4.0"
   checksum: 1a307dcfe2646e1e8323d03e8cd24554ba9f7369863bf0b020f2e4b39bff3504dc7d6dcad19cb96899f0825eda4c688819911f0c270e84f1bb0954fe3ac16a31
@@ -6814,7 +6909,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:^24.3.0, jest-diff@npm:^24.9.0":
+"jest-diff@npm:^24.9.0":
   version: 24.9.0
   resolution: "jest-diff@npm:24.9.0"
   dependencies:
@@ -6823,6 +6918,18 @@ fsevents@~2.1.2:
     jest-get-type: ^24.9.0
     pretty-format: ^24.9.0
   checksum: ba4aa10e5712ad365700921c90362dae8c2ab5b2c599b6f64fc4f3013f6208d760cb2980d491010e602e4a36b28a5c18fceba251f7602929d93300ae03ae931c
+  languageName: node
+  linkType: hard
+
+"jest-diff@npm:^26.0.0":
+  version: 26.6.2
+  resolution: "jest-diff@npm:26.6.2"
+  dependencies:
+    chalk: ^4.0.0
+    diff-sequences: ^26.6.2
+    jest-get-type: ^26.3.0
+    pretty-format: ^26.6.2
+  checksum: 05d0f1bdba147a026eab4121a73a69ee3df21aec59ecd34659d665ee0663e518636650b435d248974ab5aceb345de9bfcc035efd01df723fe788756a07c8d046
   languageName: node
   linkType: hard
 
@@ -6879,6 +6986,13 @@ fsevents@~2.1.2:
   version: 24.9.0
   resolution: "jest-get-type@npm:24.9.0"
   checksum: 0e6164dff23f8cd664a46642d2167b743e67349c57ff908259b56e3f5c81f8d2a13de2dd473a1a3d7682adcfe85888d14b0496ba51c5c8095eb52bf7526c3918
+  languageName: node
+  linkType: hard
+
+"jest-get-type@npm:^26.3.0":
+  version: 26.3.0
+  resolution: "jest-get-type@npm:26.3.0"
+  checksum: fc3e2d2b90cca74597c4ad6234c2fcc2ccb62894d0f7afe22fc55b5d93a2f02d3080ccef50f09c979d4b5a060bc76c4343911556d75ed9e892e0ebda6d54c44b
   languageName: node
   linkType: hard
 
@@ -7665,6 +7779,17 @@ fsevents@~2.1.2:
     emojis-list: ^3.0.0
     json5: ^1.0.1
   checksum: 9fd690e57ad78d32ff2942383b4a7a175eba575280ba5aca3b4d03183fec34aa0db314f49bd3301adf7e60b02471644161bf53149e8f2d18fd6a52627e95a927
+  languageName: node
+  linkType: hard
+
+"loader-utils@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "loader-utils@npm:2.0.0"
+  dependencies:
+    big.js: ^5.2.2
+    emojis-list: ^3.0.0
+    json5: ^2.1.2
+  checksum: a1c2e48781e1501e126a32c39bc1fb1a7e2f02bd99e5aeb8853ddaf3c121fffefcc4579367f97ca6890b58369e571af1c9ec82e4e20db238d560ab359ff25c33
   languageName: node
   linkType: hard
 
@@ -9683,6 +9808,18 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"pretty-format@npm:^26.0.0, pretty-format@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "pretty-format@npm:26.6.2"
+  dependencies:
+    "@jest/types": ^26.6.2
+    ansi-regex: ^5.0.0
+    ansi-styles: ^4.0.0
+    react-is: ^17.0.1
+  checksum: 5ad34fc128218485732cf0271d396158a00584708fc97bf063c1c3c000fe14da572e9a1d3d7b92d95c5e24965434656c56ed0e45804dea2435ca59a1f86f1b07
+  languageName: node
+  linkType: hard
+
 "process-nextick-args@npm:~2.0.0":
   version: 2.0.1
   resolution: "process-nextick-args@npm:2.0.1"
@@ -9959,6 +10096,13 @@ fsevents@~2.1.2:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 11bcf1267a314a522615f626f3ce3727a3a24cdbf61c4d452add3550a7875326669631326cfb1ba3e92b6f72244c32ffecf93ad21c0cad8455d3e169d0e3f060
+  languageName: node
+  linkType: hard
+
+"react-is@npm:^17.0.1":
+  version: 17.0.1
+  resolution: "react-is@npm:17.0.1"
+  checksum: 5a83dfc78e7adcb93d632bf367b0733db650e3abd2e9c57c33b87e50d201212c1884b0d7bcf13e692f1556189fa1b87f9f3e0ba10fe858fd6aebe83ed4fcd1ea
   languageName: node
   linkType: hard
 

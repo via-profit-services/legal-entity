@@ -1,4 +1,3 @@
-import path from 'path';
 import { Configuration } from 'webpack';
 
 const webpackBaseConfig: Configuration = {
@@ -29,9 +28,6 @@ const webpackBaseConfig: Configuration = {
   resolve: {
     // .mjs needed for https://github.com/graphql/graphql-js/issues/1272
     extensions: ['.ts', '.mjs', '.js', '.json', '.gql', '.graphql'],
-    alias: {
-      '~': path.resolve(__dirname, '..', 'src'),
-    },
   },
 };
 

@@ -1,21 +1,21 @@
 /* eslint-disable no-console */
-/* eslint-disable import/no-extraneous-dependencies */
 import { App, schemas } from '@via-profit-services/core';
 import * as geography from '@via-profit-services/geography';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 
-import typeDefs from '../schema.graphql';
-import * as legalEntity from '../src/index';
-import { configureApp } from '../src/utils/configureApp';
+import typeDefs from '../../src/schema.graphql';
+import { resolvers } from '../index';
+import { configureApp } from './configureApp';
 
 dotenv.config();
 
 const config = configureApp({
   typeDefs: [typeDefs, geography.typeDefs],
-  resolvers: [legalEntity.resolvers, geography.resolvers],
+  resolvers: [resolvers, geography.resolvers],
 });
+
 const app = new App(config);
 const AuthService = schemas.auth.service;
 

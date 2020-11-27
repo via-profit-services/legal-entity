@@ -1,21 +1,30 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import { configureApp } from './configureApp';
+import { Knex } from '@via-profit-services/core';
+import dotenv from 'dotenv';
 
-const { database } = configureApp();
-const { timezone, ...dbConfig } = database;
+dotenv.config();
 
-const CHARSET = 'UTF8';
-const CLIENT = 'pg';
-
-const config = {
-  client: CLIENT,
-  ...dbConfig,
+const config: Knex.Config = {
+  client: 'pg',
+  connection: {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+  },
+  migrations: {
+    directory: './.migrations',
+    extension: 'ts',
+  },
+  seeds: {
+    directory: './.seeds',
+    extension: 'ts',
+  },
   pool: {
     afterCreate: (conn: any, done: any) => {
       conn.query(
         `
-          SET TIMEZONE = '${timezone}';
-          SET CLIENT_ENCODING = ${CHARSET};
+          SET TIMEZONE = 'UTC';
+          SET CLIENT_ENCODING = UTF8;
         `,
         (err: any) => {
           done(err, conn);

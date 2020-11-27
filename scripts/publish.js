@@ -11,6 +11,7 @@ const files = [
   ['./package.json', './dist/package.json'],
   ['./README.md', './dist/README.md'],
   ['./LICENSE', './dist/LICENSE'],
+  ['./scripts/postinstall.js', './dist/scripts/postinstall.js'],
 ];
 
 
@@ -20,6 +21,11 @@ console.log('');
 
 files.forEach(([source, destination]) => {
   console.log(chalk.magenta(`Copy ${source} ->> ${destination}`));
+  const distDir = path.dirname(destination);
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir, { recursive: true })
+  }
+
   fs.copyFileSync(
     path.resolve(process.cwd(), source),
     path.resolve(process.cwd(), destination),
