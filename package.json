@@ -1,7 +1,7 @@
 {
     "name": "@via-profit-services/legal-entity",
     "support": "https://via-profit.ru",
-    "version": "0.7.5",
+    "version": "0.7.7",
     "description": "Via Profit Legal Entity Schema",
     "engines": {
         "node": ">= 12.8.3",
@@ -19,7 +19,6 @@
         "analyze": "cross-env ANALYZE=true yarn build:dist",
         "build:dist": "yarn webpack --progress --color --config ./webpack/webpack-config-prod.ts",
         "start:dev": "yarn build:dev --watch",
-        "start:dist": "yarn dist && yarn node ./dist/playground.js",
         "test": "jest",
         "lint": "eslint --ext .ts ./src/ --fix .",
         "via-profit-core:knex": "yarn run via-profit-core knex --knexfile src/utils/knexfile.ts",
@@ -32,11 +31,12 @@
         "knex:migrate:rollback:all": "yarn run via-profit-core:knex migrate rollback-all",
         "knex:seed:make": "yarn run via-profit-core:knex seed make --name",
         "knex:seed:run": "yarn run via-profit-core:knex seed run --name",
-        "release:prepatch": "yarn version prepatch",
+        "release:prepatch": "yarn run npm version prepatch",
         "release:patch": "yarn version patch",
         "release:minor": "yarn version minor",
         "release:major": "yarn version major",
-        "release:prerelease": "yarn version prerelease"
+        "release:prerelease": "yarn npm version prerelease",
+        "npm:publish": "yarn node ./scripts/publish.js"
     },
     "repository": {
         "type": "git",
@@ -55,10 +55,9 @@
     "dependencies": {
         "@via-profit-services/core": "^0.31.6",
         "@via-profit-services/geography": "^0.4.11",
-        "@yarnpkg/pnpify": "^2.3.3",
         "moment": "^2.24.0",
         "moment-timezone": "^0.5.28",
-        "uuid": "^7.0.2"
+        "uuid": "^8.3.1"
     },
     "devDependencies": {
         "@jagi/jest-transform-graphql": "^1.0.2",
@@ -68,8 +67,9 @@
         "@types/jest": "^24.0.23",
         "@types/moment-timezone": "^0.5.12",
         "@types/node": "^14.14.10",
+        "@types/shelljs": "^0.8.8",
         "@types/supertest": "^2.0.8",
-        "@types/uuid": "^7.0.0",
+        "@types/uuid": "^8.3.0",
         "@types/webpack": "^4.41.2",
         "@types/webpack-bundle-analyzer": "^3.9.0",
         "@types/webpack-merge": "^4.1.5",
@@ -77,7 +77,7 @@
         "@typescript-eslint/eslint-plugin": "^4.6.1",
         "@typescript-eslint/parser": "^4.6.1",
         "@via-profit-services/eslint-config": "^0.1.11",
-        "chalk": "^3.0.0",
+        "chalk": "^4.1.0",
         "clean-webpack-plugin": "^3.0.0",
         "cross-env": "^6.0.3",
         "dotenv": "^8.2.0",
@@ -102,6 +102,7 @@
         "nodemon-webpack-plugin": "^4.3.2",
         "prettier": "^2.1.2",
         "remove-files-webpack-plugin": "^1.2.2",
+        "shelljs": "^0.8.4",
         "supertest": "^4.0.2",
         "terser-webpack-plugin": "^2.3.5",
         "ts-jest": "^24.2.0",

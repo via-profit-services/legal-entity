@@ -55,7 +55,7 @@ yarn via-profit-core knex migrate latest --knexfile ./src/utils/knexfile.ts
  - LegalEntity - Класс, реализующий модель данного модуля
  - loaders - Даталоадеры
 
-Сама схема доступна по импорту `@via-profit-services/legal-entity/schema`.
+GraphQL схема доступна по пути `@via-profit-services/legal-entity/schema.graphql` и не входит в бандл модуля, но может быть загружена из его директории.
 
 Для интеграции модуля, просто, задействуйте в своем приложении экспортируемые типы и резолверы
 
@@ -64,7 +64,7 @@ yarn via-profit-core knex migrate latest --knexfile ./src/utils/knexfile.ts
 ```ts
 import { App } from '@via-profit-services/core';
 import { resolvers } from '@via-profit-services/legal-entity';
-import typeDefs from '@via-profit-services/legal-entity/schema';
+import typeDefs from '@via-profit-services/legal-entity/schema.graphql';
 
 const app = new App({
   ...

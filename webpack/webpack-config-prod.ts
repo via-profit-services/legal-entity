@@ -11,8 +11,6 @@ import webpackbaseConfig from './webpack-config-base';
 const webpackProdConfig: Configuration = merge(webpackbaseConfig, {
   entry: {
     index: path.resolve(__dirname, '../src/index.ts'),
-    schema: path.resolve(__dirname, '../src/schema.ts'),
-    // playground: path.resolve(__dirname, '../src/playground/index.ts'),
   },
   output: {
     path: path.join(__dirname, '../dist/'),
@@ -44,10 +42,6 @@ Contact    ${packageInfo.support}
 
         compiler.hooks.afterEmit.tapAsync('WebpackAfterBuild', (_, callback) => {
 
-          fs.rmdirSync(path.resolve(__dirname, '../dist/playground'), {
-            recursive: true,
-          });
-
           fs.copySync(
             path.resolve(__dirname, '../src/database/migrations/'),
             path.resolve(__dirname, '../dist/database/migrations/'),
@@ -58,19 +52,9 @@ Contact    ${packageInfo.support}
             path.resolve(__dirname, '../dist/database/seeds/'),
           );
 
-          fs.copyFileSync(
-            path.resolve(__dirname, '../package.json'),
-            path.resolve(__dirname, '../dist/package.json'),
-          );
-
-          fs.copyFileSync(
-            path.resolve(__dirname, '../README.md'),
-            path.resolve(__dirname, '../dist/README.md'),
-          );
-
-          fs.copyFileSync(
-            path.resolve(__dirname, '../LICENSE'),
-            path.resolve(__dirname, '../dist/LICENSE'),
+          fs.copySync(
+            path.resolve(__dirname, '../src/schema.graphql'),
+            path.resolve(__dirname, '../dist/schema.graphql'),
           );
 
           callback();

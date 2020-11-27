@@ -6,9 +6,9 @@ import chalk from 'chalk';
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 
-import * as legalEntity from '../index';
-import typeDefs from '../schema';
-import { configureApp } from '../utils/configureApp';
+import typeDefs from '../schema.graphql';
+import * as legalEntity from '../src/index';
+import { configureApp } from '../src/utils/configureApp';
 
 dotenv.config();
 
