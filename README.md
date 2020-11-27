@@ -6,7 +6,7 @@
 
 ![npm (scoped)](https://img.shields.io/npm/v/@via-profit-services/legal-entity?color=blue)
 ![NPM](https://img.shields.io/npm/l/@via-profit-services/legal-entity?color=blue)
-
+![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@via-profit-services/legal-entity?color=blue)
 
 ## Содержание
 
@@ -51,10 +51,11 @@ yarn via-profit-core knex migrate latest --knexfile ./src/utils/knexfile.ts
 ## <a name="how-to-use"></a> Как использовать
 
 Модуль экспортирует наружу:
- - typeDefs - Типы
  - resolvers - Резолверы
  - LegalEntity - Класс, реализующий модель данного модуля
  - loaders - Даталоадеры
+
+GraphQL схема доступна по пути `@via-profit-services/legal-entity/schema.graphql` и не входит в бандл модуля, но может быть загружена из его директории.
 
 Для интеграции модуля, просто, задействуйте в своем приложении экспортируемые типы и резолверы
 
@@ -62,7 +63,8 @@ yarn via-profit-core knex migrate latest --knexfile ./src/utils/knexfile.ts
 
 ```ts
 import { App } from '@via-profit-services/core';
-import { typeDefs, resolvers } from '@via-profit-services/legal-entity';
+import { resolvers } from '@via-profit-services/legal-entity';
+import typeDefs from '@via-profit-services/legal-entity/schema.graphql';
 
 const app = new App({
   ...
@@ -73,10 +75,3 @@ const app = new App({
 app.bootstrap();
 
 ```
-
-
-## TODO
-
-- [ ] Write the CONTRIBUTING docs
-- [ ] Write the tests
-- [ ] Create Subscriptions

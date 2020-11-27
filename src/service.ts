@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import {
   IListResponse,
   TOutputFilter,
@@ -9,18 +8,13 @@ import {
 } from '@via-profit-services/core';
 import cities from '@via-profit-services/geography/dist/countries/RU/cities.json';
 import moment from 'moment-timezone';
-import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
-import {
-  EXTERNAL_SEARCH_API_TOKEN,
-  EXTERNAL_SEARCH_API_URL_COMPANIES,
-  EXTERNAL_SEARCH_API_URL_PAYMENTS,
-} from './constants';
 import {
   Context, ILegalEntity, TLegalEntityInputTable, ILegalEntityPayment, ILegalEntityPaymentInputTable,
   ILegalEntityPaymentOutputTable, ILegalEntityOutputTable, ILegalEntityExternalSearchResult,
 } from './types';
+import fetchExternal, { RequestType } from './utils/fetch-external';
 
 
 class LegalEntitiesService {
@@ -232,25 +226,14 @@ class LegalEntitiesService {
     const { context } = this.props;
     const { logger } = context;
     try {
-      const response = await fetch(EXTERNAL_SEARCH_API_URL_COMPANIES, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Token ${EXTERNAL_SEARCH_API_TOKEN}`,
-        },
-        body: JSON.stringify({
-          query,
-        }),
-      });
-      const body = await response.json();
 
-      if (!body || !body.suggestions) {
+      const response = await fetchExternal(RequestType.COMPANY, query);
+
+      if (!response || !response.suggestions) {
         return null;
       }
 
-
-      const suggestions: ILegalEntityExternalSearchResult[] = body.suggestions
+      const suggestions: ILegalEntityExternalSearchResult[] = response.suggestions
         .map((suggestion: any) => {
           const data = suggestion?.data || {};
           const directorNameNominative = String(data?.management?.post).toLowerCase().indexOf('директор') !== -1
@@ -294,7 +277,7 @@ class LegalEntitiesService {
 
       return suggestions;
     } catch (err) {
-      logger.server.error(`External API request to ${EXTERNAL_SEARCH_API_URL_PAYMENTS} failure`, {
+      logger.server.error('External API request of companies search are failure', {
         err,
       });
 
@@ -306,24 +289,14 @@ class LegalEntitiesService {
     const { context } = this.props;
     const { logger } = context;
     try {
-      const response = await fetch(EXTERNAL_SEARCH_API_URL_PAYMENTS, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          Authorization: `Token ${EXTERNAL_SEARCH_API_TOKEN}`,
-        },
-        body: JSON.stringify({
-          query,
-        }),
-      });
-      const body = await response.json();
 
-      if (!body || !body.suggestions) {
+      const response = await fetchExternal(RequestType.PAYMENTS, query);
+
+      if (!response || !response.suggestions) {
         return null;
       }
 
-      const suggestions: ILegalEntityPayment[] = body.suggestions.map((suggestion: any) => {
+      const suggestions: ILegalEntityPayment[] = response.suggestions.map((suggestion: any) => {
         const data = suggestion?.data || {};
 
         return {
@@ -336,7 +309,7 @@ class LegalEntitiesService {
 
       return suggestions;
     } catch (err) {
-      logger.server.error(`External API request to ${EXTERNAL_SEARCH_API_URL_PAYMENTS} failure`, {
+      logger.server.error('External API request to search payment accounts are failure', {
         err,
       });
 

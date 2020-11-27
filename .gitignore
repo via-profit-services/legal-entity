@@ -21,3 +21,5 @@
 /dump.rdb
 
 /sessions
+.yarn/*
+.yarn/releases
