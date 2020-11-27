@@ -6,7 +6,6 @@
 
 ![npm (scoped)](https://img.shields.io/npm/v/@via-profit-services/legal-entity?color=blue)
 ![NPM](https://img.shields.io/npm/l/@via-profit-services/legal-entity?color=blue)
-![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@via-profit-services/legal-entity?color=blue)
 
 ## Содержание
 
