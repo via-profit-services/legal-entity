@@ -1,11 +1,10 @@
-import loaders from './loaders';
+import factory from './middleware-factory';
 import resolvers from './resolvers';
-import LegalEntity from './service';
+import typeDefs from './schema.graphql';
 
-export * from './types';
 
 export {
   resolvers,
-  LegalEntity,
-  loaders,
+  typeDefs,
+  factory,
 };

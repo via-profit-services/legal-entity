@@ -1,1 +1,74 @@
-module.exports=(()=>{"use strict";var t={278:function(t,n){var e=this&&this.__awaiter||function(t,n,e,i){return new(e||(e=Promise))((function(r,o){function a(t){try{l(i.next(t))}catch(t){o(t)}}function u(t){try{l(i.throw(t))}catch(t){o(t)}}function l(t){var n;t.done?r(t.value):(n=t.value,n instanceof e?n:new e((function(t){t(n)}))).then(a,u)}l((i=i.apply(t,n||[])).next())}))};Object.defineProperty(n,"__esModule",{value:!0}),n.down=n.up=void 0,n.up=function(t){return e(this,void 0,void 0,(function*(){return t.raw('\n    alter table "legalEntities" add column "city" uuid null;\n    alter table "legalEntities" add constraint "legalEntitiesToCity_fk" FOREIGN KEY ("city") REFERENCES "geographyCities"(id) ON UPDATE SET NULL;\n  ')}))},n.down=function(t){return e(this,void 0,void 0,(function*(){return t.raw('\n    alter table "legalEntities" drop constraint "legalEntitiesToCity_fk";\n    alter table "legalEntities" drop column "city";\n  ')}))}}},n={};return function e(i){if(n[i])return n[i].exports;var r=n[i]={exports:{}};return t[i].call(r.exports,r,r.exports,e),r.exports}(278)})();
+module.exports =
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 5490:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.down = exports.up = void 0;
+function up(knex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return knex.raw(`
+    alter table "legalEntities" add column "city" uuid null;
+    alter table "legalEntities" add constraint "legalEntitiesToCity_fk" FOREIGN KEY ("city") REFERENCES "geographyCities"(id) ON UPDATE SET NULL;
+  `);
+    });
+}
+exports.up = up;
+function down(knex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return knex.raw(`
+    alter table "legalEntities" drop constraint "legalEntitiesToCity_fk";
+    alter table "legalEntities" drop column "city";
+  `);
+    });
+}
+exports.down = down;
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(5490);
+/******/ })()
+;

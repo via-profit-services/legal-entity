@@ -1,37 +1,22 @@
-import { Knex } from '@via-profit-services/core';
 import dotenv from 'dotenv';
+import Knex from 'knex';
 
-dotenv.config();
+const env = dotenv.config().parsed as NodeJS.ProcessEnv;
 
 const config: Knex.Config = {
   client: 'pg',
   connection: {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-  },
-  migrations: {
-    directory: './.migrations',
-    extension: 'ts',
+    user: env.DB_USER,
+    database: env.DB_NAME,
+    password: env.DB_PASSWORD,
+    host: env.DB_HOST,
   },
   seeds: {
-    directory: './.seeds',
-    extension: 'ts',
+    directory: './seeds',
   },
-  pool: {
-    afterCreate: (conn: any, done: any) => {
-      conn.query(
-        `
-          SET TIMEZONE = 'UTC';
-          SET CLIENT_ENCODING = UTF8;
-        `,
-        (err: any) => {
-          done(err, conn);
-        },
-      );
-    },
+  migrations: {
+    directory: './migrations',
   },
 };
 
-module.exports = config;
+export default config;

@@ -3,12 +3,11 @@ import path from 'path';
 import { Configuration, WebpackPluginInstance } from 'webpack';
 import { merge } from 'webpack-merge';
 
-import webpackBaseConfig from './webpack-config-base';
+import baseConfig from './webpack-config-base';
 
-const webpackDevConfig: Configuration = merge(webpackBaseConfig,{
+const webpackDevConfig: Configuration = merge(baseConfig, {
   entry: {
-    index: path.resolve(__dirname, '../src/index.ts'),
-    playground: path.resolve(__dirname, '../src/playground/index.ts'),
+    index: path.resolve(__dirname, '../src/playground/index.ts'),
   },
   output: {
     path: path.join(__dirname, '../build/'),
@@ -16,12 +15,13 @@ const webpackDevConfig: Configuration = merge(webpackBaseConfig,{
     libraryTarget: 'commonjs2',
   },
   mode: 'development',
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   plugins: [
     new NodemonPlugin({
-      script: path.resolve(__dirname, '../build/playground.js'),
-      watch: [path.resolve(__dirname, '../build')],
-      verbose: true,
+      exec: process.env.DEBUG
+        ? 'yarn node --inspect-brk=9229 ./build/index.js'
+        : 'yarn node ./build/index.js',
+      watch: ['./build'],
     }) as WebpackPluginInstance,
   ],
 });

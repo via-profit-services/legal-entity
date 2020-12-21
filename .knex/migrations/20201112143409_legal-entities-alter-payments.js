@@ -1,1 +1,89 @@
-module.exports=(()=>{"use strict";var n={636:function(n,t){var e=this&&this.__awaiter||function(n,t,e,i){return new(e||(e=Promise))((function(r,o){function s(n){try{u(i.next(n))}catch(n){o(n)}}function a(n){try{u(i.throw(n))}catch(n){o(n)}}function u(n){var t;n.done?r(n.value):(t=n.value,t instanceof e?t:new e((function(n){n(t)}))).then(s,a)}u((i=i.apply(n,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:!0}),t.down=t.up=void 0,t.up=function(n){return e(this,void 0,void 0,(function*(){return n.raw('\n    ALTER TABLE "legalEntitiesPayments" DROP CONSTRAINT "legalEntitiesPaymentsRsUniqe";\n  ')}))},t.down=function(n){return e(this,void 0,void 0,(function*(){return n.raw('\n    \n    -- remove duplicates\n    DELETE FROM "legalEntitiesPayments"\n    WHERE id IN \n    (\n      SELECT id\n      FROM (\n        SELECT\n          id,\n          ROW_NUMBER() OVER (partition BY "rs" ORDER BY id) AS RowNumber\n        FROM "legalEntitiesPayments"\n      ) AS T\n      WHERE T.RowNumber > 1\n    );\n    \n    -- add constraint\n    ALTER TABLE "legalEntitiesPayments" ADD CONSTRAINT "legalEntitiesPaymentsRsUniqe" UNIQUE (rs);\n  ')}))}}},t={};return function e(i){if(t[i])return t[i].exports;var r=t[i]={exports:{}};return n[i].call(r.exports,r,r.exports,e),r.exports}(636)})();
+module.exports =
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 27361:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+/* eslint-disable */
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.down = exports.up = void 0;
+function up(knex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return knex.raw(`
+    ALTER TABLE "legalEntitiesPayments" DROP CONSTRAINT "legalEntitiesPaymentsRsUniqe";
+  `);
+    });
+}
+exports.up = up;
+function down(knex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return knex.raw(`
+    
+    -- remove duplicates
+    DELETE FROM "legalEntitiesPayments"
+    WHERE id IN 
+    (
+      SELECT id
+      FROM (
+        SELECT
+          id,
+          ROW_NUMBER() OVER (partition BY "rs" ORDER BY id) AS RowNumber
+        FROM "legalEntitiesPayments"
+      ) AS T
+      WHERE T.RowNumber > 1
+    );
+    
+    -- add constraint
+    ALTER TABLE "legalEntitiesPayments" ADD CONSTRAINT "legalEntitiesPaymentsRsUniqe" UNIQUE (rs);
+  `);
+    });
+}
+exports.down = down;
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(27361);
+/******/ })()
+;

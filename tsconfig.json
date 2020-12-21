@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
-    "declaration": true,
+    "declaration": false,
     "esModuleInterop": true,
     "module": "commonjs",
     "moduleResolution": "node",
@@ -30,6 +30,6 @@
     "webpack",
     "scripts",
     "keys",
-    "src/__tests__",
-  ],
+    "src/__tests__"
+  ]
 }

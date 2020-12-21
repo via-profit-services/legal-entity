@@ -1,20 +1,20 @@
-import { IObjectTypeResolver } from '@via-profit-services/core';
+import { IObjectTypeResolver } from '@graphql-tools/utils';
+import { Context } from '@via-profit-services/core';
+import { ExternalSearchArgs } from '@via-profit-services/legal-entity';
 
-import LegalEntityService from '../service';
-import { Context, IExternalSearchArgs } from '../types';
 
-export const legalEntityExternalSearchResolver: IObjectTypeResolver<any, Context> = {
-  companies: async (parent, args: IExternalSearchArgs, context) => {
+export const legalEntityExternalSearchResolver: IObjectTypeResolver<unknown, Context> = {
+  companies: async (_parent, args: ExternalSearchArgs, context) => {
     const { query } = args;
-    const legalEntitiesService = new LegalEntityService({ context });
-    const result = await legalEntitiesService.externalSearchCompanies(query);
+    const { services } = context;
+    const result = await services.legalEntity.externalSearchCompanies(query);
 
     return result;
   },
-  payments: async (parent, args: IExternalSearchArgs, context) => {
+  payments: async (_parent, args: ExternalSearchArgs, context) => {
     const { query } = args;
-    const legalEntitiesService = new LegalEntityService({ context });
-    const result = await legalEntitiesService.externalSearchPayments(query);
+    const { services } = context;
+    const result = await services.legalEntity.externalSearchPayments(query);
 
     return result;
   },

@@ -5,7 +5,7 @@ import {
   EXTERNAL_SEARCH_API_URL_COMPANIES,
   EXTERNAL_SEARCH_API_URL_PAYMENTS,
   EXTERNAL_SEARCH_API_TOKEN,
-} from './constants';
+} from '../constants';
 
 export enum RequestType {
   COMPANY = 'company',

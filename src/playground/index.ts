@@ -1,51 +1,65 @@
 /* eslint-disable no-console */
-import { App, schemas } from '@via-profit-services/core';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import * as core from '@via-profit-services/core';
 import * as geography from '@via-profit-services/geography';
-import chalk from 'chalk';
+import * as knex from '@via-profit-services/knex';
 import dotenv from 'dotenv';
-import { v4 as uuidv4 } from 'uuid';
+import express from 'express';
+import http from 'http';
+import path from 'path';
 
-import typeDefs from '../../src/schema.graphql';
-import { resolvers } from '../index';
-import { configureApp } from './configureApp';
+import * as legalEntity from '../index';
 
 dotenv.config();
 
-const config = configureApp({
-  typeDefs: [typeDefs, geography.typeDefs],
-  resolvers: [resolvers, geography.resolvers],
-});
+const PORT = 9005;
+const app = express();
+const server = http.createServer(app);
+(async () => {
 
-const app = new App(config);
-const AuthService = schemas.auth.service;
-
-app.bootstrap((props) => {
-  const { resolveUrl, context } = props;
-  if (process.env.NODE_ENV !== 'development') {
-    console.log(`GraphQL server was started at ${resolveUrl.graphql}`);
-
-    return;
-  }
-
-  console.log('');
-  const authService = new AuthService({ context });
-  const { accessToken } = authService.generateTokens({
-    uuid: uuidv4(),
-    roles: ['developer'],
-  }, {
-    access: 2.592e6,
-    refresh: 2.592e6,
+  const knexMiddleware = knex.factory({
+    connection: {
+      user: process.env.DB_USER,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+      host: process.env.DB_HOST,
+    },
   });
 
-  console.log(chalk.green('Your development token is:'));
-  console.log(chalk.yellow(accessToken.token));
-  console.log('');
+  const geographyMiddleware = geography.factory();
+  const legalEntityMiddleware = legalEntity.factory();
 
-  console.log('');
-  console.log(chalk.green('============== Server =============='));
-  console.log('');
-  console.log(`${chalk.green('GraphQL server')}:     ${chalk.yellow(resolveUrl.graphql)}`);
-  console.log(`${chalk.green('Auth server')}:        ${chalk.yellow(resolveUrl.auth)}`);
+  const schema = makeExecutableSchema({
+    typeDefs: [
+      core.typeDefs,
+      geography.typeDefs,
+      legalEntity.typeDefs,
+    ],
+    resolvers: [
+      core.resolvers,
+      geography.resolvers,
+      legalEntity.resolvers,
+    ],
+  });
 
-  console.log('');
-});
+
+  const { graphQLExpress } = await core.factory({
+    server,
+    schema,
+    debug: true,
+    enableIntrospection: true,
+    logDir: path.resolve(__dirname, '../../build/logs'),
+    middleware: [
+      knexMiddleware,
+      geographyMiddleware,
+      legalEntityMiddleware,
+    ],
+  });
+
+  app.use(graphQLExpress);
+  server.listen(PORT, () => {
+    console.log(`GraphQL Server started at http://localhost:${PORT}/graphql`);
+    console.log(`Subscriptions server started at ws://localhost:${PORT}/graphql`);
+  })
+
+})();

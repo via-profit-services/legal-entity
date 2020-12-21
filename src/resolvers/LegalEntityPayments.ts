@@ -1,17 +1,16 @@
-import { IObjectTypeResolver, IFieldResolver } from '@via-profit-services/core';
+import { IObjectTypeResolver, IFieldResolver } from '@graphql-tools/utils';
+import { Context } from '@via-profit-services/core';
+import { LegalEntityPayment } from '@via-profit-services/legal-entity';
 
-import createLoaders from '../loaders';
-import { Context, ILegalEntityPayment } from '../types';
-
-interface IParent {
+interface Parent {
   id: string;
 }
-interface IArgs {
+interface Args {
   id: string;
 }
-type ILegalEntityProxy = Omit<ILegalEntityPayment, 'deleted'>;
+type LegalEntityProxy = Omit<LegalEntityPayment, 'deleted'>;
 
-export const legalEntityPaymentResolver: IObjectTypeResolver<IParent, Context, any> = new Proxy({
+export const legalEntityPaymentResolver: IObjectTypeResolver<Parent, Context, unknown> = new Proxy({
   id: () => ({}),
   owner: () => ({}),
   rs: () => ({}),
@@ -21,11 +20,11 @@ export const legalEntityPaymentResolver: IObjectTypeResolver<IParent, Context, a
   priority: () => ({}),
   comment: () => ({}),
 }, {
-  get: (target, prop: keyof ILegalEntityProxy) => {
-    const resolver: IFieldResolver<IParent, Context, IArgs> = async (parent, args, context) => {
+  get: (target, prop: keyof LegalEntityProxy) => {
+    const resolver: IFieldResolver<Parent, Context, Args> = async (parent, args, context) => {
       const { id } = parent;
-      const loaders = createLoaders(context);
-      const payment = await loaders.payments.load(id);
+      const { dataloader } = context;
+      const payment = await dataloader.legalEntitiesPayments.load(id);
 
       return payment[prop];
     };

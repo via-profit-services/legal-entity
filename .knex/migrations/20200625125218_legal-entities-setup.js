@@ -1,1 +1,131 @@
-module.exports=(()=>{"use strict";var e={176:function(e,t){var n=this&&this.__awaiter||function(e,t,n,a){return new(n||(n=Promise))((function(l,i){function r(e){try{o(a.next(e))}catch(e){i(e)}}function s(e){try{o(a.throw(e))}catch(e){i(e)}}function o(e){var t;e.done?l(e.value):(t=e.value,t instanceof n?t:new n((function(e){e(t)}))).then(r,s)}o((a=a.apply(e,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:!0}),t.down=t.up=void 0,t.up=function(e){return n(this,void 0,void 0,(function*(){return e.raw('\n\n    alter table "legalEntities" drop column "rs" cascade;\n    alter table "legalEntities" drop column "ks" cascade;\n    alter table "legalEntities" drop column "bic" cascade;\n    alter table "legalEntities" drop column "bank" cascade;\n    alter table "legalEntities" rename column "name" to "label";\n\n    alter table "legalEntities" add column "nameShort" varchar(100) default \'\';\n    alter table "legalEntities" alter column "nameShort" set not null;\n\n    alter table "legalEntities" add column "nameFull" varchar(100) default \'\';\n    alter table "legalEntities" alter column "nameFull" set not null;\n    \n\n\n\n\n    drop type if exists "legalEntityPaymentPriority" cascade;\n    CREATE TYPE "legalEntityPaymentPriority" AS ENUM (\n      \'master\',\n      \'slave\'\n    );\n\n    DROP TABLE IF EXISTS "legalEntitiesPayments";\n    CREATE TABLE "legalEntitiesPayments" (\n      "id" uuid NOT NULL,\n      "owner" uuid NOT NULL,\n      "createdAt" timestamptz NOT NULL DEFAULT now(),\n      "updatedAt" timestamptz NOT NULL DEFAULT now(),\n      "rs" varchar(255) NOT NULL,\n      "ks" varchar(255) NOT NULL,\n      "bic" varchar(255) NOT NULL,\n      "bank" varchar(255) NOT NULL,\n      "priority" "legalEntityPaymentPriority" NOT NULL DEFAULT \'slave\'::"legalEntityPaymentPriority",\n      "deleted" boolean NOT NULL DEFAULT false,\n      "comment" text NULL,\n      CONSTRAINT "legalEntitiesPayments_pkey" PRIMARY KEY (id)\n    );\n    \n    ALTER TABLE "legalEntitiesPayments" ADD CONSTRAINT "legalEntitiesPaymentsRsUniqe" UNIQUE (rs);\n    ALTER TABLE "legalEntitiesPayments" ADD CONSTRAINT "legalEntitiesPayments_owner_fk" FOREIGN KEY ("owner") REFERENCES "legalEntities"(id) ON DELETE CASCADE;\n    CREATE INDEX "legalEntitiesPaymentsDeletedIndex" ON "legalEntitiesPayments" USING btree ("deleted");\n  ')}))},t.down=function(e){return n(this,void 0,void 0,(function*(){return e.raw('\n    DROP TABLE IF EXISTS "legalEntitiesPayments" cascade;\n    drop type if exists "legalEntityPaymentPriority" cascade;\n\n    alter table "legalEntities" rename column "label" to "name";\n\n    alter table "legalEntities" add column "rs" varchar(255) default \'\';\n    alter table "legalEntities" alter column "rs" set not null;\n\n    alter table "legalEntities" add column "ks" varchar(255) default \'\';\n    alter table "legalEntities" alter column "ks" set not null;\n\n    alter table "legalEntities" add column "bic" varchar(255) default \'\';\n    alter table "legalEntities" alter column "bic" set not null;\n\n    alter table "legalEntities" add column "bank" varchar(255) default \'\';\n    alter table "legalEntities" alter column "bank" set not null;\n    \n    alter table "legalEntities" drop column "nameShort" cascade;\n    alter table "legalEntities" drop column "nameFull" cascade;\n  ')}))}}},t={};return function n(a){if(t[a])return t[a].exports;var l=t[a]={exports:{}};return e[a].call(l.exports,l,l.exports,n),l.exports}(176)})();
+module.exports =
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 94550:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.down = exports.up = void 0;
+function up(knex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return knex.raw(`
+
+    alter table "legalEntities" drop column "rs" cascade;
+    alter table "legalEntities" drop column "ks" cascade;
+    alter table "legalEntities" drop column "bic" cascade;
+    alter table "legalEntities" drop column "bank" cascade;
+    alter table "legalEntities" rename column "name" to "label";
+
+    alter table "legalEntities" add column "nameShort" varchar(100) default '';
+    alter table "legalEntities" alter column "nameShort" set not null;
+
+    alter table "legalEntities" add column "nameFull" varchar(100) default '';
+    alter table "legalEntities" alter column "nameFull" set not null;
+    
+
+
+
+
+    drop type if exists "legalEntityPaymentPriority" cascade;
+    CREATE TYPE "legalEntityPaymentPriority" AS ENUM (
+      'master',
+      'slave'
+    );
+
+    DROP TABLE IF EXISTS "legalEntitiesPayments";
+    CREATE TABLE "legalEntitiesPayments" (
+      "id" uuid NOT NULL,
+      "owner" uuid NOT NULL,
+      "createdAt" timestamptz NOT NULL DEFAULT now(),
+      "updatedAt" timestamptz NOT NULL DEFAULT now(),
+      "rs" varchar(255) NOT NULL,
+      "ks" varchar(255) NOT NULL,
+      "bic" varchar(255) NOT NULL,
+      "bank" varchar(255) NOT NULL,
+      "priority" "legalEntityPaymentPriority" NOT NULL DEFAULT 'slave'::"legalEntityPaymentPriority",
+      "deleted" boolean NOT NULL DEFAULT false,
+      "comment" text NULL,
+      CONSTRAINT "legalEntitiesPayments_pkey" PRIMARY KEY (id)
+    );
+    
+    ALTER TABLE "legalEntitiesPayments" ADD CONSTRAINT "legalEntitiesPaymentsRsUniqe" UNIQUE (rs);
+    ALTER TABLE "legalEntitiesPayments" ADD CONSTRAINT "legalEntitiesPayments_owner_fk" FOREIGN KEY ("owner") REFERENCES "legalEntities"(id) ON DELETE CASCADE;
+    CREATE INDEX "legalEntitiesPaymentsDeletedIndex" ON "legalEntitiesPayments" USING btree ("deleted");
+  `);
+    });
+}
+exports.up = up;
+function down(knex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return knex.raw(`
+    DROP TABLE IF EXISTS "legalEntitiesPayments" cascade;
+    drop type if exists "legalEntityPaymentPriority" cascade;
+
+    alter table "legalEntities" rename column "label" to "name";
+
+    alter table "legalEntities" add column "rs" varchar(255) default '';
+    alter table "legalEntities" alter column "rs" set not null;
+
+    alter table "legalEntities" add column "ks" varchar(255) default '';
+    alter table "legalEntities" alter column "ks" set not null;
+
+    alter table "legalEntities" add column "bic" varchar(255) default '';
+    alter table "legalEntities" alter column "bic" set not null;
+
+    alter table "legalEntities" add column "bank" varchar(255) default '';
+    alter table "legalEntities" alter column "bank" set not null;
+    
+    alter table "legalEntities" drop column "nameShort" cascade;
+    alter table "legalEntities" drop column "nameFull" cascade;
+  `);
+    });
+}
+exports.down = down;
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(94550);
+/******/ })()
+;

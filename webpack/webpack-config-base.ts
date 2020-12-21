@@ -1,4 +1,7 @@
-import { Configuration } from 'webpack';
+import { knexExternals } from '@via-profit-services/knex/dist/webpack-utils';
+import { Configuration, DefinePlugin } from 'webpack';
+
+import { version } from '../package.json';
 
 const webpackBaseConfig: Configuration = {
   target: 'node',
@@ -6,18 +9,11 @@ const webpackBaseConfig: Configuration = {
     rules: [
       {
         test: /\.ts$/,
-        exclude: /node_modules/,
         use: 'ts-loader',
       },
       {
-        test: /\.mjs$/, // fixes https://github.com/graphql/graphql-js/issues/1272
-        include: /node_modules/,
-        type: 'javascript/auto',
-      },
-      {
-        test: /\.(graphql|gql)$/,
-        exclude: /node_modules/,
-        use: 'graphql-tag/loader',
+        test: /\.graphql$/,
+        use: 'raw-loader',
       },
     ],
   },
@@ -26,9 +22,27 @@ const webpackBaseConfig: Configuration = {
     __dirname: true,
   },
   resolve: {
-    // .mjs needed for https://github.com/graphql/graphql-js/issues/1272
-    extensions: ['.ts', '.mjs', '.js', '.json', '.gql', '.graphql'],
+    extensions: ['.ts', '.js', '.graphql'],
   },
-};
+  plugins: [
+    new DefinePlugin({
+      'process.env.MODULE_VERSION': JSON.stringify(version),
+      'process.env.MODULE_VERSION_ID': JSON.stringify('86c8a79c-f356-4c63-a4ee-b0fa579dedf7'),
+    }),
+  ],
+  externals: [
+    ...knexExternals,
+    /^@via-profit-services\/core/,
+    /^@via-profit-services\/knex/,
+    /^@via-profit-services\/accounts/,
+    /^moment$/,
+    /^moment-timezone$/,
+    /^uuid$/,
+    /^dataloader$/,
+    /^winston$/,
+    /^graphql$/,
+    /^winston-daily-rotate-file$/,
+  ],
+}
 
 export default webpackBaseConfig;

@@ -1,1 +1,98 @@
-module.exports=(()=>{"use strict";var n={554:function(n,e){var t=this&&this.__awaiter||function(n,e,t,i){return new(t||(t=Promise))((function(r,a){function N(n){try{l(i.next(n))}catch(n){a(n)}}function o(n){try{l(i.throw(n))}catch(n){a(n)}}function l(n){var e;n.done?r(n.value):(e=n.value,e instanceof t?e:new t((function(n){n(e)}))).then(N,o)}l((i=i.apply(n,e||[])).next())}))};Object.defineProperty(e,"__esModule",{value:!0}),e.down=e.up=void 0,e.up=function(n){return t(this,void 0,void 0,(function*(){return n.raw('\n\n\n    DROP TABLE IF EXISTS "legalEntities";\n    CREATE TABLE "legalEntities" (\n      "id" uuid NOT NULL,\n      "createdAt" timestamptz NOT NULL DEFAULT now(),\n      "updatedAt" timestamptz NOT NULL DEFAULT now(),\n      "name" varchar(100) NOT NULL,\n      "address" varchar(255) NOT NULL,\n      "ogrn" varchar(50) NOT NULL,\n      "kpp" varchar(100) NULL,\n      "inn" varchar(50) NOT NULL,\n      "rs" varchar(255) NOT NULL,\n      "ks" varchar(255) NOT NULL,\n      "bic" varchar(255) NOT NULL,\n      "bank" varchar(255) NOT NULL,\n      "directorNameNominative" varchar(255) NOT NULL,\n      "directorNameGenitive" varchar(255) NOT NULL,\n      "deleted" boolean NOT NULL DEFAULT false,\n      CONSTRAINT "legalEntities_pkey" PRIMARY KEY (id)\n    );\n    \n    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesInnUniqe" UNIQUE (inn);\n    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesOgrnUniqe" UNIQUE (ogrn);\n    CREATE INDEX "legalEntitiesDeletedIndex" ON "legalEntities" USING btree (deleted);\n    CREATE INDEX "legalentitiesInnIndex" ON "legalEntities" (inn);\n    CREATE INDEX "legalentitiesOgrnIndex" ON "legalEntities" (ogrn);\n  ')}))},e.down=function(n){return t(this,void 0,void 0,(function*(){return n.raw('\n    DROP TABLE IF EXISTS "legalEntities" CASCADE;\n  ')}))}}},e={};return function t(i){if(e[i])return e[i].exports;var r=e[i]={exports:{}};return n[i].call(r.exports,r,r.exports,t),r.exports}(554)})();
+module.exports =
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 59983:
+/***/ (function(__unused_webpack_module, exports) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.down = exports.up = void 0;
+function up(knex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return knex.raw(`
+
+
+    DROP TABLE IF EXISTS "legalEntities";
+    CREATE TABLE "legalEntities" (
+      "id" uuid NOT NULL,
+      "createdAt" timestamptz NOT NULL DEFAULT now(),
+      "updatedAt" timestamptz NOT NULL DEFAULT now(),
+      "name" varchar(100) NOT NULL,
+      "address" varchar(255) NOT NULL,
+      "ogrn" varchar(50) NOT NULL,
+      "kpp" varchar(100) NULL,
+      "inn" varchar(50) NOT NULL,
+      "rs" varchar(255) NOT NULL,
+      "ks" varchar(255) NOT NULL,
+      "bic" varchar(255) NOT NULL,
+      "bank" varchar(255) NOT NULL,
+      "directorNameNominative" varchar(255) NOT NULL,
+      "directorNameGenitive" varchar(255) NOT NULL,
+      "deleted" boolean NOT NULL DEFAULT false,
+      CONSTRAINT "legalEntities_pkey" PRIMARY KEY (id)
+    );
+    
+    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesInnUniqe" UNIQUE (inn);
+    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesOgrnUniqe" UNIQUE (ogrn);
+    CREATE INDEX "legalEntitiesDeletedIndex" ON "legalEntities" USING btree (deleted);
+    CREATE INDEX "legalentitiesInnIndex" ON "legalEntities" (inn);
+    CREATE INDEX "legalentitiesOgrnIndex" ON "legalEntities" (ogrn);
+  `);
+    });
+}
+exports.up = up;
+function down(knex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return knex.raw(`
+    DROP TABLE IF EXISTS "legalEntities" CASCADE;
+  `);
+    });
+}
+exports.down = down;
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(59983);
+/******/ })()
+;
