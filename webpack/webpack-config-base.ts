@@ -32,6 +32,8 @@ const webpackBaseConfig: Configuration = {
   ],
   externals: [
     ...knexExternals,
+    /^@via-profit-services\/geography/,
+    /^@via-profit-services\/subscriptions/,
     /^@via-profit-services\/core/,
     /^@via-profit-services\/knex/,
     /^@via-profit-services\/accounts/,
