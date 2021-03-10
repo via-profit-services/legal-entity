@@ -39,10 +39,10 @@ type LegalEntitiesQuery {
     after: String
     orderBy: [LegalEntityOrderBy!]
     filter: LegalEntityListFilter
-    search: LegalEntityFilterSearch
+    search: [LegalEntityFilterSearch!]
   ): LegalEntityListConnection!
 
-  get(id: ID!): LegalEntity
+  legalEntity(id: ID!): LegalEntity
 
   """
   Search data in external resources
@@ -132,8 +132,13 @@ type LegalEntitiesMutation {
   delete(
     id: ID
     ids: [ID!]
-  ): Boolean!
+  ): LegalEntityDeletePayload!
   
+}
+
+type LegalEntityDeletePayload {
+  deletedIDs: [ID!]!
+  query: Query!
 }
 
 """
@@ -164,7 +169,7 @@ enum LegalEntityFilterSearchField {
 }
 
 input LegalEntityFilterSearch {
-  fields: [LegalEntityFilterSearchField!]!
+  field: LegalEntityFilterSearchField!
   query: String!
 }
 
@@ -234,6 +239,8 @@ type LegalEntity implements Node {
 
 type LegalEntityPayments {
   id: ID!
+  createdAt: Date!
+  updatedAt: Date!
   owner: LegalEntity!
   rs: String!
   ks: String!
@@ -246,6 +253,7 @@ type LegalEntityPayments {
   """
   priority: LegalEntityPaymentPriority!
   comment: String
+  deleted: Boolean!
 }
 
 
@@ -287,16 +295,16 @@ input LegalEntityInputCreate {
   ogrn: String!
   inn: String!
   id: ID
-  label: String
-  nameFull: String
-  nameShort: String
-  address: String
-  kpp: String
+  label: String!
+  nameFull: String!
+  nameShort: String!
+  address: String!
+  kpp: String!
   payments: [LegalEntityInputPayments!]!
-  directorNameNominative: String
-  directorNameGenitive: String
-  directorNameShortNominative: String
-  directorNameShortGenitive: String
-  comment: String
-  city: ID
+  directorNameNominative: String!
+  directorNameGenitive: String!
+  directorNameShortNominative: String!
+  directorNameShortGenitive: String!
+  comment: String!
+  city: ID!
 }

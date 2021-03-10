@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { Knex } from '@via-profit-services/core';
+import Knex from 'knex';
 
 export async function up(knex: Knex): Promise<unknown> {
   return knex.raw(`

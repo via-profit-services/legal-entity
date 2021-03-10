@@ -1,6 +1,5 @@
 /node_modules/
 /.env
-/.env.prod
 /log
 /misc
 /sandbox.js
@@ -21,5 +20,11 @@
 /dump.rdb
 
 /sessions
+/package.tgz
+/package-*.tgz
+
 .yarn/*
-.yarn/releases
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions

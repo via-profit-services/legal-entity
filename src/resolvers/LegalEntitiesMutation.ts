@@ -1,28 +1,21 @@
-import { ServerError, TWhereAction, IObjectTypeResolver } from '@via-profit-services/core';
+import { ServerError } from '@via-profit-services/core';
+import { CreatePaymentProps, Resolvers } from '@via-profit-services/legal-entity';
 import { v4 as uuidv4 } from 'uuid';
 
-import createLoaders from '../loaders';
-import LegalEntityService from '../service';
-import {
-  Context, IUpdateArgs, ICreateArgs, IDeleteArgs,
-} from '../types';
-
-export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
-
-  update: async (parent, args: IUpdateArgs, context) => {
+export const legalEntityMutationResolver: Resolvers['LegalEntitiesMutation'] = {
+  update: async (_parent, args, context) => {
+    const { services, dataloader } = context;
     const { id, input } = args;
     const { payments, ...otherInput } = input;
-    const loaders = createLoaders(context);
-    const legalEntityService = new LegalEntityService({ context });
 
 
     // check INN unique
     if (input.inn) {
-      const { nodes } = await legalEntityService.getLegalEntities({
+      const { nodes } = await services.legalEntities.getLegalEntities({
         limit: 1,
         where: [
-          ['inn', TWhereAction.EQ, input.inn],
-          ['id', TWhereAction.NEQ, id],
+          ['inn', '=', input.inn],
+          ['id', '<>', id],
         ],
       });
 
@@ -38,11 +31,11 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
 
     // check OGRN unique
     if (input.ogrn) {
-      const { nodes } = await legalEntityService.getLegalEntities({
+      const { nodes } = await services.legalEntities.getLegalEntities({
         limit: 1,
         where: [
-          ['ogrn', TWhereAction.EQ, input.ogrn],
-          ['id', TWhereAction.NEQ, id],
+          ['ogrn', '=', input.ogrn],
+          ['id', '<>', id],
         ],
       });
 
@@ -58,43 +51,53 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
 
     // update legal entity
     try {
-      await legalEntityService.updateLegalEntity(id, otherInput);
+      otherInput.id = id;
+      await services.legalEntities.updateLegalEntity(id, otherInput);
+      dataloader.legalEntities.clear(id);
+
     } catch (err) {
       throw new ServerError('Failed to update legal entity', { err, id, input });
     }
 
     const currentPaymentsIds: string[] = [];
     if (payments && Array.isArray(payments)) {
-      const legalEntity = await loaders.legalEntities.load(id);
+      const legalEntity = await dataloader.legalEntities.load(id);
 
       // create and update payments
       await payments.reduce(async (prev, data) => {
         await prev;
 
-        const defaultPaymentData = LegalEntityService.getLegalEntityPaymentDefaultData();
-        const existsPaymentData = await loaders.payments.load(data.id || defaultPaymentData.id);
+        data.id = data.id || uuidv4();
 
-        const paymentData = {
-          // mixed default data if is new payment
-          ...(data.id ? {} : defaultPaymentData),
-          // mixed input data
+        const existsPaymentData = await dataloader.payments.load(data.id);
+
+        const paymentData: CreatePaymentProps = {
+          id: uuidv4(),
+          deleted: false,
+          rs: '',
+          ks: '',
+          bank: '',
+          bic: '',
+          comment: '',
+          priority: 'master',
           ...data,
           // set owner permanently
           owner: id,
         };
 
         currentPaymentsIds.push(paymentData.id);
-        loaders.payments.clear(paymentData.id);
 
         if (!existsPaymentData) {
           try {
-            await legalEntityService.createLegalEntityPayment(paymentData);
+            await services.legalEntities.createLegalEntityPayment(paymentData);
+            dataloader.payments.clear(paymentData.id);
           } catch (err) {
             throw new ServerError('Failed to create legal entity payments', { err });
           }
         } else {
           try {
-            await legalEntityService.updateLegalEntityPayment(paymentData.id, paymentData);
+            await services.legalEntities.updateLegalEntityPayment(paymentData.id, paymentData);
+            dataloader.payments.clear(paymentData.id);
           } catch (err) {
             throw new ServerError('Failed to update legal entity payments', { err });
           }
@@ -108,9 +111,9 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
           .includes(prevId));
       try {
         await Promise.all(toDeletePaymentIds.map((((idToDelete) => {
-          loaders.payments.clear(idToDelete);
+          dataloader.payments.clear(idToDelete);
 
-          return legalEntityService.deleteLegalEntityPayment(idToDelete);
+          return services.legalEntities.deleteLegalEntityPayment(idToDelete);
         }))));
       } catch (err) {
         throw new ServerError('Failed to remove old payments of this legal entity', { err });
@@ -118,23 +121,22 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
     }
 
     // clear cache of this legal entity
-    loaders.legalEntities.clear(id);
+    dataloader.legalEntities.clear(id);
 
     return { id };
   },
-  create: async (parent, args: ICreateArgs, context) => {
+  create: async (parent, args, context) => {
     const { input } = args;
+    const { dataloader, services } = context;
     const { payments, ...otherInput } = input;
     const id = input.id || uuidv4();
-    const legalEntityService = new LegalEntityService({ context });
-    const loaders = createLoaders(context);
 
     // check INN unique
     if (input.inn) {
-      const { totalCount } = await legalEntityService.getLegalEntities({
+      const { totalCount } = await services.legalEntities.getLegalEntities({
         limit: 1,
         where: [
-          ['inn', TWhereAction.EQ, input.inn],
+          ['inn', '=', input.inn],
         ],
       });
 
@@ -145,27 +147,10 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
       }
     }
 
-
-    // check OGRN unique
-    // if (input.ogrn) {
-    //   const { totalCount } = await legalEntityService.getLegalEntities({
-    //     limit: 1,
-    //     where: [
-    //       ['ogrn', TWhereAction.EQ, input.ogrn],
-    //     ],
-    //   });
-
-    //   if (totalCount) {
-    //     throw new ServerError(
-    //       `Legal entity record already exists with ogrn ${input.ogrn} value`, { input },
-    //     );
-    //   }
-    // }
-
     try {
-      await legalEntityService.createLegalEntity({
-        ...LegalEntityService.getLegalEntityDefaultData(),
+      await services.legalEntities.createLegalEntity({
         ...otherInput,
+        deleted: false,
         id,
       });
     } catch (err) {
@@ -177,9 +162,16 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
       await payments.reduce(async (prev, paymentData) => {
         await prev;
         try {
-          await legalEntityService.createLegalEntityPayment({
-            ...LegalEntityService.getLegalEntityPaymentDefaultData(),
+          await services.legalEntities.createLegalEntityPayment({
+            id: uuidv4(),
+            comment: '',
+            rs: '',
+            ks: '',
+            bic: '',
+            bank: '',
+            priority: 'master',
             ...paymentData,
+            deleted: false,
             owner: id,
           });
         } catch (err) {
@@ -191,15 +183,14 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
     }
 
 
-    loaders.legalEntities.clear(id);
+    dataloader.legalEntities.clear(id);
 
     return { id };
   },
-  delete: async (parent, args: IDeleteArgs, context) => {
+  delete: async (parent, args, context) => {
     const { id, ids } = args;
-    const { logger, token } = context;
-    const legalEntityService = new LegalEntityService({ context });
-    const loaders = createLoaders(context);
+    const { logger } = context;
+    const { services, dataloader } = context;
 
     const toDeleteIds = []
       .concat(ids || [])
@@ -208,11 +199,10 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
     await toDeleteIds.reduce(async (prevPromise, legalEntityId) => {
       await prevPromise;
       try {
-        legalEntityService.deleteLegalEntity(legalEntityId);
-        loaders.legalEntities.clear(legalEntityId);
+        services.legalEntities.deleteLegalEntity(legalEntityId);
+        dataloader.legalEntities.clear(legalEntityId);
         logger.server.debug(`Legal entity with id ${legalEntityId} was deleted`, {
           id: legalEntityId,
-          uuid: token.uuid,
         });
       } catch (err) {
         throw new ServerError('Failed to delete legal entity', { err, id: legalEntityId });
@@ -220,7 +210,10 @@ export const legalEntityMutationResolver: IObjectTypeResolver<any, Context> = {
     }, Promise.resolve());
 
 
-    return true;
+    return {
+      deletedIDs: toDeleteIds,
+      query: {},
+    };
   },
 
 };

@@ -1,49 +1,30 @@
-import {
-  ServerError,
-  buildCursorConnection,
-  buildQueryFilter,
-  TInputFilter,
-  TWhereAction,
-  IObjectTypeResolver,
-} from '@via-profit-services/core';
+import { ServerError, buildCursorConnection, buildQueryFilter } from '@via-profit-services/core';
+import type { Resolvers } from '@via-profit-services/legal-entity';
 
-import createLoaders from '../loaders';
-import LegalEntityService from '../service';
-import { Context } from '../types';
-
-export const queryResolver: IObjectTypeResolver<any, Context> = {
-
-  list: async (parent, args: TInputFilter, context) => {
+export const queryResolver: Resolvers['LegalEntitiesQuery'] = {
+  list: async (_parent, args, context) => {
+    const { services } = context;
     const filter = buildQueryFilter(args);
-    const legalEntitiesService = new LegalEntityService({ context });
-    const loaders = createLoaders(context);
 
-    filter.where.push(['deleted', TWhereAction.EQ, false]);
+    filter.where.push(['deleted', '=', false]);
 
     try {
-      const legalEntitiesConnection = await legalEntitiesService.getLegalEntities(filter);
+      const legalEntitiesConnection = await services.legalEntities.getLegalEntities(filter);
       const connection = buildCursorConnection(legalEntitiesConnection, 'legalEntities');
-
-      // fill the cache
-      legalEntitiesConnection.nodes.forEach((node) => {
-        loaders.legalEntities
-          .clear(node.id)
-          .prime(node.id, node);
-      });
 
       return connection;
     } catch (err) {
       throw new ServerError('Failed to get LegalEntities list', { err });
     }
   },
-  get: async (parent, args: {id: string}, context) => {
+  legalEntity: async (_parent, args, context) => {
     const { id } = args;
-    const loaders = createLoaders(context);
-    const legalEntity = await loaders.legalEntities.load(id);
+    const { dataloader } = context;
+    const legalEntity = await dataloader.legalEntities.load(id);
 
-    return legalEntity || null;
+    return legalEntity;
   },
-  externalSearch: (parent, args) => args,
+  externalSearch: (_parent, args) => args,
 };
 
 
