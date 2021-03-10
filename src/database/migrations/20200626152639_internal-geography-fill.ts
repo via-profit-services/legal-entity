@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Knex } from '@via-profit-services/core';
+import Knex from 'knex';
 import * as ru from '@via-profit-services/geography/dist/countries/RU';
 
 const list = [ru];

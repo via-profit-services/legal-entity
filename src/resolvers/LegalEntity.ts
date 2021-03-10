@@ -1,17 +1,8 @@
-import { IObjectTypeResolver, IFieldResolver } from '@via-profit-services/core';
+import type { Resolvers } from '@via-profit-services/legal-entity';
 
-import createLoaders from '../loaders';
-import { Context, ILegalEntity } from '../types';
+type EntityResolver = Resolvers['LegalEntity'];
 
-interface IParent {
-  id: string;
-}
-interface IArgs {
-  id: string;
-}
-type ILegalEntityProxy = Omit<ILegalEntity, 'deleted'>;
-
-export const legalEntityResolver:IObjectTypeResolver<IParent, Context, any> = new Proxy({
+export const legalEntityResolver = new Proxy<EntityResolver>({
   id: () => ({}),
   createdAt: () => ({}),
   updatedAt: () => ({}),
@@ -31,12 +22,13 @@ export const legalEntityResolver:IObjectTypeResolver<IParent, Context, any> = ne
   city: () => ({}),
   deleted: () => ({}),
 }, {
-  get: (target, prop: keyof ILegalEntityProxy) => {
-    const resolver: IFieldResolver<IParent, Context, IArgs> = async (
-      parent, args, context) => {
+  get: (_target, prop: keyof EntityResolver) => {
+    const resolver: EntityResolver[keyof EntityResolver] = async (
+      parent, _args, context) => {
       const { id } = parent;
-      const loaders = createLoaders(context);
-      const legalEntity = await loaders.legalEntities.load(id);
+      const { dataloader } = context;
+
+      const legalEntity = await dataloader.legalEntities.load(id);
 
       return legalEntity[prop];
     };

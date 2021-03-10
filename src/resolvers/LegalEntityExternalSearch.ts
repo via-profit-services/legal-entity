@@ -1,20 +1,18 @@
-import { IObjectTypeResolver } from '@via-profit-services/core';
+import type { Resolvers } from '@via-profit-services/legal-entity';
 
-import LegalEntityService from '../service';
-import { Context, IExternalSearchArgs } from '../types';
 
-export const legalEntityExternalSearchResolver: IObjectTypeResolver<any, Context> = {
-  companies: async (parent, args: IExternalSearchArgs, context) => {
+export const legalEntityExternalSearchResolver: Resolvers['LegalEntityExternalSearch'] = {
+  companies: async (_parent, args, context) => {
     const { query } = args;
-    const legalEntitiesService = new LegalEntityService({ context });
-    const result = await legalEntitiesService.externalSearchCompanies(query);
+    const { services } = context;
+    const result = await services.legalEntities.externalSearchCompanies(query);
 
     return result;
   },
-  payments: async (parent, args: IExternalSearchArgs, context) => {
+  payments: async (_parent, args, context) => {
     const { query } = args;
-    const legalEntitiesService = new LegalEntityService({ context });
-    const result = await legalEntitiesService.externalSearchPayments(query);
+    const { services } = context;
+    const result = await services.legalEntities.externalSearchPayments(query);
 
     return result;
   },
