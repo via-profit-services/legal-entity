@@ -282,6 +282,7 @@ declare module '@via-profit-services/legal-entity' {
     type: LegalEntityExternalSearchType;
   }
 
+  export const factory: MiddlewareFactory;
 }
 
 
