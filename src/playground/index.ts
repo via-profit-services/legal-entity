@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import http from 'http';
 
-import { factory as legalEntityFactory } from '../index';
+import * as legalEntity from '../index';
 
 dotenv.config();
 
@@ -28,7 +28,7 @@ const server = http.createServer(app);
     },
   });
 
-  const legalEntity = await legalEntityFactory();
+  const legalEntityMiddleware = await legalEntity.factory();
 
   const schema = makeExecutableSchema({
     typeDefs: [
@@ -51,7 +51,7 @@ const server = http.createServer(app);
     middleware: [
       knexMiddleware,
       geographyMiddleware,
-      legalEntity.middleware,
+      legalEntityMiddleware,
     ],
   });
 
