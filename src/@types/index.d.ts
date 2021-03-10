@@ -283,6 +283,8 @@ declare module '@via-profit-services/legal-entity' {
   }
 
   export const factory: MiddlewareFactory;
+  export const typeDefs: string;
+  export const resolvers: Resolvers;
 }
 
 
