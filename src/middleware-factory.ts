@@ -2,9 +2,6 @@ import { Middleware, ServerError } from '@via-profit-services/core';
 import type { MiddlewareFactory } from '@via-profit-services/legal-entity';
 
 import contextMiddleware from './context-middleware';
-import resolvers from './resolvers';
-import typeDefs from './schema.graphql';
-
 
 const middlewareFactory: MiddlewareFactory = async () => {
   const pool: ReturnType<Middleware> = {
@@ -26,11 +23,7 @@ const middlewareFactory: MiddlewareFactory = async () => {
     return pool;
   };
 
-  return {
-    middleware,
-    resolvers,
-    typeDefs,
-  };
+  return middleware;
 };
 
 export default middlewareFactory;

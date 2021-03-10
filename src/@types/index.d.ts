@@ -2,11 +2,7 @@ declare module '@via-profit-services/legal-entity' {
   import { Context, OutputFilter, ListResponse, Middleware, InputFilter } from '@via-profit-services/core';
   import { GraphQLFieldResolver } from 'graphql';
 
-  export type MiddlewareFactory = () => Promise<{
-    middleware: Middleware;
-    typeDefs: string;
-    resolvers: Resolvers;
-  }>;
+  export type MiddlewareFactory = () => Promise<Middleware>;
 
   export type Resolvers = {
     Query: {
