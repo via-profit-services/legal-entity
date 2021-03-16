@@ -32,6 +32,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.seed = void 0;
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/prefer-default-export */
 const RU_1 = __webpack_require__(1691);
 const faker_1 = __importDefault(__webpack_require__(95872));
 const LEGAL_ENTITIES_QUANTITY = 109;

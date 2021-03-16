@@ -1,45 +1,72 @@
-/**
- * @via-profit-services/legal-entity
- *
- * This migration file was created by the @via-profit-services/legal-entity package
- */
-/* eslint-disable import/no-extraneous-dependencies */
 import Knex from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
   return knex.raw(`
+    drop table if exists "legalEntities" cascade;
+    drop table if exists "legalEntitiesPayments" cascade;
+
+    drop type if exists "legalEntityPaymentPriority";
+
+    create type "legalEntityPaymentPriority" AS enum (
+      'master',
+      'slave'
+    );
 
 
-    DROP TABLE IF EXISTS "legalEntities";
-    CREATE TABLE "legalEntities" (
+    create table "legalEntities" (
       "id" uuid NOT NULL,
       "createdAt" timestamptz NOT NULL DEFAULT now(),
       "updatedAt" timestamptz NOT NULL DEFAULT now(),
-      "name" varchar(100) NOT NULL,
+      "label" varchar(100) NOT NULL,
       "address" varchar(255) NOT NULL,
       "ogrn" varchar(50) NOT NULL,
       "kpp" varchar(100) NULL,
       "inn" varchar(50) NOT NULL,
+      "directorNameNominative" varchar(255) NOT NULL,
+      "directorNameGenitive" varchar(255) NOT NULL,
+      "deleted" bool NOT NULL DEFAULT false,
+      "directorNameShortNominative" varchar(100) NOT NULL DEFAULT ''::character varying,
+      "directorNameShortGenitive" varchar(100) NOT NULL DEFAULT ''::character varying,
+      "comment" text NULL,
+      "nameShort" varchar(100) NOT NULL DEFAULT ''::character varying,
+      "nameFull" text NOT NULL DEFAULT ''::character varying,
+      "city" uuid NULL,
+      CONSTRAINT "legalEntitiesInnUniqe" UNIQUE (inn),
+      CONSTRAINT "legalEntities_pkey" PRIMARY KEY (id)
+    );
+
+    create table "legalEntitiesPayments" (
+      "id" uuid NOT NULL,
+      "owner" uuid NOT NULL,
+      "createdAt" timestamptz NOT NULL DEFAULT now(),
+      "updatedAt" timestamptz NOT NULL DEFAULT now(),
       "rs" varchar(255) NOT NULL,
       "ks" varchar(255) NOT NULL,
       "bic" varchar(255) NOT NULL,
       "bank" varchar(255) NOT NULL,
-      "directorNameNominative" varchar(255) NOT NULL,
-      "directorNameGenitive" varchar(255) NOT NULL,
-      "deleted" boolean NOT NULL DEFAULT false,
-      CONSTRAINT "legalEntities_pkey" PRIMARY KEY (id)
+      "priority" "legalEntityPaymentPriority" NOT NULL DEFAULT 'slave'::"legalEntityPaymentPriority",
+      "deleted" bool NOT NULL DEFAULT false,
+      "comment" text NULL,
+      CONSTRAINT "legalEntitiesPayments_pkey" PRIMARY KEY (id)
     );
-    
-    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesInnUniqe" UNIQUE (inn);
-    ALTER TABLE "legalEntities" ADD CONSTRAINT "legalEntitiesOgrnUniqe" UNIQUE (ogrn);
-    CREATE INDEX "legalEntitiesDeletedIndex" ON "legalEntities" USING btree (deleted);
-    CREATE INDEX "legalentitiesInnIndex" ON "legalEntities" (inn);
-    CREATE INDEX "legalentitiesOgrnIndex" ON "legalEntities" (ogrn);
+
+
+    create index "legalEntitiesDeletedIndex" ON "legalEntities" USING btree ("deleted");
+    create index "legalentitiesInnIndex" ON "legalEntities" USING btree ("inn");
+    create index "legalentitiesOgrnIndex" ON "legalEntities" USING btree ("ogrn");
+    create index "legalEntitiesPaymentsDeletedIndex" ON "legalEntitiesPayments" USING btree ("deleted");
+
+    alter table "legalEntitiesPayments" ADD CONSTRAINT "legalEntitiesPayments_owner_fk" FOREIGN KEY ("owner") REFERENCES "legalEntities"("id") ON DELETE CASCADE;
+    alter table "legalEntities" ADD CONSTRAINT "legalEntitiesToCity_fk" FOREIGN KEY ("city") REFERENCES "geographyCities"("id") ON UPDATE SET NULL;
+
   `);
 }
 
 export async function down(knex: Knex): Promise<any> {
   return knex.raw(`
-    DROP TABLE IF EXISTS "legalEntities" CASCADE;
+    drop table if exists "legalEntitiesPayments" cascade;
+    drop table if exists "legalEntities" cascade;
+
+    drop type if exists "legalEntityPaymentPriority";
   `);
 }
