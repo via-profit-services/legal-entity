@@ -222,7 +222,7 @@ declare module '@via-profit-services/legal-entity' {
   class LegalEntityService {
     props: LegalEntityServiceProps;
     constructor(props: LegalEntityServiceProps);
-    getLegalEntities(filter: Partial<OutputFilter>): Promise<ListResponse<LegalEntity>>;
+    getLegalEntities(filter: Partial<OutputFilter>, notDeletedOnly?: boolean): Promise<ListResponse<LegalEntity>>;
     getLegalEntitiesByIds(ids: string[]): Promise<LegalEntity[]>;
     getLegalEntity(id: string): Promise<LegalEntity | false>;
     updateLegalEntity(id: string, legalEntityData: UpdateEntityProps): Promise<void>;
