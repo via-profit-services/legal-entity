@@ -1114,6 +1114,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@via-profit-services/geography@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@via-profit-services/geography@npm:1.1.2"
+  peerDependencies:
+    "@via-profit-services/core": ^1.0.0
+    "@via-profit-services/knex": ^1.0.0
+    graphql: "*"
+  checksum: 80e47e06b37519e21fb47d9eefe54022a12bdc0cb7e090564f7b570dacaf5dd5b30eda198dde4601757d58b66a8c696e7002696a37d381ee7c4427f2ce11dad9
+  languageName: node
+  linkType: hard
+
 "@via-profit-services/knex@npm:^1.0.3":
   version: 1.0.3
   resolution: "@via-profit-services/knex@npm:1.0.3"
@@ -1150,6 +1161,7 @@ __metadata:
     "@typescript-eslint/parser": ^4.6.1
     "@via-profit-services/core": ^1.0.5
     "@via-profit-services/eslint-config": ^0.1.11
+    "@via-profit-services/geography": ^1.1.2
     "@via-profit-services/knex": ^1.0.3
     chalk: ^4.1.0
     clean-webpack-plugin: ^3.0.0
@@ -1198,7 +1210,7 @@ __metadata:
     webpack-node-externals: ^1.7.2
     webpack-shell-plugin: ^0.5.0
   peerDependencies:
-    "@via-profit-services/core": ^1.0.3
+    "@via-profit-services/core": ^1.0.5
     "@via-profit-services/geography": ^1.0.0
     moment: ^2.24.0
     moment-timezone: ^0.5.28

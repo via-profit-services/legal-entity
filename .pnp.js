@@ -58,6 +58,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/parser", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:4.8.2"],
             ["@via-profit-services/core", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.0.5"],
             ["@via-profit-services/eslint-config", "npm:0.1.11"],
+            ["@via-profit-services/geography", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.1.2"],
             ["@via-profit-services/knex", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.0.3"],
             ["chalk", "npm:4.1.0"],
             ["clean-webpack-plugin", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:3.0.0"],
@@ -1456,6 +1457,36 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@via-profit-services/geography", [
+        ["npm:1.1.2", {
+          "packageLocation": "./.yarn/unplugged/@via-profit-services-geography-virtual-cb40efe5b0/node_modules/@via-profit-services/geography/",
+          "packageDependencies": [
+            ["@via-profit-services/geography", "npm:1.1.2"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.1.2", {
+          "packageLocation": "./.yarn/unplugged/@via-profit-services-geography-virtual-cb40efe5b0/node_modules/@via-profit-services/geography/",
+          "packageDependencies": [
+            ["@via-profit-services/geography", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.1.2"],
+            ["@types/graphql", null],
+            ["@types/via-profit-services__core", null],
+            ["@types/via-profit-services__knex", null],
+            ["@via-profit-services/core", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.0.5"],
+            ["@via-profit-services/knex", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.0.3"],
+            ["graphql", "npm:15.5.0"]
+          ],
+          "packagePeers": [
+            "@types/graphql",
+            "@types/via-profit-services__core",
+            "@types/via-profit-services__knex",
+            "@via-profit-services/core",
+            "@via-profit-services/knex",
+            "graphql"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@via-profit-services/knex", [
         ["npm:1.0.3", {
           "packageLocation": "./.yarn/cache/@via-profit-services-knex-npm-1.0.3-2993ed6b59-c1457ec8b0.zip/node_modules/@via-profit-services/knex/",
@@ -1512,6 +1543,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/parser", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:4.8.2"],
             ["@via-profit-services/core", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.0.5"],
             ["@via-profit-services/eslint-config", "npm:0.1.11"],
+            ["@via-profit-services/geography", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.1.2"],
             ["@via-profit-services/knex", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:1.0.3"],
             ["chalk", "npm:4.1.0"],
             ["clean-webpack-plugin", "virtual:bdf3778ecc64e13ebeec87e7ec884758a46637de9b711baa8435a20222efcdc93b132e9088e225a26de026ba733e2f3fac5dc5eb7d5ad95850e856a708875029#npm:3.0.0"],
