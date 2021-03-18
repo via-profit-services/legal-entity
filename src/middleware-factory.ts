@@ -1,14 +1,11 @@
-import { Middleware, ServerError } from '@via-profit-services/core';
+import { Middleware, ServerError, collateForDataloader } from '@via-profit-services/core';
 import type { MiddlewareFactory } from '@via-profit-services/legal-entity';
 import '@via-profit-services/geography';
+import DataLoader from 'dataloader';
 
-import contextMiddleware from './context-middleware';
+import LegalEntityService from './LegalEntityService';
 
 const middlewareFactory: MiddlewareFactory = async () => {
-  const pool: ReturnType<Middleware> = {
-    context: null,
-  };
-
   const middleware: Middleware = async ({ context }) => {
 
     // check knex dependencies
@@ -25,10 +22,26 @@ const middlewareFactory: MiddlewareFactory = async () => {
       );
     }
 
-    // define static context at once
-    pool.context = pool.context ?? contextMiddleware({ context });
+    // Inject service
+    context.services.legalEntities = context.services.legalEntities ?? new LegalEntityService({ context });
 
-    return pool;
+    // Inject common dataloader
+    context.dataloader.legalEntities = context.dataloader.legalEntities ?? new DataLoader(async (ids: string[]) => {
+      const nodes = await context.services.legalEntities.getLegalEntitiesByIds(ids);
+
+      return collateForDataloader(ids, nodes);
+    });
+
+    // Inject payments dataloader
+    context.dataloader.payments = context.dataloader.payments ?? new DataLoader(async (ids: string[]) => {
+      const nodes = await context.services.legalEntities.getLegalEntityPaymentsByIds(ids);
+
+      return collateForDataloader(ids, nodes);
+    });
+
+    return {
+      context,
+    };
   };
 
   return middleware;
