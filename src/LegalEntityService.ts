@@ -22,12 +22,13 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
 
   public async getLegalEntities(
     filter: Partial<OutputFilter>,
+    notDeletedOnly?: boolean,
   ): Promise<ListResponse<LegalEntity>> {
     const { context } = this.props;
     const { knex } = context;
     const { limit, offset, orderBy, where, search } = filter;
 
-    const response = await knex
+    const request = knex
       .select([
         knex.raw('"legalEntities".*'),
         knex.raw('count(*) over() as "totalCount"'),
@@ -45,7 +46,13 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
       }))
       .where((builder) => convertSearchToKnex(builder, search))
       .orderBy(convertOrderByToKnex(orderBy))
-      .groupBy('legalEntities.id')
+      .groupBy('legalEntities.id');
+
+    if (notDeletedOnly) {
+      request.where('deleted', false);
+    }
+
+    const response = await request
       .then((nodes) => nodes.map((node) => ({
         ...node,
         city: node.city ? { id: node.city } : null,
@@ -54,12 +61,12 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
           : null,
       })))
       .then((nodes) => ({
-        ...extractTotalCountPropOfNode(nodes),
-          offset,
-          limit,
-          orderBy,
-          where,
-        }));
+      ...extractTotalCountPropOfNode(nodes),
+        offset,
+        limit,
+        orderBy,
+        where,
+      }));
 
     return response;
   }

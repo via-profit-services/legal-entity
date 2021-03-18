@@ -2,11 +2,7 @@ declare module '@via-profit-services/legal-entity' {
   import { Context, OutputFilter, ListResponse, Middleware, InputFilter } from '@via-profit-services/core';
   import { GraphQLFieldResolver } from 'graphql';
 
-  export type MiddlewareFactory = () => Promise<{
-    middleware: Middleware;
-    typeDefs: string;
-    resolvers: Resolvers;
-  }>;
+  export type MiddlewareFactory = () => Promise<Middleware>;
 
   export type Resolvers = {
     Query: {
@@ -226,7 +222,7 @@ declare module '@via-profit-services/legal-entity' {
   class LegalEntityService {
     props: LegalEntityServiceProps;
     constructor(props: LegalEntityServiceProps);
-    getLegalEntities(filter: Partial<OutputFilter>): Promise<ListResponse<LegalEntity>>;
+    getLegalEntities(filter: Partial<OutputFilter>, notDeletedOnly?: boolean): Promise<ListResponse<LegalEntity>>;
     getLegalEntitiesByIds(ids: string[]): Promise<LegalEntity[]>;
     getLegalEntity(id: string): Promise<LegalEntity | false>;
     updateLegalEntity(id: string, legalEntityData: UpdateEntityProps): Promise<void>;
@@ -282,6 +278,9 @@ declare module '@via-profit-services/legal-entity' {
     type: LegalEntityExternalSearchType;
   }
 
+  export const factory: MiddlewareFactory;
+  export const typeDefs: string;
+  export const resolvers: Resolvers;
 }
 
 

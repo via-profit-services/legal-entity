@@ -1093,9 +1093,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@via-profit-services/core@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@via-profit-services/core@npm:1.0.3"
+"@via-profit-services/core@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "@via-profit-services/core@npm:1.0.5"
   dependencies:
     bufferutil: ^4.0.2
     content-type: ^1.0.4
@@ -1114,7 +1114,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: d740cca23d5f16862036c60695701c9c5cde536b6eb4b50987694739f94804ed2463508c90c4e7834d4a11b0c9dab635314fe092fb9a0f57effc5cea8b199a29
+  checksum: 70166fa0c9d99336224af96b3d451a2da715988a02208858bf176ab7cfcba9762e9b585bf010c9e0894066662a45333c8f9445c6ffc5e8099837a0a2e2b0c403
   languageName: node
   linkType: hard
 
@@ -1125,14 +1125,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@via-profit-services/geography@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@via-profit-services/geography@npm:1.0.0"
+"@via-profit-services/geography@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@via-profit-services/geography@npm:1.1.2"
   peerDependencies:
     "@via-profit-services/core": ^1.0.0
     "@via-profit-services/knex": ^1.0.0
     graphql: "*"
-  checksum: 97ef0304dca7dfdd94721b6e9f76f8cac5550b25d36f84beb97b1f44e5d691dc14f07aad4dd87d32a027d8d9e25420b56e18ec1fb1cb5776b4922f7dfa63a614
+  checksum: 80e47e06b37519e21fb47d9eefe54022a12bdc0cb7e090564f7b570dacaf5dd5b30eda198dde4601757d58b66a8c696e7002696a37d381ee7c4427f2ce11dad9
   languageName: node
   linkType: hard
 
@@ -1170,9 +1170,9 @@ __metadata:
     "@types/webpack-node-externals": ^1.7.0
     "@typescript-eslint/eslint-plugin": ^4.6.1
     "@typescript-eslint/parser": ^4.6.1
-    "@via-profit-services/core": ^1.0.3
+    "@via-profit-services/core": ^1.0.5
     "@via-profit-services/eslint-config": ^0.1.11
-    "@via-profit-services/geography": ^1.0.0
+    "@via-profit-services/geography": ^1.1.2
     "@via-profit-services/knex": ^1.0.3
     chalk: ^4.1.0
     clean-webpack-plugin: ^3.0.0
@@ -1200,8 +1200,8 @@ __metadata:
     jest: ^24.9.0
     jest-transform-graphql: ^2.1.0
     knex: ^0.21.19
-    moment: ^2.24.0
-    moment-timezone: ^0.5.28
+    moment: ^2.29.1
+    moment-timezone: ^0.5.33
     nodemon: ^2.0.2
     nodemon-webpack-plugin: ^4.3.2
     pg: ^8.5.1
@@ -1215,7 +1215,7 @@ __metadata:
     ts-loader: ^8.0.11
     ts-node: ^9.0.0
     typescript: ^4.1.2
-    uuid: ^8.3.1
+    uuid: ^8.3.2
     webpack: ^5.7.0
     webpack-bundle-analyzer: ^4.1.0
     webpack-cli: ^4.2.0
@@ -1223,6 +1223,14 @@ __metadata:
     webpack-merge: ^5.4.0
     webpack-node-externals: ^1.7.2
     webpack-shell-plugin: ^0.5.0
+    winston: ^3.3.3
+    winston-daily-rotate-file: ^4.5.1
+  peerDependencies:
+    "@via-profit-services/core": ^1.0.5
+    "@via-profit-services/geography": ^1.0.0
+    moment: ^2.24.0
+    moment-timezone: ^0.5.28
+    uuid: ^8.3.1
     winston: ^3.3.3
     winston-daily-rotate-file: ^4.5.0
   languageName: unknown
@@ -7940,16 +7948,16 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"moment-timezone@npm:^0.5.28":
-  version: 0.5.32
-  resolution: "moment-timezone@npm:0.5.32"
+"moment-timezone@npm:^0.5.33":
+  version: 0.5.33
+  resolution: "moment-timezone@npm:0.5.33"
   dependencies:
     moment: ">= 2.9.0"
-  checksum: 1e5ff2335e310fabdebdde7c0d4b97062bb242c14926e8f79b06fdf8ad356db05d76f75add80ad1b33a68bcd330e265a1ca8b5bbdf1ea2a9c2b5df76d4e12d52
+  checksum: d4e72a3514a2885ab26b1cbc640e2f4785c997f9de28bb48bf3994ef137b0a560ca8f07eb07f11121e1223eef0c3bce4bc647b911111481a6a066bbc61285f99
   languageName: node
   linkType: hard
 
-"moment@npm:>= 2.9.0, moment@npm:>=2.14.0, moment@npm:^2.11.2, moment@npm:^2.24.0":
+"moment@npm:>= 2.9.0, moment@npm:>=2.14.0, moment@npm:^2.11.2, moment@npm:^2.29.1":
   version: 2.29.1
   resolution: "moment@npm:2.29.1"
   checksum: 86729013febf7160de5b93da69273dd304d674b0224f9544b3abd09a87671ddd2cdd57598261ce57588910d63747ffd5590965e83c790d8bf327083c0e0a06e0
@@ -11842,12 +11850,12 @@ typescript@^4.1.2:
   languageName: node
   linkType: hard
 
-"uuid@npm:^8.3.1":
-  version: 8.3.1
-  resolution: "uuid@npm:8.3.1"
+"uuid@npm:^8.3.2":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
   bin:
     uuid: dist/bin/uuid
-  checksum: 6a5d07c5564614271237d8bbc5c1c72abf056343e91af8f67a8e6d29957a1a061f347b8425a1e499af32f5a8f0039c44d200dff663b9a8090c51a7f7b5031534
+  checksum: aed2bcef341f95635f308fea8831fb9038b18c485fe7e71feb89d2e05602dfecad0cb6f2246fae096d4da425cca6e8a71056f28abd97ad98cf770a2018853248
   languageName: node
   linkType: hard
 
@@ -12284,21 +12292,21 @@ typescript@^4.1.2:
   languageName: node
   linkType: hard
 
-"winston-daily-rotate-file@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "winston-daily-rotate-file@npm:4.5.0"
+"winston-daily-rotate-file@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "winston-daily-rotate-file@npm:4.5.1"
   dependencies:
     file-stream-rotator: ^0.5.7
     object-hash: ^2.0.1
     triple-beam: ^1.3.0
-    winston-transport: ^4.2.0
+    winston-transport: ^4.4.0
   peerDependencies:
     winston: ^3
-  checksum: 5e1ba87c69ffa51fb0a94a5cae9ee727778f37482928cf805a3db9ade221eab6d70cf6bd9f03336eba682a8e7b654c23ddb262f6b6f8ddc3610297de236c5f55
+  checksum: c67482ad24edbc4ab3fec1d5584d3e904a9d7abdabaae2bbff6837e2bd11a27404dc4372cf1c449b4dc370195f05f1b09a9e5cd651535dde9a29a48be2c7f541
   languageName: node
   linkType: hard
 
-"winston-transport@npm:^4.2.0, winston-transport@npm:^4.4.0":
+"winston-transport@npm:^4.4.0":
   version: 4.4.0
   resolution: "winston-transport@npm:4.4.0"
   dependencies:
