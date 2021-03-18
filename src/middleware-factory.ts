@@ -23,17 +23,17 @@ const middlewareFactory: MiddlewareFactory = async () => {
     }
 
     // Inject service
-    context.services.legalEntities = context.services.legalEntities ?? new LegalEntityService({ context });
+    context.services.legalEntities = new LegalEntityService({ context });
 
     // Inject common dataloader
-    context.dataloader.legalEntities = context.dataloader.legalEntities ?? new DataLoader(async (ids: string[]) => {
+    context.dataloader.legalEntities = new DataLoader(async (ids: string[]) => {
       const nodes = await context.services.legalEntities.getLegalEntitiesByIds(ids);
 
       return collateForDataloader(ids, nodes);
     });
 
     // Inject payments dataloader
-    context.dataloader.payments = context.dataloader.payments ?? new DataLoader(async (ids: string[]) => {
+    context.dataloader.payments = new DataLoader(async (ids: string[]) => {
       const nodes = await context.services.legalEntities.getLegalEntityPaymentsByIds(ids);
 
       return collateForDataloader(ids, nodes);
