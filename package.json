@@ -1,7 +1,7 @@
 {
     "name": "@via-profit-services/legal-entity",
     "support": "https://via-profit.ru",
-    "version": "1.1.5-rc.1",
+    "version": "1.1.5",
     "description": "Via Profit Legal Entity Schema",
     "main": "dist/index.js",
     "engines": {

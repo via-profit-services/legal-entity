@@ -1,9 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/prefer-default-export */
 import { cities } from '@via-profit-services/geography/dist/countries/RU';
+import type { LegalEntitiesTableModel, PaymentsTableModel } from '@via-profit-services/legal-entity';
 import faker from 'faker';
 import Knex from 'knex';
-import type { LegalEntitiesTableModel, PaymentsTableModel } from '@via-profit-services/legal-entity';
 
 const LEGAL_ENTITIES_QUANTITY = 109;
 
@@ -72,7 +72,9 @@ const generateRSKS = () => {
 export async function seed(knex: Knex): Promise<any> {
 
   const legalEntitiesPayments: PaymentsTableModel[] = [];
-  const legalEntities: LegalEntitiesTableModel[] = [...Array(LEGAL_ENTITIES_QUANTITY).keys()].map(() => {
+  const legalEntities: LegalEntitiesTableModel[] = [
+    ...Array(LEGAL_ENTITIES_QUANTITY).keys(),
+  ].map(() => {
     const id = faker.random.uuid();
     const companyName = faker.company.companyName();
     const paymentsArray: PaymentsTableModel[] = [...Array(3).keys()].map((key, index) => ({
@@ -96,7 +98,7 @@ export async function seed(knex: Knex): Promise<any> {
     paymentsArray.splice(0, randomInt(1, 3)).forEach((payment) => {
       legalEntitiesPayments.push(payment);
     })
-    
+
     const entity: LegalEntitiesTableModel = {
       id,
       type: 'Customer',
@@ -121,10 +123,10 @@ export async function seed(knex: Knex): Promise<any> {
       city: getRandomCity().id,
       ...getDirectorName(),
     };
+
     return entity;
   });
 
-  
   await knex('legalEntities').del();
   await knex('legalEntitiesPayments').del();
   await knex('legalEntitiesTypes').del();

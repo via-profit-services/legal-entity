@@ -24,7 +24,7 @@ export async function up(knex: Knex): Promise<any> {
       "createdAt" timestamptz NOT NULL DEFAULT now(),
       "updatedAt" timestamptz NOT NULL DEFAULT now(),
       "type" varchar(50) NOT NULL DEFAULT 'VoidLegalEntity'::character varying,
-      "entity" varchar(100) NOT NULL,
+      "entity" uuid NOT NULL,
       "label" varchar(100) NOT NULL,
       "address" varchar(255) NOT NULL,
       "ogrn" varchar(50) NOT NULL,

@@ -19,6 +19,89 @@ declare module '@via-profit-services/legal-entity' {
     resolvers: Resolvers;
   }>;
 
+  export type LegalEntityMutationCreateInput = {
+    id?: string;
+    entity: string;
+    type: string;
+    ogrn: string;
+    inn: string;
+    label: string;
+    nameFull: string;
+    nameShort: string;
+    address: string;
+    kpp: string;
+    directorNameNominative: string;
+    directorNameGenitive: string;
+    directorNameShortNominative: string;
+    directorNameShortGenitive: string;
+    comment: string;
+    city: string;
+    payments: Array<{
+      id: string;
+      rs: string;
+      ks: string;
+      bic: string;
+      bank: string;
+      priority: PaymentPriority;
+      comment: string;
+    }>;
+  }
+
+  export type LegalEntityMutationUpdateInput = {
+    id?: string;
+    entity?: string;
+    type?: string;
+    ogrn?: string;
+    inn?: string;
+    label?: string;
+    nameFull?: string;
+    nameShort?: string;
+    address?: string;
+    kpp?: string;
+    directorNameNominative?: string;
+    directorNameGenitive?: string;
+    directorNameShortNominative?: string;
+    directorNameShortGenitive?: string;
+    comment?: string;
+    city?: string;
+    payments?: Array<{
+      id: string;
+      rs?: string;
+      ks?: string;
+      bic?: string;
+      bank?: string;
+      priority?: PaymentPriority;
+      comment?: string;
+    }>;
+  };
+
+  export type LegalEntityMutationReplaceInput = Array<{
+    id: string;
+    type?: string;
+    ogrn?: string;
+    inn?: string;
+    label?: string;
+    nameFull?: string;
+    nameShort?: string;
+    address?: string;
+    kpp?: string;
+    directorNameNominative?: string;
+    directorNameGenitive?: string;
+    directorNameShortNominative?: string;
+    directorNameShortGenitive?: string;
+    comment?: string;
+    city?: string;
+    payments: Array<{
+      id: string;
+      rs?: string;
+      ks?: string;
+      bic?: string;
+      bank?: string;
+      priority?: PaymentPriority;
+      comment?: string;
+    }>;
+  }>;
+
   export type Resolvers = {
     Query: {
       legalEntities: GraphQLFieldResolver<unknown, Context>;
@@ -49,92 +132,15 @@ declare module '@via-profit-services/legal-entity' {
     };
     LegalEntitiesMutation: {
       create: GraphQLFieldResolver<unknown, Context, {
-        input: {
-          id?: string;
-          entity: string;
-          type: string;
-          ogrn: string;
-          inn: string;
-          label: string;
-          nameFull: string;
-          nameShort: string;
-          address: string;
-          kpp: string;
-          directorNameNominative: string;
-          directorNameGenitive: string;
-          directorNameShortNominative: string;
-          directorNameShortGenitive: string;
-          comment: string;
-          city: string;
-          payments: Array<{
-            id: string;
-            rs: string;
-            ks: string;
-            bic: string;
-            bank: string;
-            priority: PaymentPriority;
-            comment: string;
-          }>;
-        };
+        input: LegalEntityMutationCreateInput;
       }>;
       update: GraphQLFieldResolver<unknown, Context, {
         id: string;
-        input: {
-          id?: string;
-          entity?: string;
-          type?: string;
-          ogrn?: string;
-          inn?: string;
-          label?: string;
-          nameFull?: string;
-          nameShort?: string;
-          address?: string;
-          kpp?: string;
-          directorNameNominative?: string;
-          directorNameGenitive?: string;
-          directorNameShortNominative?: string;
-          directorNameShortGenitive?: string;
-          comment?: string;
-          city?: string;
-          payments?: Array<{
-            id: string;
-            rs?: string;
-            ks?: string;
-            bic?: string;
-            bank?: string;
-            priority?: PaymentPriority;
-            comment?: string;
-          }>;
-        };
+        input: LegalEntityMutationUpdateInput;
       }>;
       replace: GraphQLFieldResolver<unknown, Context, {
         entity?: string;
-        input: Array<{
-          id: string;
-          type?: string;
-          ogrn?: string;
-          inn?: string;
-          label?: string;
-          nameFull?: string;
-          nameShort?: string;
-          address?: string;
-          kpp?: string;
-          directorNameNominative?: string;
-          directorNameGenitive?: string;
-          directorNameShortNominative?: string;
-          directorNameShortGenitive?: string;
-          comment?: string;
-          city?: string;
-          payments: Array<{
-            id: string;
-            rs?: string;
-            ks?: string;
-            bic?: string;
-            bank?: string;
-            priority?: PaymentPriority;
-            comment?: string;
-          }>;
-        }>;
+        input: LegalEntityMutationReplaceInput;
       }>;
       delete: GraphQLFieldResolver<unknown, Context, {
         id?: string;

@@ -75,7 +75,9 @@ const generateRSKS = () => {
 function seed(knex) {
     return __awaiter(this, void 0, void 0, function* () {
         const legalEntitiesPayments = [];
-        const legalEntities = [...Array(LEGAL_ENTITIES_QUANTITY).keys()].map(() => {
+        const legalEntities = [
+            ...Array(LEGAL_ENTITIES_QUANTITY).keys(),
+        ].map(() => {
             const id = faker_1.default.random.uuid();
             const companyName = faker_1.default.company.companyName();
             const paymentsArray = [...Array(3).keys()].map((key, index) => ({
