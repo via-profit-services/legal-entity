@@ -114,25 +114,22 @@ type LegalEntitiesMutation {
   """
   Create legal entity
   """
-  create(
-    input: LegalEntityInputCreate!
-  ): LegalEntity!
+  create(input: LegalEntityInputCreate!): LegalEntity!
 
   """
   Update legal entity
   """
-  update(
-    id: ID!
-    input: LegalEntityInputUpdate!
-  ): LegalEntity!
+  update(id: ID! input: LegalEntityInputUpdate!): LegalEntity!
+
+  """
+  Replace exists entities to new entities collection
+  """
+  replace(entity: String! input: [LegalEntityInputReplace!]!): [LegalEntity!]!
 
   """
   Delete legal entity
   """
-  delete(
-    id: ID
-    ids: [ID!]
-  ): LegalEntityDeletePayload!
+  delete(id: ID ids: [ID!]): LegalEntityDeletePayload!
   
 }
 
@@ -198,6 +195,8 @@ type LegalEntity implements Node {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  type: LegalEntityType!
+  entity: LegalEntityEntity!
   label: String!
   nameFull: String!
   nameShort: String!
@@ -233,7 +232,6 @@ type LegalEntity implements Node {
   directorNameShortGenitive: String!
 
   comment: String
-  deleted: Boolean!
 }
 
 
@@ -253,12 +251,21 @@ type LegalEntityPayments {
   """
   priority: LegalEntityPaymentPriority!
   comment: String
-  deleted: Boolean!
 }
 
 
-input LegalEntityInputPayments {
+input LegalEntityPaymentsInputCreate {
   id: ID
+  rs: String!
+  ks: String!
+  bic: String!
+  bank: String!
+  priority: LegalEntityPaymentPriority!
+  comment: String!
+}
+
+input LegalEntityPaymentsInputUpdate {
+  id: ID!
   rs: String
   ks: String
   bic: String
@@ -272,39 +279,75 @@ Possible data to legal entity update
 """
 input LegalEntityInputUpdate {
   id: ID
+  entity: ID
+  type: LegalEntityType
+  ogrn: String
+  inn: String
   label: String
   nameFull: String
   nameShort: String
   address: String
-  ogrn: String
-  inn: String
   kpp: String
-  payments: [LegalEntityInputPayments!]
   directorNameNominative: String
   directorNameGenitive: String
   directorNameShortNominative: String
   directorNameShortGenitive: String
   comment: String
   city: ID
+  payments: [LegalEntityPaymentsInputUpdate!]
+}
+
+
+"""
+Possible data to legal entity replace
+"""
+input LegalEntityInputReplace {
+  id: ID!
+  type: LegalEntityType
+  ogrn: String
+  inn: String
+  label: String
+  nameFull: String
+  nameShort: String
+  address: String
+  kpp: String
+  directorNameNominative: String
+  directorNameGenitive: String
+  directorNameShortNominative: String
+  directorNameShortGenitive: String
+  comment: String
+  city: ID
+  payments: [LegalEntityPaymentsInputUpdate!]!
 }
 
 """
 Possible data to legal entity update
 """
 input LegalEntityInputCreate {
+  id: ID
+  entity: ID!
+  type: LegalEntityType!
   ogrn: String!
   inn: String!
-  id: ID
   label: String!
   nameFull: String!
   nameShort: String!
   address: String!
   kpp: String!
-  payments: [LegalEntityInputPayments!]!
   directorNameNominative: String!
   directorNameGenitive: String!
   directorNameShortNominative: String!
   directorNameShortGenitive: String!
   comment: String!
   city: ID!
+  payments: [LegalEntityPaymentsInputCreate!]!
 }
+
+"""
+Dummy type.
+Not for usage
+"""
+type VoidLegalEntity {
+  voidLegalEntityField: Void
+}
+

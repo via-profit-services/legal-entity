@@ -5,6 +5,8 @@ import type {
   LegalEntity, CreateEntityProps, UpdateEntityProps, LegalEntityExternalSearchResult,
   LegalEntityPayment, PaymentsTableModelResponse, UpdatePaymentProps, CreatePaymentProps,
   LegalEntitiesTableModel, LegalEntitiesTableModelResponse, PaymentsTableModel,
+  LegalEntityCreateOrUpdateProps, ReplaceEntityProps, ReplaceEntityResult,
+  ReplaceEntityPaymentsProps, PaymentCreateOrUpdateProps, ReplacePaymentResult,
 } from '@via-profit-services/legal-entity';
 import moment from 'moment-timezone';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,10 +22,7 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
     this.props = props;
   }
 
-  public async getLegalEntities(
-    filter: Partial<OutputFilter>,
-    notDeletedOnly?: boolean,
-  ): Promise<ListResponse<LegalEntity>> {
+  public async getLegalEntities(filter: Partial<OutputFilter>): Promise<ListResponse<LegalEntity>> {
     const { context } = this.props;
     const { knex } = context;
     const { limit, offset, orderBy, where, search } = filter;
@@ -37,9 +36,7 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
       .from<LegalEntitiesTableModel, LegalEntitiesTableModelResponse[]>('legalEntities')
       .limit(limit || 1)
       .offset(offset || 0)
-      .leftJoin('legalEntitiesPayments as payments', (builder) => builder
-          .on('payments.owner', '=', 'legalEntities.id')
-          .onIn('payments.deleted', [false]))
+      .leftJoin('legalEntitiesPayments as payments', 'payments.owner', 'legalEntities.id')
       .where((builder) => convertWhereToKnex(builder, where, {
         payments: ['bank', 'bic', 'rs', 'ks', 'owner', 'priority'],
         legalEntities: '*',
@@ -48,10 +45,6 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
       .orderBy(convertOrderByToKnex(orderBy))
       .groupBy('legalEntities.id');
 
-    if (notDeletedOnly) {
-      request.where('deleted', false);
-    }
-
     const response = await request
       .then((nodes) => nodes.map((node) => ({
         ...node,
@@ -59,6 +52,9 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
         payments: node.payments
           ? arrayOfIdsToArrayOfObjectIds(node.payments.split('|'))
           : null,
+        entity: !node.entity ? null : {
+          id: node.entity,
+        },
       })))
       .then((nodes) => ({
       ...extractTotalCountPropOfNode(nodes),
@@ -88,52 +84,56 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
     return nodes.length ? nodes[0] : false;
   }
 
-  public async updateLegalEntity(id: string, legalEntityData: UpdateEntityProps): Promise<void> {
-    const { knex, timezone } = this.props.context;
+  public async updateLegalEntity(id: string, legalEntityData: UpdateEntityProps): Promise<string> {
+    const { context } = this.props;
+    const { knex, timezone } = context;
 
     await knex<LegalEntitiesTableModel>('legalEntities')
       .update({
         ...legalEntityData,
-        id, // force set id
         updatedAt: moment.tz(timezone).format(),
-      })
-      .where('id', id)
-      .returning('id');
+      }).where({ id });
 
+    return id;
   }
 
   public async createLegalEntity(legalEntityData: CreateEntityProps): Promise<string> {
-    const { knex, timezone } = this.props.context;
+    const defaultEntityData = this.getDefaultEntityRecord();
+    const entities = [legalEntityData].map((data) => ({
+      ...defaultEntityData,
+      ...data,
+    }));
+    const insertedIDs = await this.createOrUpdateEntities(entities);
 
-    const result = await knex<LegalEntitiesTableModel>('legalEntities')
-      .insert({
-          ...legalEntityData,
-        id: legalEntityData.id || uuidv4(),
-        createdAt: moment.tz(timezone).format(),
-        updatedAt: moment.tz(timezone).format(),
-      })
-      .returning('id');
-
-    return result[0];
+    return insertedIDs[0];
   }
 
   public async deleteLegalEntities(ids: string[]): Promise<void> {
-    await Promise.all(ids.map((id) => this.updateLegalEntity(id, {
-      inn: uuidv4(),
-      ogrn: uuidv4(),
-      deleted: true,
-    })));
+    const { context } = this.props;
+    const { knex } = context;
+
+    await knex<LegalEntitiesTableModel>('legalEntities')
+      .del()
+      .whereIn('id', ids);
   }
 
   public async deleteLegalEntity(id: string): Promise<void> {
     return this.deleteLegalEntities([id]);
   }
 
-  public async restoreLegalEntity(id: string): Promise<void> {
-    await this.updateLegalEntity(id, {
-      deleted: false,
-    });
+  public async deleteLegalEntityPayments(ids: string[]): Promise<void> {
+    const { context } = this.props;
+    const { knex } = context;
+
+    await knex<PaymentsTableModel>('legalEntitiesPayments')
+      .del()
+      .whereIn('id', ids);
   }
+
+  public async deleteLegalEntityPayment(id: string): Promise<void> {
+    return this.deleteLegalEntityPayments([id]);
+  }
+
 
   public async externalSearchCompanies(
     query: string,
@@ -226,7 +226,6 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
           rs: '',
           owner: { id: '' },
           comment: '',
-          deleted: false,
         }
 
         return payment;
@@ -326,20 +325,280 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
     return result[0];
   }
 
-  public async deleteLegalEntityPayment(id: string): Promise<boolean> {
-    const result = this.updateLegalEntityPayment(id, {
-      deleted: true,
-    });
 
-    return Boolean(result);
+  public async rebaseTypes(types: string[]): Promise<void> {
+    const { context } = this.props;
+    const { knex } = context;
+
+    const payload = types.map((type) => ({ type }));
+    await knex.raw(`${knex('legalEntitiesTypes').insert(payload).toString()} on conflict ("type") do nothing;`);
+    await knex('legalEntitiesTypes').del().whereNotIn('type', types);
   }
 
-  public async restoreLegalEntityPayment(id: string): Promise<boolean> {
-    const result = this.updateLegalEntityPayment(id, {
-      deleted: false,
+  public getDefaultEntityRecord(): LegalEntitiesTableModel {
+    const { timezone } = this.props.context;
+
+    const createdAt = moment.tz(timezone).format();
+    const data: LegalEntitiesTableModel = {
+      createdAt,
+      updatedAt: createdAt,
+      id: uuidv4(),
+      entity: '',
+      type: '',
+      label: '',
+      address: '',
+      ogrn: '',
+      kpp: '',
+      inn: '',
+      directorNameNominative: '',
+      directorNameGenitive: '',
+      directorNameShortNominative: '',
+      directorNameShortGenitive: '',
+      nameShort: '',
+      nameFull: '',
+      city: '',
+      comment: '',
+    };
+
+    return data;
+  }
+
+  public getDefaultPaymentRecord(): PaymentsTableModel {
+    const { timezone } = this.props.context;
+
+    const createdAt = moment.tz(timezone).format();
+    const data: PaymentsTableModel = {
+      createdAt,
+      updatedAt: createdAt,
+      id: uuidv4(),
+      owner: '',
+      rs: '',
+      ks: '',
+      bic: '',
+      bank: '',
+      priority: 'master',
+      comment: '',
+    };
+
+    return data;
+  }
+
+  public prepareEntityDataToInsert(
+    input: CreateEntityProps | UpdateEntityProps,
+    ): LegalEntitiesTableModel {
+    const data: LegalEntitiesTableModel = {
+      ...this.getDefaultEntityRecord(),
+      ...input,
+    };
+
+    return data;
+  }
+  public preparePaymentDataToInsert(
+    input: CreatePaymentProps | UpdatePaymentProps,
+  ): PaymentsTableModel {
+    const data: PaymentsTableModel = {
+      ...this.getDefaultPaymentRecord(),
+      ...input,
+    };
+
+    return data;
+  }
+
+  public async getLegalEntitiesByEntities(
+    entitiesIDs: string[],
+  ): Promise<ListResponse<LegalEntity>> {
+    const list = await this.getLegalEntities({
+      limit: Number.MAX_SAFE_INTEGER,
+      where: [
+        ['entity', 'in', entitiesIDs],
+      ],
     });
 
-    return Boolean(result);
+    return list;
+  }
+
+  public async getLegalEntitiesByEntity(entityID: string): Promise<ListResponse<LegalEntity>> {
+    return this.getLegalEntitiesByEntities([entityID]);
+  }
+
+  public async createOrUpdateEntities (
+    entities: LegalEntityCreateOrUpdateProps[],
+  ): Promise<string[]> {
+    const { context } = this.props;
+    const { knex, timezone } = context;
+
+    const createdAt = moment.tz(timezone).toDate();
+    const prepared = entities.map((entity) => ({
+      ...this.prepareEntityDataToInsert(entity),
+      createdAt,
+      updatedAt: createdAt,
+    }));
+
+    const response = await knex.raw(
+      `${knex('legalEntities').insert(prepared).toQuery()} \
+      on conflict ("id") do update set \
+        "updatedAt" = excluded."updatedAt",\
+        "entity" = excluded."entity",\
+        "type" = excluded."type",\
+        "label" = excluded."label",\
+        "address" = excluded."address",\
+        "ogrn" = excluded."ogrn",\
+        "kpp" = excluded."kpp",\
+        "inn" = excluded."inn",\
+        "directorNameNominative" = excluded."directorNameNominative",\
+        "directorNameGenitive" = excluded."directorNameGenitive",\
+        "directorNameShortNominative" = excluded."directorNameShortNominative",\
+        "directorNameShortGenitive" = excluded."directorNameShortGenitive",\
+        "nameShort" = excluded."nameShort",\
+        "nameFull" = excluded."nameFull",\
+        "city" = excluded."city",\
+        "comment" = excluded."comment"
+      returning id;`,
+    );
+
+    return (response as {rows: Array<{id: string}>})
+      .rows
+      .map(({ id }) => id);
+  }
+
+  public async replaceEntities (
+    entity: string,
+    legalEntities: ReplaceEntityProps[],
+  ): Promise<ReplaceEntityResult> {
+
+    const oldData = await this.getLegalEntitiesByEntity(entity);
+    const dataToReplace = legalEntities.map((legalEntity) => {
+      const oldLegalEntityData = oldData.nodes.find(({ id }) => id === legalEntity.id);
+      const {
+        label,
+        address,
+        ogrn,
+        type,
+        kpp,
+        inn,
+        directorNameNominative,
+        directorNameGenitive,
+        directorNameShortNominative,
+        directorNameShortGenitive,
+        nameShort,
+        nameFull,
+        comment,
+      } = oldLegalEntityData || this.getDefaultEntityRecord();
+
+      const d: LegalEntityCreateOrUpdateProps = {
+        label,
+        address,
+        ogrn,
+        type,
+        kpp,
+        inn,
+        directorNameNominative,
+        directorNameGenitive,
+        directorNameShortNominative,
+        directorNameShortGenitive,
+        nameShort,
+        nameFull,
+        city: legalEntity.city || oldLegalEntityData.city.id,
+        comment,
+        ...legalEntity,
+        entity,
+      };
+
+      return d;
+    });
+
+    const newEntityIdsOfThisEntity = await this.createOrUpdateEntities(dataToReplace);
+
+    const iDsToDelete = oldData.nodes
+      .filter(({ id }) => !newEntityIdsOfThisEntity.includes(id))
+      .map(({ id }) => id);
+
+    await this.deleteLegalEntities(iDsToDelete);
+
+    return {
+      deleted: iDsToDelete,
+      persistens: newEntityIdsOfThisEntity,
+      affected: iDsToDelete.concat(newEntityIdsOfThisEntity),
+    };
+  }
+
+  public async createOrUpdatePayments (payments: PaymentCreateOrUpdateProps[]): Promise<string[]> {
+    const { context } = this.props;
+    const { knex, timezone } = context;
+
+    const createdAt = moment.tz(timezone).toDate();
+    const prepared = payments.map((payment) => ({
+      ...this.preparePaymentDataToInsert(payment),
+      createdAt,
+      updatedAt: createdAt,
+    }));
+
+    const response = await knex.raw(
+      `${knex('legalEntitiesPayments').insert(prepared).toQuery()} \
+      on conflict ("id") do update set \
+        "updatedAt" = excluded."updatedAt",\
+        "owner" = excluded."owner",\
+        "id" = excluded."id",\
+        "rs" = excluded."rs",\
+        "ks" = excluded."ks",\
+        "bic" = excluded."bic",\
+        "bank" = excluded."bank",\
+        "comment" = excluded."comment",\
+        "priority" = excluded."priority"      
+      returning id;`,
+    );
+
+    return (response as {rows: Array<{id: string}>})
+      .rows
+      .map(({ id }) => id);
+  }
+
+  public async replacePayments (
+    owner: string,
+    payments: ReplaceEntityPaymentsProps[],
+  ): Promise<ReplacePaymentResult> {
+
+    const oldPayments = await this.getLegalEntityPayments({
+      where: [['owner', '=', owner]],
+    });
+    const dataToReplace = payments.map((payment) => {
+      const oldPaymentData = oldPayments.nodes.find(({ id }) => id === payment.id);
+      const {
+        rs,
+        ks,
+        bic,
+        bank,
+        priority,
+        comment,
+      } = oldPaymentData || this.getDefaultPaymentRecord();
+
+      const d: PaymentCreateOrUpdateProps = {
+        rs,
+        ks,
+        bic,
+        bank,
+        priority,
+        comment,
+        ...payment,
+        owner,
+      };
+
+      return d;
+    });
+
+    const newPaymenIdsOfThisEntity = await this.createOrUpdatePayments(dataToReplace);
+
+    const iDsToDelete = oldPayments.nodes
+      .filter(({ id }) => !newPaymenIdsOfThisEntity.includes(id))
+      .map(({ id }) => id);
+
+    await this.deleteLegalEntities(iDsToDelete);
+
+    return {
+      deleted: iDsToDelete,
+      persistens: newPaymenIdsOfThisEntity,
+      affected: iDsToDelete.concat(newPaymenIdsOfThisEntity),
+    };
   }
 }
 

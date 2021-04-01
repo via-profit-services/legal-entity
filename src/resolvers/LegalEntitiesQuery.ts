@@ -6,8 +6,6 @@ export const queryResolver: Resolvers['LegalEntitiesQuery'] = {
     const { services } = context;
     const filter = buildQueryFilter(args);
 
-    filter.where.push(['deleted', '=', false]);
-
     try {
       const legalEntitiesConnection = await services.legalEntities.getLegalEntities(filter);
       const connection = buildCursorConnection(legalEntitiesConnection, 'legalEntities');

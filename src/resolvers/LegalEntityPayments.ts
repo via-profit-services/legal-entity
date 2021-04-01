@@ -13,7 +13,6 @@ export const legalEntityPaymentResolver = new Proxy<PaymentResolver>({
   bank: () => ({}),
   priority: () => ({}),
   comment: () => ({}),
-  deleted: () => ({}),
 }, {
   get: (_target, prop: keyof PaymentResolver) => {
     const resolver: PaymentResolver[keyof PaymentResolver] = async (parent, _args, context) => {

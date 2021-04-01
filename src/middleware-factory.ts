@@ -1,11 +1,21 @@
 import { Middleware, ServerError, collateForDataloader } from '@via-profit-services/core';
-import type { MiddlewareFactory } from '@via-profit-services/legal-entity';
+import type { MiddlewareFactory, Configuration } from '@via-profit-services/legal-entity';
 import '@via-profit-services/geography';
 import DataLoader from 'dataloader';
 
 import LegalEntityService from './LegalEntityService';
+import resolvers from './resolvers';
+import typeDefs from './schema.graphql';
 
-const middlewareFactory: MiddlewareFactory = async () => {
+const middlewareFactory: MiddlewareFactory = async (configuration) => {
+  let typesTableInit = false;
+  const { entities } = configuration || {} as Configuration;
+  const typeList = new Set(
+    [...entities || []].map((entity) => entity.replace(/[^a-zA-Z]/g, '')),
+  );
+  
+  typeList.add('VoidLegalEntity');
+
   const middleware: Middleware = async ({ context }) => {
 
     // check knex dependencies
@@ -39,12 +49,28 @@ const middlewareFactory: MiddlewareFactory = async () => {
       return collateForDataloader(ids, nodes);
     });
 
+    // check to init tables
+    if (!typesTableInit) {
+      await context.services.legalEntities.rebaseTypes([...typeList]);
+      typesTableInit = true;
+    }
+
     return {
       context,
     };
   };
 
-  return middleware;
+  return {
+    middleware,
+    resolvers,
+    typeDefs: `
+      ${typeDefs}
+      union LegalEntityEntity = ${[...typeList].join(' | ')}
+      enum LegalEntityType {
+        ${[...typeList].join(',\n')}
+      }
+      `,
+  };
 };
 
 export default middlewareFactory;

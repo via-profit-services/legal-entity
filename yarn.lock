@@ -1093,9 +1093,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@via-profit-services/core@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "@via-profit-services/core@npm:1.0.5"
+"@via-profit-services/core@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "@via-profit-services/core@npm:1.0.9"
   dependencies:
     bufferutil: ^4.0.2
     content-type: ^1.0.4
@@ -1114,7 +1114,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 70166fa0c9d99336224af96b3d451a2da715988a02208858bf176ab7cfcba9762e9b585bf010c9e0894066662a45333c8f9445c6ffc5e8099837a0a2e2b0c403
+  checksum: 8b5d7f0d90ba23b136f1b3007e0184a7c9ed371151336546a25188bcb1ec4da99f0b21af474f8551138c48af080c247030c4c5d680dd60d1b5f08d1e4e262a93
   languageName: node
   linkType: hard
 
@@ -1125,14 +1125,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@via-profit-services/geography@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "@via-profit-services/geography@npm:1.1.2"
+"@via-profit-services/geography@npm:^1.1.5":
+  version: 1.1.5
+  resolution: "@via-profit-services/geography@npm:1.1.5"
   peerDependencies:
     "@via-profit-services/core": ^1.0.0
     "@via-profit-services/knex": ^1.0.0
     graphql: "*"
-  checksum: 80e47e06b37519e21fb47d9eefe54022a12bdc0cb7e090564f7b570dacaf5dd5b30eda198dde4601757d58b66a8c696e7002696a37d381ee7c4427f2ce11dad9
+  checksum: 3e41e3159ffc1d2d82a857bc263c22c88125451a624ab8dd246a3919373188f6a9fd6fa9705f787da42e778358454eaecab5b1bd432d335f1ca7647c7b5aa554
   languageName: node
   linkType: hard
 
@@ -1170,9 +1170,9 @@ __metadata:
     "@types/webpack-node-externals": ^1.7.0
     "@typescript-eslint/eslint-plugin": ^4.6.1
     "@typescript-eslint/parser": ^4.6.1
-    "@via-profit-services/core": ^1.0.5
+    "@via-profit-services/core": ^1.0.9
     "@via-profit-services/eslint-config": ^0.1.11
-    "@via-profit-services/geography": ^1.1.2
+    "@via-profit-services/geography": ^1.1.5
     "@via-profit-services/knex": ^1.0.3
     chalk: ^4.1.0
     clean-webpack-plugin: ^3.0.0
