@@ -5,8 +5,7 @@ import type {
   LegalEntity, CreateEntityProps, UpdateEntityProps, LegalEntityExternalSearchResult,
   LegalEntityPayment, PaymentsTableModelResponse, UpdatePaymentProps, CreatePaymentProps,
   LegalEntitiesTableModel, LegalEntitiesTableModelResponse, PaymentsTableModel,
-  LegalEntityCreateOrUpdateProps, ReplaceEntityProps, ReplaceEntityResult,
-  ReplaceEntityPaymentsProps, PaymentCreateOrUpdateProps, ReplacePaymentResult,
+  LegalEntityCreateOrUpdateProps, PaymentCreateOrUpdateProps,
 } from '@via-profit-services/legal-entity';
 import moment from 'moment-timezone';
 import { v4 as uuidv4 } from 'uuid';
@@ -308,6 +307,7 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
     return result[0];
   }
 
+
   public async createLegalEntityPayment(
     paymentData: CreatePaymentProps,
   ): Promise<string> {
@@ -428,98 +428,18 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
     const { knex, timezone } = context;
 
     const createdAt = moment.tz(timezone).toDate();
-    const prepared = entities.map((entity) => ({
+    const prepared = entities.map(({ payments, ...entity }) => ({
       ...this.prepareEntityDataToInsert(entity),
       createdAt,
       updatedAt: createdAt,
     }));
 
-    const response = await knex.raw(
-      `${knex('legalEntities').insert(prepared).toQuery()} \
-      on conflict ("id") do update set \
-        "updatedAt" = excluded."updatedAt",\
-        "entity" = excluded."entity",\
-        "type" = excluded."type",\
-        "label" = excluded."label",\
-        "address" = excluded."address",\
-        "ogrn" = excluded."ogrn",\
-        "kpp" = excluded."kpp",\
-        "inn" = excluded."inn",\
-        "directorNameNominative" = excluded."directorNameNominative",\
-        "directorNameGenitive" = excluded."directorNameGenitive",\
-        "directorNameShortNominative" = excluded."directorNameShortNominative",\
-        "directorNameShortGenitive" = excluded."directorNameShortGenitive",\
-        "nameShort" = excluded."nameShort",\
-        "nameFull" = excluded."nameFull",\
-        "city" = excluded."city",\
-        "comment" = excluded."comment"
-      returning id;`,
-    );
-
-    return (response as {rows: Array<{id: string}>})
-      .rows
-      .map(({ id }) => id);
-  }
-
-  public async replaceEntities (
-    entity: string,
-    legalEntities: ReplaceEntityProps[],
-  ): Promise<ReplaceEntityResult> {
-
-    const oldData = await this.getLegalEntitiesByEntity(entity);
-    const dataToReplace = legalEntities.map((legalEntity) => {
-      const oldLegalEntityData = oldData.nodes.find(({ id }) => id === legalEntity.id);
-      const {
-        label,
-        address,
-        ogrn,
-        type,
-        kpp,
-        inn,
-        directorNameNominative,
-        directorNameGenitive,
-        directorNameShortNominative,
-        directorNameShortGenitive,
-        nameShort,
-        nameFull,
-        comment,
-      } = oldLegalEntityData || this.getDefaultEntityRecord();
-
-      const d: LegalEntityCreateOrUpdateProps = {
-        label,
-        address,
-        ogrn,
-        type,
-        kpp,
-        inn,
-        directorNameNominative,
-        directorNameGenitive,
-        directorNameShortNominative,
-        directorNameShortGenitive,
-        nameShort,
-        nameFull,
-        city: legalEntity.city || oldLegalEntityData.city.id,
-        comment,
-        ...legalEntity,
-        entity,
-      };
-
-      return d;
-    });
-
-    const newEntityIdsOfThisEntity = await this.createOrUpdateEntities(dataToReplace);
-
-    const iDsToDelete = oldData.nodes
-      .filter(({ id }) => !newEntityIdsOfThisEntity.includes(id))
-      .map(({ id }) => id);
-
-    await this.deleteLegalEntities(iDsToDelete);
-
-    return {
-      deleted: iDsToDelete,
-      persistens: newEntityIdsOfThisEntity,
-      affected: iDsToDelete.concat(newEntityIdsOfThisEntity),
-    };
+    const response: any = await knex('legalEntities')
+      .insert(prepared)
+      .returning('id')
+      .onConflict('id').merge();
+    
+    return response;
   }
 
   public async createOrUpdatePayments (payments: PaymentCreateOrUpdateProps[]): Promise<string[]> {
@@ -533,73 +453,14 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
       updatedAt: createdAt,
     }));
 
-    const response = await knex.raw(
-      `${knex('legalEntitiesPayments').insert(prepared).toQuery()} \
-      on conflict ("id") do update set \
-        "updatedAt" = excluded."updatedAt",\
-        "owner" = excluded."owner",\
-        "id" = excluded."id",\
-        "rs" = excluded."rs",\
-        "ks" = excluded."ks",\
-        "bic" = excluded."bic",\
-        "bank" = excluded."bank",\
-        "comment" = excluded."comment",\
-        "priority" = excluded."priority"      
-      returning id;`,
-    );
+    const response: any = await knex('legalEntitiesPayments')
+      .insert(prepared)
+      .returning('id')
+      .onConflict('id').merge();
 
-    return (response as {rows: Array<{id: string}>})
-      .rows
-      .map(({ id }) => id);
+    return response;
   }
 
-  public async replacePayments (
-    owner: string,
-    payments: ReplaceEntityPaymentsProps[],
-  ): Promise<ReplacePaymentResult> {
-
-    const oldPayments = await this.getLegalEntityPayments({
-      where: [['owner', '=', owner]],
-    });
-    const dataToReplace = payments.map((payment) => {
-      const oldPaymentData = oldPayments.nodes.find(({ id }) => id === payment.id);
-      const {
-        rs,
-        ks,
-        bic,
-        bank,
-        priority,
-        comment,
-      } = oldPaymentData || this.getDefaultPaymentRecord();
-
-      const d: PaymentCreateOrUpdateProps = {
-        rs,
-        ks,
-        bic,
-        bank,
-        priority,
-        comment,
-        ...payment,
-        owner,
-      };
-
-      return d;
-    });
-
-    const newPaymenIdsOfThisEntity = await this.createOrUpdatePayments(dataToReplace);
-
-    const iDsToDelete = oldPayments.nodes
-      .filter(({ id }) => !newPaymenIdsOfThisEntity.includes(id))
-      .map(({ id }) => id);
-
-    await this.deleteLegalEntities(iDsToDelete);
-
-    return {
-      deleted: iDsToDelete,
-      persistens: newPaymenIdsOfThisEntity,
-      affected: iDsToDelete.concat(newPaymenIdsOfThisEntity),
-    };
-  }
 }
 
 

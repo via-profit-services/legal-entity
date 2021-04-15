@@ -1,4 +1,4 @@
-import Knex from 'knex';
+import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
   return knex.raw(`
@@ -60,7 +60,7 @@ export async function up(knex: Knex): Promise<any> {
     create index "legalentitiesInnIndex" ON "legalEntities" USING btree ("inn");
     create index "legalentitiesOgrnIndex" ON "legalEntities" USING btree ("ogrn");
 
-    alter table "legalEntitiesPayments" ADD CONSTRAINT "legalEntitiesPayments_owner_fk" FOREIGN KEY ("owner") REFERENCES "legalEntities"("id") ON DELETE CASCADE;
+    alter table "legalEntitiesPayments" ADD CONSTRAINT "legalEntitiesPayments_owner_fk" FOREIGN KEY ("owner") REFERENCES "legalEntities"("id") ON DELETE CASCADE on update cascade;
     alter table "legalEntities" ADD CONSTRAINT "legalEntitiesToCity_fk" FOREIGN KEY ("city") REFERENCES "geographyCities"("id") ON UPDATE SET NULL;
 
   `);

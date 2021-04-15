@@ -1,31 +1,62 @@
-import * as ru from '@via-profit-services/geography/dist/countries/RU';
-import Knex from 'knex';
+import fs from 'fs';
+import path from 'path';
+import { Knex } from 'knex';
 
-const list = [ru];
+/**
+ * Split array to chunks per size
+ */
+const arrayChunk = <T extends Record<string, any>>(array: Array<T>, size: number): T[][] => {
+  const results: T[][] = [];
+  while (array.length) {
+    results.push(array.splice(0, size));
+  }
 
-export async function seed (knex: Knex): Promise<any> {
-  return list.reduce(async (prev, { countries, states, cities }) => {
+  return results;
+}
+
+/**
+ * Insert or update data for a specific type (countries, states or cities)
+ */
+const insertOrUpdate = async (
+  knex: Knex,
+  type: 'countries' | 'states' | 'cities',
+): Promise<void> => {
+
+  // Geography data must be in `<ProjectRoot>/.data/geography` directory
+  const dataDir = path.resolve(process.cwd(), '../.data/geography');
+
+  // Reading directory to get array of country codes
+  await fs.readdirSync(dataDir).reduce(async (prev, countryCode) => {
     await prev;
 
-    // insert countries
-    await knex.raw(`
-      ${knex('geographyCountries').insert(countries).toQuery()}
-      on conflict ("id") do update set
-      ${Object.keys(countries[0]).map((field) => `"${field}" = excluded."${field}"`).join(',')}
-    `);
+    const tableMap = {
+      countries: 'geographyCountries',
+      states: 'geographyStates',
+      cities: 'geographyCities',
+    };
 
-    // insert states
-    await knex.raw(`
-      ${knex('geographyStates').insert(states).toQuery()}
-      on conflict ("id") do update set
-      ${Object.keys(states[0]).map((field) => `"${field}" = excluded."${field}"`).join(', ')}
-    `);
+    const filename = path.resolve(dataDir, countryCode, `${type}.json`);
+    const tableName = tableMap[type];
 
-    // insert cities
-    await knex.raw(`
-      ${knex('geographyCities').insert(cities).toQuery()}
-      on conflict ("id") do update set
-      ${Object.keys(cities[0]).map((field) => `"${field}" = excluded."${field}"`).join(', ')}
-    `);
+    // read and parse from JSON
+    const data = JSON.parse(fs.readFileSync(filename, { encoding: 'utf8' }));
+
+    // split into chunks because the length of the SQL query is limited
+    const chunks = arrayChunk(data, 1000);
+
+    // convert chunks to promises
+    const requests = chunks.map((chunk) => knex(tableName).insert(chunk).onConflict('id').merge());
+
+    await Promise.all(requests);
+
   }, Promise.resolve());
 }
+
+
+export const seed = async (knex: Knex) => {
+  // Countries first, then states and cities at last
+  await insertOrUpdate(knex, 'countries');
+  await insertOrUpdate(knex, 'states');
+  await insertOrUpdate(knex, 'cities');
+}
+

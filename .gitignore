@@ -23,8 +23,12 @@
 /package.tgz
 /package-*.tgz
 
+.data
+.knex
+.env
 .yarn/*
 !.yarn/releases
 !.yarn/plugins
 !.yarn/sdks
 !.yarn/versions
+.knex/knexfile.js

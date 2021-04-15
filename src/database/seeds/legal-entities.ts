@@ -1,9 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/prefer-default-export */
-import { cities } from '@via-profit-services/geography/dist/countries/RU';
 import type { LegalEntitiesTableModel, PaymentsTableModel } from '@via-profit-services/legal-entity';
 import faker from 'faker';
-import Knex from 'knex';
+import { Knex } from 'knex';
 
 const LEGAL_ENTITIES_QUANTITY = 109;
 
@@ -22,7 +21,7 @@ const randomInt = (min?: number, max?: number) => {
   return Math.floor(Math.random() * (data.max - data.min + 1) + data.min);
 };
 
-const getRandomCity = () => cities[randomInt(0, cities.length - 1)];
+const getRandomCity = () => 'f89c59d6-a1af-4439-8a45-0f8466bb2f1d';
 
 
 const getDirectorName = () => {
@@ -120,7 +119,7 @@ export async function seed(knex: Knex): Promise<any> {
       ogrn: generateOGRN(),
       inn: generateINN(),
       kpp: generateKPP(),
-      city: getRandomCity().id,
+      city: getRandomCity(),
       ...getDirectorName(),
     };
 

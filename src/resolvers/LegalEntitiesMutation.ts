@@ -1,39 +1,8 @@
 import { ServerError } from '@via-profit-services/core';
-import { Resolvers, ReplaceEntityPaymentsProps, ReplaceEntityProps } from '@via-profit-services/legal-entity';
+import { Resolvers } from '@via-profit-services/legal-entity';
 
 export const legalEntityMutationResolver: Resolvers['LegalEntitiesMutation'] = {
-  replace: async (_parent, args, context) => {
-    const { entity, input } = args;
-    const { dataloader, services } = context;
 
-    const paymentsMap: Record<string, ReplaceEntityPaymentsProps[]> = {};
-    const inputWithoutPayments: ReplaceEntityProps[] = [];
-    input.map(({ payments, ...entityData }) => {
-      inputWithoutPayments.push(entityData);
-      paymentsMap[entityData.id] = payments;
-    });
-
-    try {
-      const { affected, persistens } = await services.legalEntities.replaceEntities(
-        entity,
-        inputWithoutPayments,
-      );
-      affected.forEach((id) => {
-        dataloader.legalEntities.clear(id);
-      });
-
-      // replace payments
-      await Promise.all(
-        Object.entries(paymentsMap)
-          .map(([owner, payments]) => services.legalEntities.replacePayments(owner, payments)),
-      );
-
-      return persistens.map((id) => ({ id }));
-
-    } catch (err) {
-      throw new ServerError('Failed to replace legal entities', { err });
-    }
-  },
   create: async (_parent, args, context) => {
     const { services, dataloader } = context;
     const { input } = args;
@@ -63,15 +32,33 @@ export const legalEntityMutationResolver: Resolvers['LegalEntitiesMutation'] = {
     const { id, input } = args;
     const { payments, ...legalEntityInput } = input;
 
+    // check to exist
+    const currentEntity = await dataloader.legalEntities.load(id);
+    if (!currentEntity) {
+      throw new ServerError('Legal entity not found');
+    }
+
+    const currentPaymentIDs = currentEntity.payments.map(({ id }) => id);
+
+    try {
+      const persistensPaymentIDs = await services.legalEntities.createOrUpdatePayments(payments.map((payment) => ({
+        ...payment,
+        owner: id,
+      })));
+
+      const iDsToRemove = currentPaymentIDs.filter((currentID) => !persistensPaymentIDs.includes(currentID))
+      if (persistensPaymentIDs.length) {
+        await services.legalEntities.deleteLegalEntityPayments(iDsToRemove);
+      }
+      
+    } catch (err) {
+      throw new ServerError('Failed to update legal entity payments', { err });
+    }
+    
     try {
       await services.legalEntities.updateLegalEntity(id, legalEntityInput);
     } catch (err) {
       throw new ServerError('Failed to update legal entity', { err });
-    }
-
-    // update (replace) payments
-    if (payments) {
-      await services.legalEntities.replacePayments(id, payments);
     }
 
     dataloader.legalEntities.clear(id);

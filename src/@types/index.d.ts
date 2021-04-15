@@ -66,41 +66,14 @@ declare module '@via-profit-services/legal-entity' {
     city?: string;
     payments?: Array<{
       id: string;
-      rs?: string;
-      ks?: string;
-      bic?: string;
-      bank?: string;
-      priority?: PaymentPriority;
-      comment?: string;
+      rs: string;
+      ks: string;
+      bic: string;
+      bank: string;
+      priority: PaymentPriority;
+      comment: string;
     }>;
   };
-
-  export type LegalEntityMutationReplaceInput = Array<{
-    id: string;
-    type?: string;
-    ogrn?: string;
-    inn?: string;
-    label?: string;
-    nameFull?: string;
-    nameShort?: string;
-    address?: string;
-    kpp?: string;
-    directorNameNominative?: string;
-    directorNameGenitive?: string;
-    directorNameShortNominative?: string;
-    directorNameShortGenitive?: string;
-    comment?: string;
-    city?: string;
-    payments: Array<{
-      id: string;
-      rs?: string;
-      ks?: string;
-      bic?: string;
-      bank?: string;
-      priority?: PaymentPriority;
-      comment?: string;
-    }>;
-  }>;
 
   export type Resolvers = {
     Query: {
@@ -137,10 +110,6 @@ declare module '@via-profit-services/legal-entity' {
       update: GraphQLFieldResolver<unknown, Context, {
         id: string;
         input: LegalEntityMutationUpdateInput;
-      }>;
-      replace: GraphQLFieldResolver<unknown, Context, {
-        entity?: string;
-        input: LegalEntityMutationReplaceInput;
       }>;
       delete: GraphQLFieldResolver<unknown, Context, {
         id?: string;
@@ -306,6 +275,7 @@ declare module '@via-profit-services/legal-entity' {
     directorNameShortGenitive: string;
     comment: string;
     city: string;
+    payments?: any[]; // this data will be excluded
   }
 
   export type PaymentCreateOrUpdateProps = {
@@ -319,46 +289,6 @@ declare module '@via-profit-services/legal-entity' {
     priority: PaymentPriority;
   }
 
-  export type ReplaceEntityPaymentsProps = {
-    id: string;
-    rs?: string;
-    ks?: string;
-    bic?: string;
-    bank?: string;
-    priority?: PaymentPriority;
-    comment?: string;
-  };
-
-  export type ReplaceEntityProps = {
-    id: string;
-    ogrn?: string;
-    inn?: string;
-    type?: string;
-    entity?: string;
-    label?: string;
-    nameFull?: string;
-    nameShort?: string;
-    address?: string;
-    kpp?: string;
-    directorNameNominative?: string;
-    directorNameGenitive?: string;
-    directorNameShortNominative?: string;
-    directorNameShortGenitive?: string;
-    comment?: string;
-    city?: string;
-  };
-
-  export type ReplaceEntityResult = {
-    deleted: string[];
-    persistens: string[];
-    affected: string[];
-  };
-
-  export type ReplacePaymentResult = {
-    deleted: string[];
-    persistens: string[];
-    affected: string[];
-  };
 
   export type LegalEntityServiceProps = {
     context: Context;
@@ -387,13 +317,11 @@ declare module '@via-profit-services/legal-entity' {
     getLegalEntitiesByEntities(entitiesIDs: string[]): Promise<ListResponse<LegalEntity>>;
     getLegalEntitiesByEntity(entityID: string): Promise<ListResponse<LegalEntity>>;
     createOrUpdateEntities (entities: LegalEntityCreateOrUpdateProps[]): Promise<string[]>;
-    createOrUpdatePayments (payments: PaymentCreateOrUpdateProps[]): Promise<string[]>;
     prepareEntityDataToInsert(input: CreateEntityProps | UpdateEntityProps): LegalEntitiesTableModel;
     preparePaymentDataToInsert(input: CreatePaymentProps | UpdatePaymentProps): PaymentsTableModel;
     getDefaultEntityRecord(): LegalEntitiesTableModel;
     getDefaultPaymentRecord(): PaymentsTableModel;
-    replaceEntities (entity: string, legalEntities: ReplaceEntityProps[]): Promise<ReplaceEntityResult>;
-    replacePayments (owner: string, payments: ReplaceEntityPaymentsProps[]): Promise<ReplacePaymentResult>;
+    createOrUpdatePayments(payments: CreatePaymentProps[]): Promise<string[]>;
   }
 
 
