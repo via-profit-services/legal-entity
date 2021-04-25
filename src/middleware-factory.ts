@@ -13,7 +13,7 @@ const middlewareFactory: MiddlewareFactory = async (configuration) => {
   const typeList = new Set(
     [...entities || []].map((entity) => entity.replace(/[^a-zA-Z]/g, '')),
   );
-  
+
   typeList.add('VoidLegalEntity');
 
   const middleware: Middleware = async ({ context }) => {
