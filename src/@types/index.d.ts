@@ -330,7 +330,8 @@ declare module '@via-profit-services/legal-entity' {
     | 'ACTIVE'
     | 'LIQUIDATING'
     | 'LIQUIDATED'
-    | 'REORGANIZING';
+    | 'REORGANIZING'
+    | 'BANKRUPT';
 
   export type LegalEntityExternalSearchBranchType =
     | 'MAIN'
