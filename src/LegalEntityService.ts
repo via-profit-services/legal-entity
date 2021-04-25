@@ -147,10 +147,13 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
         return null;
       }
 
+      const cities = await services.geography.getCities({
+        where: [['countryCode', '=', 'RU']],
+        limit: Number.MAX_SAFE_INTEGER,
+      });
 
       const suggestions: LegalEntityExternalSearchResult[] = [...response.suggestions || []]
-        .reduce(async (prev, suggestion) => {
-          await prev;
+        .map((suggestion) => {
 
           const data = suggestion?.data || {};
           const directorNameNominative = String(data?.management?.post).toLowerCase().indexOf('директор') !== -1
@@ -161,12 +164,11 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
             ? directorNameNominative.split(' ').reduce((prev, current, index) => index === 0 ? current : `${prev} ${current[0]}.`, '')
             : '';
 
-          const countryISO = data?.address?.data?.country_iso_code || 'RU';
-          const cityName = data?.address?.data?.city || 'none';
-          const cities = await services.geography.getCities({
-            where: [['countryCode', '=', countryISO]],
-            search: [{ field: 'ru', query: cityName }],
-          });
+          const city = cities.nodes
+            .find(({ ru, countryCode }) => (
+              data?.address?.data?.country_iso_code === countryCode
+              && data?.address?.data?.city.toLowerCase() === ru.toLowerCase()
+            ));
 
           const result: LegalEntityExternalSearchResult = {
             label: data?.name?.short || '',
@@ -176,7 +178,7 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
             ogrn: data?.ogrn || '',
             kpp: data?.kpp || '',
             inn: data?.inn || '',
-            city: cities.totalCount ? cities.nodes[0] : null,
+            city: city || null,
             directorNameNominative,
             directorNameShortNominative,
             state: data?.state?.status || 'ACTIVE',
@@ -189,7 +191,7 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
           };
 
           return result;
-        }, Promise.resolve);
+        });
 
       return suggestions;
     } catch (err) {
@@ -428,6 +430,7 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
     const { knex, timezone } = context;
 
     const createdAt = moment.tz(timezone).toDate();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const prepared = entities.map(({ payments, ...entity }) => ({
       ...this.prepareEntityDataToInsert(entity),
       createdAt,
@@ -438,7 +441,7 @@ class LegalEntitiesService implements LegalEntityServiceInterface {
       .insert(prepared)
       .returning('id')
       .onConflict('id').merge();
-    
+
     return response;
   }
 
