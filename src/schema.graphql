@@ -88,6 +88,7 @@ enum LegalEntityExternalStatus {
   In the process of joining another legal entity, with subsequent liquidation
   """
   REORGANIZING
+  BANKRUPT
 }
 
 enum LegalEntityExternalBranchType {
