@@ -2,7 +2,78 @@ declare module '@via-profit-services/legal-entity' {
   import { Context, OutputFilter, ListResponse, Middleware, InputFilter } from '@via-profit-services/core';
   import { GraphQLFieldResolver } from 'graphql';
 
-  export type MiddlewareFactory = () => Promise<Middleware>;
+  export type Configuration = {
+    /**
+     * You can add Account entities.\
+     * The entities that will be passed here will be added 
+     * to the types: \
+     * `enum AccountType` \
+     * `union AccountEntity`
+     */
+    entities?: string[];
+  };
+
+  export type MiddlewareFactory = (configuration?: Configuration) => Promise<{
+    middleware: Middleware;
+    typeDefs: string;
+    resolvers: Resolvers;
+  }>;
+
+  export type LegalEntityMutationCreateInput = {
+    id?: string;
+    entity: string;
+    type: string;
+    ogrn: string;
+    inn: string;
+    label: string;
+    nameFull: string;
+    nameShort: string;
+    address: string;
+    kpp: string;
+    directorNameNominative: string;
+    directorNameGenitive: string;
+    directorNameShortNominative: string;
+    directorNameShortGenitive: string;
+    comment: string;
+    city: string;
+    payments: Array<{
+      id: string;
+      rs: string;
+      ks: string;
+      bic: string;
+      bank: string;
+      priority: PaymentPriority;
+      comment: string;
+    }>;
+  }
+
+  export type LegalEntityMutationUpdateInput = {
+    id?: string;
+    entity?: string;
+    type?: string;
+    ogrn?: string;
+    inn?: string;
+    label?: string;
+    nameFull?: string;
+    nameShort?: string;
+    address?: string;
+    kpp?: string;
+    directorNameNominative?: string;
+    directorNameGenitive?: string;
+    directorNameShortNominative?: string;
+    directorNameShortGenitive?: string;
+    comment?: string;
+    city?: string;
+    payments?: Array<{
+      id: string;
+      rs: string;
+      ks: string;
+      bic: string;
+      bank: string;
+      priority: PaymentPriority;
+      comment: string;
+    }>;
+  };
 
   export type Resolvers = {
     Query: {
@@ -34,59 +105,11 @@ declare module '@via-profit-services/legal-entity' {
     };
     LegalEntitiesMutation: {
       create: GraphQLFieldResolver<unknown, Context, {
-        input: {
-          ogrn: string;
-          inn: string;
-          id?: string;
-          label: string;
-          nameFull: string;
-          nameShort: string;
-          address: string;
-          kpp: string;
-          directorNameNominative: string;
-          directorNameGenitive: string;
-          directorNameShortNominative: string;
-          directorNameShortGenitive: string;
-          comment: string;
-          city: string;
-          payments: Array<{
-            id?: string;
-            rs?: string;
-            ks?: string;
-            bic?: string;
-            bank?: string;
-            priority?: PaymentPriority;
-            comment?: string;
-          }>;
-        };
+        input: LegalEntityMutationCreateInput;
       }>;
       update: GraphQLFieldResolver<unknown, Context, {
         id: string;
-        input: {
-          ogrn?: string;
-          inn?: string;
-          id?: string;
-          label?: string;
-          nameFull?: string;
-          nameShort?: string;
-          address?: string;
-          kpp?: string;
-          directorNameNominative?: string;
-          directorNameGenitive?: string;
-          directorNameShortNominative?: string;
-          directorNameShortGenitive?: string;
-          comment?: string;
-          city?: string;
-          payments?: Array<{
-            id?: string;
-            rs?: string;
-            ks?: string;
-            bic?: string;
-            bank?: string;
-            priority?: PaymentPriority;
-            comment?: string;
-          }>;
-        };
+        input: LegalEntityMutationUpdateInput;
       }>;
       delete: GraphQLFieldResolver<unknown, Context, {
         id?: string;
@@ -102,6 +125,8 @@ declare module '@via-profit-services/legal-entity' {
     createdAt: string;
     updatedAt: string;
     label: string;
+    type: string;
+    entity: string;
     address: string;
     ogrn: string;
     kpp: string;
@@ -113,14 +138,15 @@ declare module '@via-profit-services/legal-entity' {
     nameShort: string;
     nameFull: string;
     city: string;
-    comment: string | null;
-    deleted: boolean;
+    comment: string;
   }
 
   export type LegalEntitiesTableModelResponse = {
     readonly id: string;
     readonly createdAt: Date;
     readonly updatedAt: Date;
+    readonly type: string;
+    readonly entity: string;
     readonly label: string;
     readonly address: string;
     readonly ogrn: string;
@@ -133,8 +159,7 @@ declare module '@via-profit-services/legal-entity' {
     readonly nameShort: string;
     readonly nameFull: string;
     readonly city: string;
-    readonly comment: string | null;
-    readonly deleted: boolean;
+    readonly comment: string;
     readonly totalCount: number;
     readonly payments: string;
   }
@@ -144,6 +169,10 @@ declare module '@via-profit-services/legal-entity' {
     createdAt: Date;
     updatedAt: Date;
     label: string;
+    type: string;
+    entity: {
+      id: string;
+    };
     nameFull: string;
     nameShort: string;
     address: string;
@@ -154,8 +183,7 @@ declare module '@via-profit-services/legal-entity' {
     directorNameGenitive: string;
     directorNameShortNominative: string;
     directorNameShortGenitive: string;
-    comment: string | null;
-    deleted: boolean;
+    comment: string;
     payments: Array<{
       id: string;
     }> | null;
@@ -174,8 +202,7 @@ declare module '@via-profit-services/legal-entity' {
     bic: string;
     bank: string;
     priority: PaymentPriority;
-    comment: string | null;
-    deleted: boolean;
+    comment: string;
   }
 
   export type PaymentsTableModelResponse = {
@@ -188,8 +215,7 @@ declare module '@via-profit-services/legal-entity' {
     readonly bic: string;
     readonly bank: string;
     readonly priority: PaymentPriority;
-    readonly comment: string | null;
-    readonly deleted: boolean;
+    readonly comment: string;
     readonly totalCount: number;
   }
 
@@ -204,16 +230,65 @@ declare module '@via-profit-services/legal-entity' {
     ks: string;
     bic: string;
     bank: string;
-    comment: string | null;
+    comment: string;
     priority: PaymentPriority;
-    deleted: boolean;
   }
   
 
-  export type CreateEntityProps = Omit<LegalEntitiesTableModel, 'createdAt' | 'updatedAt'>;
+  export type CreateEntityProps = {
+    id?: string;
+    label: string;
+    type: string;
+    entity: string;
+    address: string;
+    ogrn: string;
+    kpp: string;
+    inn: string;
+    directorNameNominative: string;
+    directorNameGenitive: string;
+    directorNameShortNominative: string;
+    directorNameShortGenitive: string;
+    nameShort: string;
+    nameFull: string;
+    city: string;
+    comment: string;
+  };
+  
   export type UpdateEntityProps = Partial<CreateEntityProps>;
   export type CreatePaymentProps = Omit<PaymentsTableModel, 'createdAt' | 'updatedAt'>;
   export type UpdatePaymentProps = Partial<CreatePaymentProps>;
+
+  export type LegalEntityCreateOrUpdateProps = {
+    id: string;
+    ogrn: string;
+    inn: string;
+    type: string;
+    entity: string;
+    label: string;
+    nameFull: string;
+    nameShort: string;
+    address: string;
+    kpp?: string;
+    directorNameNominative: string;
+    directorNameGenitive: string;
+    directorNameShortNominative: string;
+    directorNameShortGenitive: string;
+    comment: string;
+    city: string;
+    payments?: any[]; // this data will be excluded
+  }
+
+  export type PaymentCreateOrUpdateProps = {
+    owner: string;
+    id: string;
+    rs: string;
+    ks: string;
+    bic: string;
+    bank: string;
+    comment: string;
+    priority: PaymentPriority;
+  }
+
 
   export type LegalEntityServiceProps = {
     context: Context;
@@ -222,14 +297,13 @@ declare module '@via-profit-services/legal-entity' {
   class LegalEntityService {
     props: LegalEntityServiceProps;
     constructor(props: LegalEntityServiceProps);
-    getLegalEntities(filter: Partial<OutputFilter>, notDeletedOnly?: boolean): Promise<ListResponse<LegalEntity>>;
+    getLegalEntities(filter: Partial<OutputFilter>): Promise<ListResponse<LegalEntity>>;
     getLegalEntitiesByIds(ids: string[]): Promise<LegalEntity[]>;
     getLegalEntity(id: string): Promise<LegalEntity | false>;
-    updateLegalEntity(id: string, legalEntityData: UpdateEntityProps): Promise<void>;
+    updateLegalEntity(id: string, legalEntityData: UpdateEntityProps): Promise<string>;
     createLegalEntity(legalEntityData: CreateEntityProps): Promise<string>;
     deleteLegalEntities(ids: string[]): Promise<void>;
     deleteLegalEntity(id: string): Promise<void>;
-    restoreLegalEntity(id: string): Promise<void>;
     externalSearchCompanies(query: string): Promise<LegalEntityExternalSearchResult[] | null>;
     externalSearchPayments(query: string): Promise<LegalEntityPayment[] | null>;
     getLegalEntityPayments(filter: Partial<OutputFilter>): Promise<ListResponse<LegalEntityPayment>>;
@@ -237,9 +311,17 @@ declare module '@via-profit-services/legal-entity' {
     getLegalEntityPayment(id: string): Promise<LegalEntityPayment | false>;
     createLegalEntityPayment(paymentData: CreatePaymentProps): Promise<string>;
     updateLegalEntityPayment(id: string, paymentData: UpdatePaymentProps): Promise<string>;
-    deleteLegalEntityPayment(id: string): Promise<boolean>;
-    restoreLegalEntityPayment(id: string): Promise<boolean>;
-
+    deleteLegalEntityPayments(ids: string[]): Promise<void>;
+    deleteLegalEntityPayment(id: string): Promise<void>;
+    rebaseTypes(types: string[]): Promise<void>;
+    getLegalEntitiesByEntities(entitiesIDs: string[]): Promise<ListResponse<LegalEntity>>;
+    getLegalEntitiesByEntity(entityID: string): Promise<ListResponse<LegalEntity>>;
+    createOrUpdateEntities (entities: LegalEntityCreateOrUpdateProps[]): Promise<string[]>;
+    prepareEntityDataToInsert(input: CreateEntityProps | UpdateEntityProps): LegalEntitiesTableModel;
+    preparePaymentDataToInsert(input: CreatePaymentProps | UpdatePaymentProps): PaymentsTableModel;
+    getDefaultEntityRecord(): LegalEntitiesTableModel;
+    getDefaultPaymentRecord(): PaymentsTableModel;
+    createOrUpdatePayments(payments: CreatePaymentProps[]): Promise<string[]>;
   }
 
 
@@ -248,7 +330,8 @@ declare module '@via-profit-services/legal-entity' {
     | 'ACTIVE'
     | 'LIQUIDATING'
     | 'LIQUIDATED'
-    | 'REORGANIZING';
+    | 'REORGANIZING'
+    | 'BANKRUPT';
 
   export type LegalEntityExternalSearchBranchType =
     | 'MAIN'

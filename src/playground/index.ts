@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import http from 'http';
 
-import * as legalEntity from '../index';
+import { factory as legalEntityFactory } from '../index';
 
 dotenv.config();
 
@@ -28,18 +28,30 @@ const server = http.createServer(app);
     },
   });
 
-  const legalEntityMiddleware = await legalEntity.factory();
+  const legalEntity = await legalEntityFactory({
+    entities: ['Customer'],
+  });
 
   const schema = makeExecutableSchema({
     typeDefs: [
       typeDefs,
       legalEntity.typeDefs,
       geography.typeDefs,
+      `type Customer {
+        id: ID!
+        name: String!
+      }`,
     ],
     resolvers: [
       resolvers,
       geography.resolvers,
       legalEntity.resolvers,
+      {
+        Customer: {
+          id: () => 'e01d28ac-44cb-4e94-a11d-87a9a65d9959',
+          name: () => 'Some conpany',
+        },
+      },
     ],
   });
 
@@ -51,7 +63,7 @@ const server = http.createServer(app);
     middleware: [
       knexMiddleware,
       geographyMiddleware,
-      legalEntityMiddleware,
+      legalEntity.middleware,
     ],
   });
 

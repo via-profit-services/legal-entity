@@ -1,221 +1,95 @@
 import { ServerError } from '@via-profit-services/core';
-import { CreatePaymentProps, Resolvers } from '@via-profit-services/legal-entity';
-import { v4 as uuidv4 } from 'uuid';
+import { Resolvers } from '@via-profit-services/legal-entity';
 
 export const legalEntityMutationResolver: Resolvers['LegalEntitiesMutation'] = {
-  update: async (_parent, args, context) => {
+
+  create: async (_parent, args, context) => {
     const { services, dataloader } = context;
-    const { id, input } = args;
-    const { payments, ...otherInput } = input;
+    const { input } = args;
+    const { payments, ...legalEntityInput } = input;
 
-
-    // check INN unique
-    if (input.inn) {
-      const { nodes } = await services.legalEntities.getLegalEntities({
-        limit: 1,
-        where: [
-          ['inn', '=', input.inn],
-          ['id', '<>', id],
-        ],
-      });
-
-      if (nodes.length) {
-        if (nodes[0].id !== id) {
-          throw new ServerError(
-            `Legal entity record already exists with inn ${input.inn} value`, { id, input },
-          );
-        }
-      }
-    }
-
-
-    // check OGRN unique
-    if (input.ogrn) {
-      const { nodes } = await services.legalEntities.getLegalEntities({
-        limit: 1,
-        where: [
-          ['ogrn', '=', input.ogrn],
-          ['id', '<>', id],
-        ],
-      });
-
-      if (nodes.length) {
-        if (nodes[0].id !== id) {
-          throw new ServerError(
-            `Legal entity record already exists with ogrn ${input.ogrn} value`, { id, input },
-          );
-        }
-      }
-    }
-
-
-    // update legal entity
     try {
-      otherInput.id = id;
-      await services.legalEntities.updateLegalEntity(id, otherInput);
+      // create legal entity
+      const id = await services.legalEntities.createLegalEntity(legalEntityInput);
       dataloader.legalEntities.clear(id);
 
-    } catch (err) {
-      throw new ServerError('Failed to update legal entity', { err, id, input });
-    }
-
-    const currentPaymentsIds: string[] = [];
-    if (payments && Array.isArray(payments)) {
-      const legalEntity = await dataloader.legalEntities.load(id);
-
-      // create and update payments
-      await payments.reduce(async (prev, data) => {
-        await prev;
-
-        data.id = data.id || uuidv4();
-
-        const existsPaymentData = await dataloader.payments.load(data.id);
-
-        const paymentData: CreatePaymentProps = {
-          id: uuidv4(),
-          deleted: false,
-          rs: '',
-          ks: '',
-          bank: '',
-          bic: '',
-          comment: '',
-          priority: 'master',
-          ...data,
-          // set owner permanently
+      // create payments
+      await Promise.all(
+        payments.map((paymentInput) => services.legalEntities.createLegalEntityPayment({
           owner: id,
-        };
+          ...paymentInput,
+        })),
+      );
 
-        currentPaymentsIds.push(paymentData.id);
+      return { id };
 
-        if (!existsPaymentData) {
-          try {
-            await services.legalEntities.createLegalEntityPayment(paymentData);
-            dataloader.payments.clear(paymentData.id);
-          } catch (err) {
-            throw new ServerError('Failed to create legal entity payments', { err });
-          }
-        } else {
-          try {
-            await services.legalEntities.updateLegalEntityPayment(paymentData.id, paymentData);
-            dataloader.payments.clear(paymentData.id);
-          } catch (err) {
-            throw new ServerError('Failed to update legal entity payments', { err });
-          }
-        }
-      }, Promise.resolve());
-
-      // remove old payments of this legal entity
-      const prevPaymentsIds = legalEntity.payments.map((p) => p.id);
-      const toDeletePaymentIds = prevPaymentsIds
-        .filter((prevId) => !currentPaymentsIds
-          .includes(prevId));
-      try {
-        await Promise.all(toDeletePaymentIds.map((((idToDelete) => {
-          dataloader.payments.clear(idToDelete);
-
-          return services.legalEntities.deleteLegalEntityPayment(idToDelete);
-        }))));
-      } catch (err) {
-        throw new ServerError('Failed to remove old payments of this legal entity', { err });
-      }
+    } catch (err) {
+      throw new ServerError('Failed to create legal entity', { err });
     }
-
-    // clear cache of this legal entity
-    dataloader.legalEntities.clear(id);
-
-    return { id };
   },
-  create: async (parent, args, context) => {
-    const { input } = args;
+  update: async (_parent, args, context) => {
     const { dataloader, services } = context;
-    const { payments, ...otherInput } = input;
-    const id = input.id || uuidv4();
+    const { id, input } = args;
+    const { payments, ...legalEntityInput } = input;
 
-    // check INN unique
-    if (input.inn) {
-      const { totalCount } = await services.legalEntities.getLegalEntities({
-        limit: 1,
-        where: [
-          ['inn', '=', input.inn],
-        ],
-      });
+    // check to exist
+    const currentEntity = await dataloader.legalEntities.load(id);
+    if (!currentEntity) {
+      throw new ServerError('Legal entity not found');
+    }
 
-      if (totalCount) {
-        throw new ServerError(
-          `Legal entity record already exists with inn ${input.inn} value`, { input },
-        );
+    const currentPaymentIDs = currentEntity.payments.map(({ id }) => id);
+
+    try {
+      const persistensPaymentIDs = await services.legalEntities.createOrUpdatePayments(payments.map((payment) => ({
+        ...payment,
+        owner: id,
+      })));
+
+      const iDsToRemove = currentPaymentIDs.filter((currentID) => !persistensPaymentIDs.includes(currentID))
+      if (persistensPaymentIDs.length) {
+        await services.legalEntities.deleteLegalEntityPayments(iDsToRemove);
       }
-    }
-
-    try {
-      await services.legalEntities.createLegalEntity({
-        ...otherInput,
-        deleted: false,
-        id,
-      });
+      
     } catch (err) {
-      throw new ServerError('Failed to create legal entity', { err, input });
+      throw new ServerError('Failed to update legal entity payments', { err });
     }
-
-
+    
     try {
-      await payments.reduce(async (prev, paymentData) => {
-        await prev;
-        try {
-          await services.legalEntities.createLegalEntityPayment({
-            id: uuidv4(),
-            comment: '',
-            rs: '',
-            ks: '',
-            bic: '',
-            bank: '',
-            priority: 'master',
-            ...paymentData,
-            deleted: false,
-            owner: id,
-          });
-        } catch (err) {
-          throw new ServerError('Failed to create legal entity payments', { err });
-        }
-      }, Promise.resolve());
+      await services.legalEntities.updateLegalEntity(id, legalEntityInput);
     } catch (err) {
-      throw new ServerError('Failed to create legal entity payments', { err, input });
+      throw new ServerError('Failed to update legal entity', { err });
     }
-
 
     dataloader.legalEntities.clear(id);
 
     return { id };
   },
-  delete: async (parent, args, context) => {
-    const { id, ids } = args;
-    const { logger } = context;
+  delete: async (_parent, args, context) => {
     const { services, dataloader } = context;
+    const { id, ids } = args;
 
-    const toDeleteIds = []
-      .concat(ids || [])
-      .concat(id ? [id] : []);
+    const deletedIDs = [
+      ...ids || [],
+      ...(id ? [id] : []),
+    ];
 
-    await toDeleteIds.reduce(async (prevPromise, legalEntityId) => {
-      await prevPromise;
-      try {
-        services.legalEntities.deleteLegalEntity(legalEntityId);
-        dataloader.legalEntities.clear(legalEntityId);
-        logger.server.debug(`Legal entity with id ${legalEntityId} was deleted`, {
-          id: legalEntityId,
-        });
-      } catch (err) {
-        throw new ServerError('Failed to delete legal entity', { err, id: legalEntityId });
-      }
-    }, Promise.resolve());
+    try {
+      await services.legalEntities.deleteLegalEntities(deletedIDs);
 
+      deletedIDs.forEach((id) => {
+        dataloader.legalEntities.clear(id);
+      });
 
-    return {
-      deletedIDs: toDeleteIds,
-      query: {},
-    };
+      return {
+        deletedIDs,
+        query: {},
+      };
+
+    } catch (err) {
+      throw new ServerError('Failed to remove legal entities', { ids: deletedIDs, err });
+    }
   },
-
 };
 
 

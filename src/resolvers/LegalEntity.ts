@@ -7,6 +7,8 @@ export const legalEntityResolver = new Proxy<EntityResolver>({
   createdAt: () => ({}),
   updatedAt: () => ({}),
   label: () => ({}),
+  type: () => ({}),
+  entity: () => ({}),
   nameFull: () => ({}),
   nameShort: () => ({}),
   address: () => ({}),
@@ -20,7 +22,6 @@ export const legalEntityResolver = new Proxy<EntityResolver>({
   comment: () => ({}),
   payments: () => ({}),
   city: () => ({}),
-  deleted: () => ({}),
 }, {
   get: (_target, prop: keyof EntityResolver) => {
     const resolver: EntityResolver[keyof EntityResolver] = async (

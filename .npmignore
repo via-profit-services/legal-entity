@@ -22,3 +22,7 @@
 /dump.rdb
 /package.tgz
 /package-*.tgz
+
+.data
+.env
+.knex/knexfile.js
