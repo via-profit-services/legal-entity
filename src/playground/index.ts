@@ -4,6 +4,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { factory, resolvers, typeDefs } from '@via-profit-services/core';
 import * as geography from '@via-profit-services/geography';
 import * as knex from '@via-profit-services/knex';
+import * as redis from '@via-profit-services/redis';
 import dotenv from 'dotenv';
 import express from 'express';
 import http from 'http';
@@ -18,6 +19,9 @@ const server = http.createServer(app);
 (async () => {
 
   const geographyMiddleware = geography.factory();
+  const redisMissleware = redis.factory({
+    host: 'localhost',
+  });
 
   const knexMiddleware = knex.factory({
     connection: {
@@ -62,6 +66,7 @@ const server = http.createServer(app);
     debug: true,
     middleware: [
       knexMiddleware,
+      redisMissleware,
       geographyMiddleware,
       legalEntity.middleware,
     ],

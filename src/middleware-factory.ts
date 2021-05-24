@@ -1,7 +1,7 @@
-import { Middleware, ServerError, collateForDataloader } from '@via-profit-services/core';
+import { Middleware, ServerError } from '@via-profit-services/core';
 import type { MiddlewareFactory, Configuration } from '@via-profit-services/legal-entity';
 import '@via-profit-services/geography';
-import DataLoader from 'dataloader';
+import DataLoader from '@via-profit/dataloader';
 
 import LegalEntityService from './LegalEntityService';
 import resolvers from './resolvers';
@@ -39,14 +39,22 @@ const middlewareFactory: MiddlewareFactory = async (configuration) => {
     context.dataloader.legalEntities = new DataLoader(async (ids: string[]) => {
       const nodes = await context.services.legalEntities.getLegalEntitiesByIds(ids);
 
-      return collateForDataloader(ids, nodes);
+      return nodes;
+    }, {
+      redis: context.redis,
+      cacheName: 'legalEntities.entities',
+      defaultExpiration: '1h',
     });
 
     // Inject payments dataloader
     context.dataloader.payments = new DataLoader(async (ids: string[]) => {
       const nodes = await context.services.legalEntities.getLegalEntityPaymentsByIds(ids);
 
-      return collateForDataloader(ids, nodes);
+      return nodes;
+    }, {
+      redis: context.redis,
+      cacheName: 'legalEntities.payments',
+      defaultExpiration: '1h',
     });
 
     // check to init tables

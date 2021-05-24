@@ -1093,9 +1093,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@via-profit-services/core@npm:^1.0.9":
-  version: 1.0.9
-  resolution: "@via-profit-services/core@npm:1.0.9"
+"@via-profit-services/core@npm:^1.1.9":
+  version: 1.1.9
+  resolution: "@via-profit-services/core@npm:1.1.9"
   dependencies:
     bufferutil: ^4.0.2
     content-type: ^1.0.4
@@ -1114,7 +1114,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 8b5d7f0d90ba23b136f1b3007e0184a7c9ed371151336546a25188bcb1ec4da99f0b21af474f8551138c48af080c247030c4c5d680dd60d1b5f08d1e4e262a93
+  checksum: a8890424f8a7d053e9938d23cd196aaeffce6d0c12178de8f4ada2471df09aa7f88e30614df9936030552a4e82e89ae597ca097990189c656f82fcf6b6ff1894
   languageName: node
   linkType: hard
 
@@ -1125,25 +1125,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@via-profit-services/geography@npm:^1.1.6":
-  version: 1.1.6
-  resolution: "@via-profit-services/geography@npm:1.1.6"
+"@via-profit-services/geography@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@via-profit-services/geography@npm:1.2.0"
   peerDependencies:
     "@via-profit-services/core": ^1.0.0
     "@via-profit-services/knex": ^1.1.0
+    "@via-profit-services/redis": ^1.0.3
+    "@via-profit/dataloader": ^1.0.0
     graphql: "*"
-  checksum: e72937683cee880487a5fd208c0f13f595f5a7a145d94dd9360d88e75a982ae96713a9df67fffa140dbea006219e4a1962d565841693a4745dbb559de102a874
+  checksum: edd7cf72b69a86f3bce73dea7516d71d880ef0b541b313d9b72663ff32f6319de8e6ab29d18f58cb3d4972008628866071350d634286839e4c9a8d41df191997
   languageName: node
   linkType: hard
 
-"@via-profit-services/knex@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@via-profit-services/knex@npm:1.1.1"
+"@via-profit-services/knex@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "@via-profit-services/knex@npm:1.1.4"
   peerDependencies:
     "@via-profit-services/core": 1.x.x
     knex: ^0.95.4
     pg: ^8.5.1
-  checksum: 6c745c24f073730c493a333f29093a9e71faf55d4883d63261d9304ad636fed61d92a6a976f3b759de146b59594d83900a077cc156000a4b8793784c7465bc92
+  checksum: 9b2c41dd91ab8f471529352b06f6c190e981e10347a0708333ef24f4ec340c46f4a02e224c3977c293abcbb381d74b2502ec4c8ed81c84ccc9798ecf4b502971
   languageName: node
   linkType: hard
 
@@ -1170,14 +1172,15 @@ __metadata:
     "@types/webpack-node-externals": ^1.7.0
     "@typescript-eslint/eslint-plugin": ^4.6.1
     "@typescript-eslint/parser": ^4.6.1
-    "@via-profit-services/core": ^1.0.9
+    "@via-profit-services/core": ^1.1.9
     "@via-profit-services/eslint-config": ^0.1.11
-    "@via-profit-services/geography": ^1.1.6
-    "@via-profit-services/knex": ^1.1.1
+    "@via-profit-services/geography": ^1.2.0
+    "@via-profit-services/knex": ^1.1.4
+    "@via-profit-services/redis": ^1.0.3
+    "@via-profit/dataloader": ^1.0.0
     chalk: ^4.1.0
     clean-webpack-plugin: ^3.0.0
     cross-env: ^6.0.3
-    dataloader: ^2.0.0
     dotenv: ^8.2.0
     eslint: ^7.12.1
     eslint-config-prettier: ^6.15.0
@@ -1197,6 +1200,7 @@ __metadata:
     graphql: ^15.5.0
     graphql-tag: ^2.11.0
     husky: ^4.2.3
+    ioredis: ^4.27.3
     jest: ^24.9.0
     jest-transform-graphql: ^2.1.0
     knex: ^0.95.4
@@ -1228,6 +1232,8 @@ __metadata:
   peerDependencies:
     "@via-profit-services/core": ^1.0.5
     "@via-profit-services/geography": ^1.0.0
+    "@via-profit-services/redis": ^1.0.3
+    ioredis: ^4.27.3
     moment: ^2.24.0
     moment-timezone: ^0.5.28
     uuid: ^8.3.1
@@ -1235,6 +1241,25 @@ __metadata:
     winston-daily-rotate-file: ^4.5.0
   languageName: unknown
   linkType: soft
+
+"@via-profit-services/redis@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@via-profit-services/redis@npm:1.0.3"
+  peerDependencies:
+    "@via-profit-services/core": ^1.0.0
+    ioredis: "*"
+  checksum: d8815faf22f839f47b1b37e135e2216e5c2b8ed6799ff9a1073d117de6b1d3c9f04fd4858e8cc34e63b74e9ab569d7a7311613c235a338723d14c6fcd8c78c48
+  languageName: node
+  linkType: hard
+
+"@via-profit/dataloader@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@via-profit/dataloader@npm:1.0.0"
+  peerDependencies:
+    ioredis: ^4.27.2
+  checksum: b2d9436ed6c0ab2f785b1401928089f084e0e2c88a215ac295db09d59a562a25891b5b632e9b9f9f0adc13eb05ede9b14bda5bbfdbb7e3160cc96ae144b9f95f
+  languageName: node
+  linkType: hard
 
 "@webassemblyjs/ast@npm:1.9.0":
   version: 1.9.0
@@ -2828,6 +2853,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cluster-key-slot@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "cluster-key-slot@npm:1.1.0"
+  checksum: 3b41b06942f6b0df71029dec9df6a272be2ab78353d60fcdc5a4af3b88a749d7fb2d1d3b092db0108b2bdd104086c03edcaa3b25ef432590bb954981d6cd7715
+  languageName: node
+  linkType: hard
+
 "co@npm:^4.6.0":
   version: 4.6.0
   resolution: "co@npm:4.6.0"
@@ -3375,13 +3407,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dataloader@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "dataloader@npm:2.0.0"
-  checksum: 0165c2e80751d269c33d2a14b0078a4f3853cb010e2531e7aa99523aba8d0cdc922b9ad67e4c2bb9074c90e0ee0a41b6e7f5f63c40d31224a71c8a0b703f4be3
-  languageName: node
-  linkType: hard
-
 "debug@npm:2.6.9, debug@npm:^2.2.0, debug@npm:^2.3.3, debug@npm:^2.6.9":
   version: 2.6.9
   resolution: "debug@npm:2.6.9"
@@ -3409,6 +3434,18 @@ __metadata:
   dependencies:
     ms: ^2.1.1
   checksum: 9fc1277e666db3af31df89e9e41f5c83da6e9de56d4a95b37e095d47ba1958238b8c7b49d4327b516465d46b6340bee723a97a7b2f28c5c7563f8b0a8fc9458a
+  languageName: node
+  linkType: hard
+
+"debug@npm:^4.3.1":
+  version: 4.3.2
+  resolution: "debug@npm:4.3.2"
+  dependencies:
+    ms: 2.1.2
+  peerDependenciesMeta:
+    supports-color:
+      optional: true
+  checksum: 5543570879e2274f6725d4285a034d6e0822d35faefc6f55965933fb440e8c21eb3a0bef934e66f4b6b491f898ee2de37cab980e9d4fd61372136c19d3ce4527
   languageName: node
   linkType: hard
 
@@ -3543,6 +3580,13 @@ __metadata:
   version: 1.0.0
   resolution: "delegates@npm:1.0.0"
   checksum: 7459e34d29cadd9bfd340728bfcc70ea96da5d940fb197298b523f805822680e583cba3ec34d36a18004325f1ec9de55e202a92b414d01db18cd87bb8a2ae5bd
+  languageName: node
+  linkType: hard
+
+"denque@npm:^1.1.0":
+  version: 1.5.0
+  resolution: "denque@npm:1.5.0"
+  checksum: 3564778cda60c7dee3f1d71e397e50e6b39a8c06118aab9843b9396cb621b3191ab56d13de5237b8beee2b87bec485e8239c58ca3133472d2d1eaa3d2d518022
   languageName: node
   linkType: hard
 
@@ -5845,6 +5889,24 @@ fsevents@~2.1.2:
   dependencies:
     loose-envify: ^1.0.0
   checksum: 96d8a2a4f0ad21020c5847546fc36bec5c0870d99f071aaa93df00c1036439d48211a1823ab6128f78a15ccc4c4f62baf6a65f6c0ed489270dd44d0a04f443a1
+  languageName: node
+  linkType: hard
+
+"ioredis@npm:^4.27.3":
+  version: 4.27.3
+  resolution: "ioredis@npm:4.27.3"
+  dependencies:
+    cluster-key-slot: ^1.1.0
+    debug: ^4.3.1
+    denque: ^1.1.0
+    lodash.defaults: ^4.2.0
+    lodash.flatten: ^4.4.0
+    p-map: ^2.1.0
+    redis-commands: 1.7.0
+    redis-errors: ^1.2.0
+    redis-parser: ^3.0.0
+    standard-as-callback: ^2.1.0
+  checksum: f7080a5912fed5e4ebec45be37eb7288049d5865f9e02e77bcb135533d88c93766a5eea95ead973cbadcdbaf7e15019fb7f6e3286a5c5a820dcd945cc345dd2f
   languageName: node
   linkType: hard
 
@@ -8595,7 +8657,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"p-map@npm:^2.0.0":
+"p-map@npm:^2.0.0, p-map@npm:^2.1.0":
   version: 2.1.0
   resolution: "p-map@npm:2.1.0"
   checksum: 8557e841ed832a489aaee7d825b7bea73e0559c452578821f5af418f430a8455727ab8dd5b4318b6b6733096029cfa571aa0e8d21bdd2c213025f02f919f7a9a
@@ -9555,6 +9617,29 @@ fsevents@~2.1.2:
   dependencies:
     resolve: ^1.9.0
   checksum: 1d4cc8db1d4ff51d4c156db7ff6fe0a376e7527b61afafd148f1cfa2c19a6c454f3f77f1cb175e1f1f1476a83dbeba3632de088441dbaa404091a30d39c8749f
+  languageName: node
+  linkType: hard
+
+"redis-commands@npm:1.7.0":
+  version: 1.7.0
+  resolution: "redis-commands@npm:1.7.0"
+  checksum: cbf5d33768b1c8e1001e2a7ffdaeb6ef830c538ef812d803a1c5e6038cf03482cf0a22b29eadf1182aa02a522331826e3af0967ae75fa7883da8a139ad2fc77b
+  languageName: node
+  linkType: hard
+
+"redis-errors@npm:^1.0.0, redis-errors@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "redis-errors@npm:1.2.0"
+  checksum: b260bb64a1c8523d32a56701681ac3e5cc6bb0a4eb09f1d30729ebba397021d274216ff189909c08fe3c6b706ec8b74948e20ea410b6f69d31b35bda3fb82a59
+  languageName: node
+  linkType: hard
+
+"redis-parser@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "redis-parser@npm:3.0.0"
+  dependencies:
+    redis-errors: ^1.0.0
+  checksum: 45dbcb05bed2c80a4aac288bbefed2347ecf3508c24d542ab42efa21fd63b5aaca4208b206f05818835a2ac43abe09250c2638c11c3b0b66a5d67e83985e350f
   languageName: node
   linkType: hard
 
@@ -10574,6 +10659,13 @@ resolve@1.1.7:
   dependencies:
     escape-string-regexp: ^2.0.0
   checksum: 8d8ae1a8ac9ff7a8c4a55ad4ad7cecbff1536691297dbf742f7cf1eabd0cbce944e408bcd71247cbe4839d2beb4eade08a9da54036c583a6d3d850ecbb81aaa5
+  languageName: node
+  linkType: hard
+
+"standard-as-callback@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "standard-as-callback@npm:2.1.0"
+  checksum: 4d02327de69a3d867b8b4a069213b90ee5db4d09364fea694e3f67f8b1ee909be0724a0c8e8ee220365c972363d318242d97d7dd1c79ccf84b8bb52234be525e
   languageName: node
   linkType: hard
 

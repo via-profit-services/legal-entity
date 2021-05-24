@@ -11,7 +11,7 @@ export const legalEntityMutationResolver: Resolvers['LegalEntitiesMutation'] = {
     try {
       // create legal entity
       const id = await services.legalEntities.createLegalEntity(legalEntityInput);
-      dataloader.legalEntities.clear(id);
+      await dataloader.legalEntities.clear(id);
 
       // create payments
       await Promise.all(
@@ -41,27 +41,29 @@ export const legalEntityMutationResolver: Resolvers['LegalEntitiesMutation'] = {
     const currentPaymentIDs = currentEntity.payments.map(({ id }) => id);
 
     try {
-      const persistensPaymentIDs = await services.legalEntities.createOrUpdatePayments(payments.map((payment) => ({
+      const persistensPaymentIDs = await services.legalEntities
+        .createOrUpdatePayments(payments.map((payment) => ({
         ...payment,
         owner: id,
       })));
 
-      const iDsToRemove = currentPaymentIDs.filter((currentID) => !persistensPaymentIDs.includes(currentID))
+      const iDsToRemove = currentPaymentIDs.filter((currentID) => !persistensPaymentIDs
+        .includes(currentID))
       if (persistensPaymentIDs.length) {
         await services.legalEntities.deleteLegalEntityPayments(iDsToRemove);
       }
-      
+
     } catch (err) {
       throw new ServerError('Failed to update legal entity payments', { err });
     }
-    
+
     try {
       await services.legalEntities.updateLegalEntity(id, legalEntityInput);
     } catch (err) {
       throw new ServerError('Failed to update legal entity', { err });
     }
 
-    dataloader.legalEntities.clear(id);
+    await dataloader.legalEntities.clear(id);
 
     return { id };
   },
@@ -76,10 +78,7 @@ export const legalEntityMutationResolver: Resolvers['LegalEntitiesMutation'] = {
 
     try {
       await services.legalEntities.deleteLegalEntities(deletedIDs);
-
-      deletedIDs.forEach((id) => {
-        dataloader.legalEntities.clear(id);
-      });
+      await dataloader.legalEntities.clearMany(deletedIDs);
 
       return {
         deletedIDs,

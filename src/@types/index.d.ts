@@ -368,12 +368,12 @@ declare module '@via-profit-services/legal-entity' {
 
 
 declare module '@via-profit-services/core' {
-  import DataLoader from 'dataloader';
+  import DataLoader from '@via-profit/dataloader';
   import { LegalEntity, LegalEntityService, LegalEntityPayment } from '@via-profit-services/legal-entity';
 
   interface DataLoaderCollection {
-    legalEntities: DataLoader<string, Node<LegalEntity>>;
-    payments: DataLoader<string, Node<LegalEntityPayment>>;
+    legalEntities: DataLoader<LegalEntity>;
+    payments: DataLoader<LegalEntityPayment>;
   }
 
   interface ServicesCollection {
